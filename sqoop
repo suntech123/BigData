@@ -1,1 +1,200 @@
+# --Sqoop ships with a help tool. To display a list of all available tools, type the following command:
 
+[cloudera@quickstart ~]$ sqoop help
+usage: sqoop COMMAND [ARGS]
+
+Available commands:
+  codegen            Generate code to interact with database records
+  create-hive-table  Import a table definition into Hive
+  eval               Evaluate a SQL statement and display the results
+  export             Export an HDFS directory to a database table
+  help               List available commands
+  import             Import a table from a database to HDFS
+  import-all-tables  Import tables from a database to HDFS
+  import-mainframe   Import datasets from a mainframe server to HDFS
+  job                Work with saved jobs
+  list-databases     List available databases on a server
+  list-tables        List available tables in a database
+  merge              Merge results of incremental imports
+  metastore          Run a standalone Sqoop metastore
+  version            Display version information
+
+See 'sqoop help COMMAND' for information on a specific command.
+
+# -- You can display help for a specific tool by entering: sqoop help (tool-name); for example, sqoop help import.
+#-- You can also add the --help argument to any command: sqoop import --help.
+
+[cloudera@quickstart ~]$ sqoop help import
+[cloudera@quickstart ~]$ sqoop import --help
+
+
+# -- Using Command Aliases. We can use aliases created for different tools ( sqoop-import, sqoop-list-databases etc. )
+
+[cloudera@quickstart ~]$ sqoop-list-databases \
+> --connect $mysql \
+> --username root \
+> --password cloudera
+Warning: /usr/lib/sqoop/../accumulo does not exist! Accumulo imports will fail.
+Please set $ACCUMULO_HOME to the root of your Accumulo installation.
+16/07/11 21:03:30 INFO sqoop.Sqoop: Running Sqoop version: 1.4.6-cdh5.7.0
+16/07/11 21:03:30 WARN tool.BaseSqoopTool: Setting your password on the command-line is insecure. Consider using -P instead.
+16/07/11 21:03:31 INFO manager.MySQLManager: Preparing to use a MySQL streaming resultset.
+information_schema
+cm
+firehose
+hue
+metastore
+mysql
+nav
+navms
+oozie
+retail_db
+rman
+sentry
+
+# --Listing all the tables in a given database
+
+[cloudera@quickstart ~]$ sqoop list-tables --connect jdbc:mysql://127.0.0.1:3306/retail_db --username root --password cloudera
+Warning: /usr/lib/sqoop/../accumulo does not exist! Accumulo imports will fail.
+Please set $ACCUMULO_HOME to the root of your Accumulo installation.
+16/07/11 21:32:14 INFO sqoop.Sqoop: Running Sqoop version: 1.4.6-cdh5.7.0
+16/07/11 21:32:14 WARN tool.BaseSqoopTool: Setting your password on the command-line is insecure. Consider using -P instead.
+16/07/11 21:32:15 INFO manager.MySQLManager: Preparing to use a MySQL streaming resultset.
+categories
+customers
+departments
+order_items
+orders
+products
+
+# -- Use the --table argument to select the table to import. For example, --table departments.
+  -- This copies the data creating a directory with the name as table name in HDFS default directory (eg below command will create departments directory)
+
+[cloudera@quickstart ~]$ sqoop import \
+> --connect jdbc:mysql://127.0.0.1:3306/retail_db \
+> --username root \
+> --password cloudera \
+> --table departments
+
+[cloudera@quickstart ~]$ hadoop fs -ls departments
+Found 5 items
+-rw-r--r--   1 cloudera cloudera          0 2016-07-09 03:07 departments/_SUCCESS
+-rw-r--r--   1 cloudera cloudera         21 2016-07-09 03:07 departments/part-m-00000
+-rw-r--r--   1 cloudera cloudera         10 2016-07-09 03:07 departments/part-m-00001
+-rw-r--r--   1 cloudera cloudera          7 2016-07-09 03:07 departments/part-m-00002
+-rw-r--r--   1 cloudera cloudera         22 2016-07-09 03:07 departments/part-m-00003
+
+[cloudera@quickstart ~]$ hadoop fs -cat departments/part*
+2,Fitness
+3,Footwear
+4,Apparel
+5,Golf
+6,Outdoors
+7,Fan Shop
+
+# -- You can select a subset of columns and control their ordering by using the --columns argument. 
+  -- This should include a comma-delimited list of columns to import. For example: --columns "name,employee_id,jobtitle".
+  
+  [cloudera@quickstart ~]$ sqoop import \
+> --connect "jdbc:mysql://localhost:3306/retail_db" \
+> --username root \
+> --password cloudera \
+> --table orders \
+> --columns "order_customer_id,order_id,order_status"
+
+[cloudera@quickstart ~]$ hadoop fs -ls orders
+Found 5 items
+-rw-r--r--   1 cloudera cloudera          0 2016-07-11 22:22 orders/_SUCCESS
+-rw-r--r--   1 cloudera cloudera     362752 2016-07-11 22:22 orders/part-m-00000
+-rw-r--r--   1 cloudera cloudera     374160 2016-07-11 22:22 orders/part-m-00001
+-rw-r--r--   1 cloudera cloudera     373528 2016-07-11 22:22 orders/part-m-00002
+-rw-r--r--   1 cloudera cloudera     374078 2016-07-11 22:22 orders/part-m-00003
+
+[cloudera@quickstart ~]$ hadoop fs -cat orders/part*
+7456,68869,PROCESSING
+3343,68870,COMPLETE
+4960,68871,PENDING
+3354,68872,COMPLETE
+4545,68873,PENDING
+1601,68874,COMPLETE
+10637,68875,ON_HOLD
+4124,68876,COMPLETE
+9692,68877,ON_HOLD
+6753,68878,COMPLETE
+778,68879,COMPLETE
+
+# -- You can append a WHERE clause to this with the --where argument. For example: --where "id > 400".
+
+[cloudera@quickstart ~]$ sqoop import \
+> --connect "jdbc:mysql://localhost:3306/retail_db" \
+> --username root \
+> --password cloudera \
+> --table categories \
+> --where "category_id > 40"
+
+[cloudera@quickstart ~]$ hdfs dfs -ls categories
+Found 5 items
+-rw-r--r--   1 cloudera cloudera          0 2016-07-11 22:51 categories/_SUCCESS
+-rw-r--r--   1 cloudera cloudera         96 2016-07-11 22:51 categories/part-m-00000
+-rw-r--r--   1 cloudera cloudera         66 2016-07-11 22:51 categories/part-m-00001
+-rw-r--r--   1 cloudera cloudera         37 2016-07-11 22:51 categories/part-m-00002
+-rw-r--r--   1 cloudera cloudera         89 2016-07-11 22:51 categories/part-m-00003
+
+[cloudera@quickstart ~]$ hdfs dfs -cat categories/part*
+41,6,Trade-In
+42,7,Bike & Skate Shop
+43,7,Camping & Hiking
+44,7,Hunting & Shooting
+45,7,Fishing
+46,7,Indoor/Outdoor Games
+47,7,Boating
+48,7,Water Sports
+49,8,MLB
+50,8,NFL
+51,8,NHL
+52,8,NBA
+53,8,NCAA
+54,8,MLS
+55,8,International Soccer
+56,8,World Cup Shop
+57,8,MLB Players
+58,8,NFL Players
+
+# -- By default sqoop will use query select min(<split-by>), max(<split-by>) from <table name> to find out boundaries for creating splits. 
+  -- In some cases this query is not the most optimal so you can specify any arbitrary query returning two numeric columns 
+     using --boundary-query argument.
+
+-----------need to specify example command here later.
+
+
+
+# --> Free Form Query Import
+  --> Instead of using the --table, --columns and --where arguments, you can specify a SQL statement with the --query argument.
+  --> But While importing a free-form query, you must specify a destination directory with --target-dir.
+  --> Your query must include the token $CONDITIONS which each Sqoop process will replace with a unique condition expression.
+  --> You must also select a splitting column with --split-by.
+
+***Error demonstartation
+[cloudera@quickstart ~]$ sqoop import \
+> --connect "jdbc:mysql://localhost:3306/retail_db" \
+> --username root \
+> --password cloudera \
+> --query 'select * from categories' \
+> --target-dir stuff
+
+16/07/11 23:26:21 INFO sqoop.Sqoop: Running Sqoop version: 1.4.6-cdh5.7.0
+16/07/11 23:26:21 WARN tool.BaseSqoopTool: Setting your password on the command-line is insecure. Consider using -P instead.
+When importing query results in parallel, you must specify --split-by.
+Try --help for usage instructions.
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
