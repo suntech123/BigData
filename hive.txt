@@ -84,6 +84,76 @@ total 40
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
+[cloudera@quickstart medcine]$ hive
+
+Logging initialized using configuration in file:/etc/hive/conf.dist/hive-log4j.properties
+WARNING: Hive CLI is deprecated and migration to Beeline is recommended.
+hive> dfs -ls
+    > ;
+Found 2 items
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 10:11 sqoop_import
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 09:48 test
+hive> CREATE DATABASE IF NOT EXISTS health;
+OK
+Time taken: 21.014 seconds
+
+--Now after creating database we can check under below mentioned directory that a database with name health.db is created.
+
+hive> dfs -ls /user/hive/warehouse;
+Found 1 items
+drwxrwxrwx   - cloudera supergroup          0 2016-07-16 05:50 /user/hive/warehouse/health.db
+
+--Also note down there is nothing initially as we just created database.
+
+hive> dfs -ls /user/hive/warehouse/health.db;
+hive> 
+
+--create a table with below ddl.
+
+hive> CREATE TABLE med_products(
+    > ID INT,
+    > PRODUCT_NAME STRING,
+    > STRENGTH STRING,
+    > MOLECULE STRING,
+    > THERAPY_AREA STRING,
+    > FORM STRING,
+    > PACK_SIZE STRING
+    > )
+    > ROW FORMAT DELIMITED FIELDS TERMINATED BY '|'
+    > STORED AS TEXTFILE;
+OK
+Time taken: 2.135 seconds
+
+hive> dfs -ls /user/hive/warehouse/health.db;
+hive> 
+
+!--warning-- As still i dont see table under the given database. Because we did not create it under database health.
+
+--Hence First of all we need to switch to the database and then create database under it (As we do in MySql)
+
+hive> use health;
+OK
+Time taken: 0.097 seconds
+hive> CREATE TABLE med_products(
+    > ID INT,
+    > PRODUCT_NAME STRING,
+    > STRENGTH STRING,
+    > MOLECULE STRING,
+    > THERAPY_AREA STRING,
+    > FORM STRING,
+    > PACK_SIZE STRING
+    > )
+    > ROW FORMAT DELIMITED FIELDS TERMINATED BY '|'
+    > STORED AS TEXTFILE;
+OK
+Time taken: 0.111 seconds
+hive> dfs -ls /user/hive/warehouse/health.db;
+Found 1 items
+drwxrwxrwx   - cloudera supergroup          0 2016-07-16 06:14 /user/hive/warehouse/health.db/med_products
+
+
+
+
 
 
 
