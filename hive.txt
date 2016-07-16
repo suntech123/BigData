@@ -159,6 +159,153 @@ Table health.med_products stats: [numFiles=1, totalSize=8850]
 OK
 Time taken: 1.839 seconds
 
+--Now let's check the metastore for Hive. In cloudera the directory /etc/hive/conf contains configuration file hive-site.xml
+
+[cloudera@quickstart conf]$ pwd
+/etc/hive/conf
+[cloudera@quickstart conf]$ ls -ltr
+total 20
+-rw-r--r-- 1 root root 3505 Mar 23 11:29 hive-log4j.properties
+-rw-r--r-- 1 root root 2662 Mar 23 11:29 hive-exec-log4j.properties
+-rw-r--r-- 1 root root 2378 Mar 23 11:29 hive-env.sh.template
+-rw-r--r-- 1 root root 1196 Mar 23 11:29 beeline-log4j.properties.template
+-rw-rw-r-- 1 root root 1937 Apr  5 16:02 hive-site.xml
+
+--Here we can see that the metastore is managed in MySql database
+
+[cloudera@quickstart conf]$ cat hive-site.xml | head -24 | tail -10
+    <name>javax.jdo.option.ConnectionURL</name>
+    <value>jdbc:mysql://127.0.0.1/metastore?createDatabaseIfNotExist=true</value>
+    <description>JDBC connect string for a JDBC metastore</description>
+  </property>
+
+  <property>
+    <name>javax.jdo.option.ConnectionDriverName</name>
+    <value>com.mysql.jdbc.Driver</value>
+    <description>Driver class name for a JDBC metastore</description>
+  </property>
+
+--We can check in MySql
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| metastore          |
++--------------------+
+2 rows in set (0.00 sec)
+
+mysql> use metastore;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
+
+--Now few important metastore tables to explore.
+
+mysql> desc TBLS;
++--------------------+--------------+------+-----+---------+-------+
+| Field              | Type         | Null | Key | Default | Extra |
++--------------------+--------------+------+-----+---------+-------+
+| TBL_ID             | bigint(20)   | NO   | PRI | NULL    |       |
+| CREATE_TIME        | int(11)      | NO   |     | NULL    |       |
+| DB_ID              | bigint(20)   | YES  | MUL | NULL    |       |
+| LAST_ACCESS_TIME   | int(11)      | NO   |     | NULL    |       |
+| OWNER              | varchar(767) | YES  |     | NULL    |       |
+| RETENTION          | int(11)      | NO   |     | NULL    |       |
+| SD_ID              | bigint(20)   | YES  | MUL | NULL    |       |
+| TBL_NAME           | varchar(128) | YES  | MUL | NULL    |       |
+| TBL_TYPE           | varchar(128) | YES  |     | NULL    |       |
+| VIEW_EXPANDED_TEXT | mediumtext   | YES  |     | NULL    |       |
+| VIEW_ORIGINAL_TEXT | mediumtext   | YES  |     | NULL    |       |
+| LINK_TARGET_ID     | bigint(20)   | YES  | MUL | NULL    |       |
++--------------------+--------------+------+-----+---------+-------+
+12 rows in set (0.00 sec)
+
+mysql> select TBL_ID,DB_ID,OWNER,TBL_NAME,TBL_TYPE,VIEW_EXPANDED_TEXT,VIEW_ORIGINAL_TEXT from TBLS;
++--------+-------+----------+--------------+---------------+--------------------+--------------------+
+| TBL_ID | DB_ID | OWNER    | TBL_NAME     | TBL_TYPE      | VIEW_EXPANDED_TEXT | VIEW_ORIGINAL_TEXT |
++--------+-------+----------+--------------+---------------+--------------------+--------------------+
+|      1 |     1 | cloudera | med_products | MANAGED_TABLE | NULL               | NULL               |
+|      2 |     6 | cloudera | med_products | MANAGED_TABLE | NULL               | NULL               |
++--------+-------+----------+--------------+---------------+--------------------+--------------------+
+2 rows in set (0.00 sec)
+
+mysql> desc DBS;
++-----------------+---------------+------+-----+---------+-------+
+| Field           | Type          | Null | Key | Default | Extra |
++-----------------+---------------+------+-----+---------+-------+
+| DB_ID           | bigint(20)    | NO   | PRI | NULL    |       |
+| DESC            | varchar(4000) | YES  |     | NULL    |       |
+| DB_LOCATION_URI | varchar(4000) | NO   |     | NULL    |       |
+| NAME            | varchar(128)  | YES  | UNI | NULL    |       |
+| OWNER_NAME      | varchar(128)  | YES  |     | NULL    |       |
+| OWNER_TYPE      | varchar(10)   | YES  |     | NULL    |       |
++-----------------+---------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> select * from DBS;
++-------+-----------------------+---------------------------------------------------------------+---------+------------+------------+
+| DB_ID | DESC                  | DB_LOCATION_URI                                               | NAME    | OWNER_NAME | OWNER_TYPE |
++-------+-----------------------+---------------------------------------------------------------+---------+------------+------------+
+|     1 | Default Hive database | hdfs://quickstart.cloudera:8020/user/hive/warehouse           | default | public     | ROLE       |
+|     6 | NULL                  | hdfs://quickstart.cloudera:8020/user/hive/warehouse/health.db | health  | cloudera   | USER       |
++-------+-----------------------+---------------------------------------------------------------+---------+------------+------------+
+2 rows in set (0.00 sec)
+
+mysql> desc ROLES;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| ROLE_ID     | bigint(20)   | NO   | PRI | NULL    |       |
+| CREATE_TIME | int(11)      | NO   |     | NULL    |       |
+| OWNER_NAME  | varchar(128) | YES  |     | NULL    |       |
+| ROLE_NAME   | varchar(128) | YES  | UNI | NULL    |       |
++-------------+--------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select * from ROLES;
++---------+-------------+------------+-----------+
+| ROLE_ID | CREATE_TIME | OWNER_NAME | ROLE_NAME |
++---------+-------------+------------+-----------+
+|       1 |  1467777720 | admin      | admin     |
+|       2 |  1467777720 | public     | public    |
++---------+-------------+------------+-----------+
+2 rows in set (0.05 sec)
+
+mysql> desc SDS;
++---------------------------+---------------+------+-----+---------+-------+
+| Field                     | Type          | Null | Key | Default | Extra |
++---------------------------+---------------+------+-----+---------+-------+
+| SD_ID                     | bigint(20)    | NO   | PRI | NULL    |       |
+| CD_ID                     | bigint(20)    | YES  | MUL | NULL    |       |
+| INPUT_FORMAT              | varchar(4000) | YES  |     | NULL    |       |
+| IS_COMPRESSED             | bit(1)        | NO   |     | NULL    |       |
+| IS_STOREDASSUBDIRECTORIES | bit(1)        | NO   |     | NULL    |       |
+| LOCATION                  | varchar(4000) | YES  |     | NULL    |       |
+| NUM_BUCKETS               | int(11)       | NO   |     | NULL    |       |
+| OUTPUT_FORMAT             | varchar(4000) | YES  |     | NULL    |       |
+| SERDE_ID                  | bigint(20)    | YES  | MUL | NULL    |       |
++---------------------------+---------------+------+-----+---------+-------+
+9 rows in set (0.00 sec)
+
+mysql> select SD_ID,CD_ID,IS_STOREDASSUBDIRECTORIES,LOCATION from SDS;
++-------+-------+---------------------------+----------------------------------------------------------------------------+
+| SD_ID | CD_ID | IS_STOREDASSUBDIRECTORIES | LOCATION                                                                   |
++-------+-------+---------------------------+----------------------------------------------------------------------------+
+|     1 |     1 |                           | hdfs://quickstart.cloudera:8020/user/hive/warehouse/med_products           |
+|     2 |     2 |                           | hdfs://quickstart.cloudera:8020/user/hive/warehouse/health.db/med_products |
++-------+-------+---------------------------+----------------------------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+
+
+
+
+
+
 
 
 
