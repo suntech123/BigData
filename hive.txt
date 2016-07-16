@@ -1,1 +1,26 @@
-shgashgAHSG
+# ---> Hive Shell Files. At the installation directory we have hive & hiveserver2 shell scripts.
+
+[cloudera@quickstart bin]$ pwd
+/usr/bin
+[cloudera@quickstart bin]$ ls -ltr hive*
+-rwxr-xr-x 1 root root 328 Mar 23 11:40 hiveserver2
+-rwxr-xr-x 1 root root 321 Mar 23 11:40 hive
+
+
+# ---> We can check both above shell files pointing $HIVE_HOME/bin to your PATH.
+
+[cloudera@quickstart bin]$ cat hive
+#!/bin/bash
+.......
+.......
+export HIVE_HOME=/usr/lib/hive
+exec /usr/lib/hive/bin/hive "$@"
+
+[cloudera@quickstart bin]$ cat hiveserver2
+#!/bin/bash
+.....
+.....
+export HIVE_HOME=/usr/lib/hive
+exec /usr/lib/hive/bin/hiveserver2 "$@"
+
+
