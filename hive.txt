@@ -1,4 +1,5 @@
 # ---> Hive Shell Files. At the installation directory we have hive & hiveserver2 shell scripts.
+# ---> The /usr/bin contains almost all user commands. Some commands are in /usr/bin or in /usr/local/bin
 
 [cloudera@quickstart bin]$ pwd
 /usr/bin
@@ -23,11 +24,7 @@ exec /usr/lib/hive/bin/hive "$@"
 export HIVE_HOME=/usr/lib/hive
 exec /usr/lib/hive/bin/hiveserver2 "$@"
 
-# ---> The /usr/bin contains almost all user commands. 
-
-
-
-
+# ---> The directory /usr/lib contains unchanging data files for programs and subsystems including some site-wide configuration files. Originally libraries of programming subroutines were stored in /usr/lib.
 [cloudera@quickstart lib]$ pwd
 /usr/lib
 [cloudera@quickstart lib]$ ls -ltr hive
