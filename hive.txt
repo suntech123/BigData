@@ -151,6 +151,14 @@ hive> dfs -ls /user/hive/warehouse/health.db;
 Found 1 items
 drwxrwxrwx   - cloudera supergroup          0 2016-07-16 06:14 /user/hive/warehouse/health.db/med_products
 
+--Now its time to load data in the table.
+
+hive> LOAD DATA LOCAL INPATH '/home/cloudera/healthcare/medcine/product1.txt' INTO TABLE med_products;
+Loading data to table health.med_products
+Table health.med_products stats: [numFiles=1, totalSize=8850]
+OK
+Time taken: 1.839 seconds
+
 
 
 
