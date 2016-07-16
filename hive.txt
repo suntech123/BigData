@@ -23,4 +23,36 @@ exec /usr/lib/hive/bin/hive "$@"
 export HIVE_HOME=/usr/lib/hive
 exec /usr/lib/hive/bin/hiveserver2 "$@"
 
+# ---> The /usr/bin contains almost all user commands. 
+
+
+
+
+[cloudera@quickstart lib]$ pwd
+/usr/lib
+[cloudera@quickstart lib]$ ls -ltr hive
+total 432
+-rw-r--r-- 1 root root 376416 Mar 23 11:29 RELEASE_NOTES.txt
+-rw-r--r-- 1 root root    397 Mar 23 11:29 NOTICE
+-rw-r--r-- 1 root root  23169 Mar 23 11:29 LICENSE
+drwxr-xr-x 3 root root   4096 Apr  6 00:59 bin
+drwxr-xr-x 3 root root   4096 Apr  6 00:59 data
+lrwxrwxrwx 1 root root     14 Apr  6 00:59 conf -> /etc/hive/conf
+drwxr-xr-x 2 root root   4096 Apr  6 00:59 cloudera
+drwxr-xr-x 6 root root   4096 Apr  6 00:59 docs
+drwxr-xr-x 3 root root   4096 Apr  6 00:59 scripts
+drwxr-xr-x 3 root root   4096 Apr  6 00:59 sentry
+drwxr-xr-x 4 root root  12288 Apr  6 01:24 lib
+[cloudera@quickstart lib]$ cd /etc/hive/conf
+[cloudera@quickstart conf]$ pwd
+/etc/hive/conf
+[cloudera@quickstart conf]$ ls -ltr
+total 20
+-rw-r--r-- 1 root root 3505 Mar 23 11:29 hive-log4j.properties
+-rw-r--r-- 1 root root 2662 Mar 23 11:29 hive-exec-log4j.properties
+-rw-r--r-- 1 root root 2378 Mar 23 11:29 hive-env.sh.template
+-rw-r--r-- 1 root root 1196 Mar 23 11:29 beeline-log4j.properties.template
+-rw-rw-r-- 1 root root 1937 Apr  5 16:02 hive-site.xml
+
+
 
