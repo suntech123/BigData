@@ -1,1 +1,27 @@
----
+---locating hadoop core configuration files
+
+[cloudera@quickstart ~]$ pwd
+/home/cloudera
+[cloudera@quickstart ~]$ cd /etc/hadoop
+[cloudera@quickstart hadoop]$ ls -ltr
+total 12
+drwxr-xr-x 2 root root 4096 Apr  5 16:02 conf.pseudo
+lrwxrwxrwx 1 root root   10 Apr  6 00:59 conf.dist -> conf.empty
+drwxr-xr-x 2 root root 4096 Apr  6 00:59 conf.impala
+drwxr-xr-x 2 root root 4096 Apr  6 01:00 conf.empty
+lrwxrwxrwx 1 root root   29 Apr  6 01:21 conf -> /etc/alternatives/hadoop-conf
+[cloudera@quickstart hadoop]$ cd /etc/alternatives/hadoop-conf
+[cloudera@quickstart hadoop-conf]$ ls -ltr
+total 40
+-rwxr-xr-x 1 root root  2375 Feb 23 01:25 yarn-site.xml
+-rwxr-xr-x 1 root root  1104 Feb 23 01:25 README
+-rwxr-xr-x 1 root root  2890 Feb 23 01:25 hadoop-metrics.properties
+-rwxr-xr-x 1 root root  1366 Feb 23 01:25 hadoop-env.sh
+-rwxr-xr-x 1 root root 11291 Mar 23 12:01 log4j.properties
+-rw-rw-r-- 1 root root  1546 Apr  5 16:02 mapred-site.xml
+-rw-rw-r-- 1 root root  3739 Apr  5 16:02 hdfs-site.xml
+-rw-rw-r-- 1 root root  1915 Apr  5 16:02 core-site.xml
+
+
+---core-site.xml   usually contains default file system
+---hdfs-site.xml  usually contains replication factor, 
