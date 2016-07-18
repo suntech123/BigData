@@ -1,2 +1,189 @@
----We will explore hdfs
+--First of all we can get all the admin command by following.
+
+[cloudera@quickstart ~]$ hdfs dfsadmin -help
+
+--To get help on a particular command. Note that while running this command don't use -cmd (only cmd after -help). Also the commands are case sensitive( eg refreshNodes is correct but refreshnodes wont work)
+
+[cloudera@quickstart ~]$ hdfs dfsadmin -help report
+-report [-live] [-dead] [-decommissioning]:
+	Reports basic filesystem information and statistics. 
+	The dfs usage can be different from "du" usage, because it
+	measures raw space used by replication, checksums, snapshots
+	and etc. on all the DNs.
+	Optional flags may be used to filter the list of displayed DNs.
+
+[cloudera@quickstart ~]$ hdfs dfsadmin -help safemode
+-safemode <enter|leave|get|wait>:  Safe mode maintenance command.
+		Safe mode is a Namenode state in which it
+			1.  does not accept changes to the name space (read-only)
+			2.  does not replicate or delete blocks.
+		Safe mode is entered automatically at Namenode startup, and
+		leaves safe mode automatically when the configured minimum
+		percentage of blocks satisfies the minimum replication
+		condition.  Safe mode can also be entered manually, but then
+		it can only be turned off manually as well.
+
+[cloudera@quickstart ~]$ hdfs dfsadmin -help refreshNodes
+-refreshNodes: 	Updates the namenode with the set of datanodes allowed to connect to the namenode.
+
+		Namenode re-reads datanode hostnames from the file defined by 
+		dfs.hosts, dfs.hosts.exclude configuration parameters.
+		Hosts defined in dfs.hosts are the datanodes that are part of 
+		the cluster. If there are entries in dfs.hosts, only the hosts 
+		in it are allowed to register with the namenode.
+
+		Entries in dfs.hosts.exclude are datanodes that need to be 
+		decommissioned. Datanodes complete decommissioning when 
+		all the replicas from them are replicated to other datanodes.
+		Decommissioned nodes are not automatically shutdown and 
+		are not chosen for writing new replicas.
+
+---let us find the basic stats of hdfs. Some of these also available to NameNode front page.
+
+[cloudera@quickstart ~]$ hdfs dfsadmin -report
+Configured Capacity: 58531520512 (54.51 GB)
+Present Capacity: 47307837440 (44.06 GB)
+DFS Remaining: 46445096960 (43.26 GB)
+DFS Used: 862740480 (822.77 MB)
+DFS Used%: 1.82%
+Under replicated blocks: 0
+Blocks with corrupt replicas: 0
+Missing blocks: 0
+Missing blocks (with replication factor 1): 3084
+
+-------------------------------------------------
+Live datanodes (1):
+
+Name: 127.0.0.1:50010 (quickstart.cloudera)
+Hostname: quickstart.cloudera
+Decommission Status : Normal
+Configured Capacity: 58531520512 (54.51 GB)
+DFS Used: 862740480 (822.77 MB)
+Non DFS Used: 11223683072 (10.45 GB)
+DFS Remaining: 46445096960 (43.26 GB)
+DFS Used%: 1.47%
+DFS Remaining%: 79.35%
+Configured Cache Capacity: 0 (0 B)
+Cache Used: 0 (0 B)
+Cache Remaining: 0 (0 B)
+Cache Used%: 100.00%
+Cache Remaining%: 0.00%
+Xceivers: 2
+Last contact: Mon Jul 18 12:07:07 PDT 2016
+
+--------------------------------------------------------------------------------------------------------------------------------------
+                                                         HDFS Commands
+**************************************************************************************************************************************
+
+---Listing Files in HDFS
+
+[cloudera@quickstart ~]$ hdfs dfs -help ls
+-ls [-d] [-h] [-R] [<path> ...] :
+  List the contents that match the specified file pattern. If path is not
+  specified, the contents of /user/<currentUser> will be listed. Directory entries
+  are of the form:
+  	permissions - userId groupId sizeOfDirectory(in bytes)
+  modificationDate(yyyy-MM-dd HH:mm) directoryName
+  
+  and file entries are of the form:
+  	permissions numberOfReplicas userId groupId sizeOfFile(in bytes)
+  modificationDate(yyyy-MM-dd HH:mm) fileName
+                                                                                 
+  -d  Directories are listed as plain files.                                     
+  -h  Formats the sizes of files in a human-readable fashion rather than a number
+      of bytes.                                                                  
+  -R  Recursively list the contents of directories.                              
+
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/
+Found 2 items
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 10:11 /user/cloudera/sqoop_import
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 09:48 /user/cloudera/test
+
+[cloudera@quickstart ~]$ hdfs dfs -ls 
+Found 2 items
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 10:11 sqoop_import
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 09:48 test
+
+[cloudera@quickstart ~]$ hdfs dfs -ls sqoop_import/categories
+Found 13 items
+-rw-r--r--   1 cloudera cloudera          0 2016-07-12 10:04 sqoop_import/categories/_SUCCESS
+-rw-r--r--   1 cloudera cloudera         76 2016-07-12 10:03 sqoop_import/categories/part-m-00000
+-rw-r--r--   1 cloudera cloudera         92 2016-07-12 10:03 sqoop_import/categories/part-m-00001
+-rw-r--r--   1 cloudera cloudera        103 2016-07-12 10:03 sqoop_import/categories/part-m-00002
+-rw-r--r--   1 cloudera cloudera         95 2016-07-12 10:03 sqoop_import/categories/part-m-00003
+-rw-r--r--   1 cloudera cloudera         96 2016-07-12 10:03 sqoop_import/categories/part-m-00004
+-rw-r--r--   1 cloudera cloudera         94 2016-07-12 10:03 sqoop_import/categories/part-m-00005
+-rw-r--r--   1 cloudera cloudera         98 2016-07-12 10:04 sqoop_import/categories/part-m-00006
+-rw-r--r--   1 cloudera cloudera         87 2016-07-12 10:04 sqoop_import/categories/part-m-00007
+-rw-r--r--   1 cloudera cloudera         96 2016-07-12 10:04 sqoop_import/categories/part-m-00008
+-rw-r--r--   1 cloudera cloudera         66 2016-07-12 10:04 sqoop_import/categories/part-m-00009
+-rw-r--r--   1 cloudera cloudera         37 2016-07-12 10:04 sqoop_import/categories/part-m-00010
+-rw-r--r--   1 cloudera cloudera         89 2016-07-12 10:04 sqoop_import/categories/part-m-00011
+
+---Creating a directory in HDFS. Its start of the game
+
+[cloudera@quickstart ~]$ hdfs dfs -help mkdir
+-mkdir [-p] <path> ... :
+  Create a directory in specified location.
+                                                  
+  -p  Do not fail if the directory already exists 
+
+[cloudera@quickstart ~]$ hdfs dfs -mkdir -p demo
+[cloudera@quickstart ~]$ hdfs dfs -ls
+Found 3 items
+drwxr-xr-x   - cloudera cloudera          0 2016-07-18 13:10 demo
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 10:11 sqoop_import
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 09:48 test
+
+---Creating a file in given directory in HDFS
+
+[cloudera@quickstart ~]$ hdfs dfs -help touchz
+-touchz <path> ... :
+  Creates a file of zero length at <path> with current time as the timestamp of
+  that <path>. An error is returned if the file exists with non-zero length
+
+[cloudera@quickstart ~]$ hdfs dfs -touchz /user/cloudera/demo/sun1
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/demo/
+Found 1 items
+-rw-r--r--   1 cloudera cloudera          0 2016-07-18 13:16 /user/cloudera/demo/sun1
+
+---Appending a file in HDFS from local source.
+---Appending to hdfs file from local file(s).
+
+[cloudera@quickstart ~]$ hdfs dfs -help appendToFile
+-appendToFile <localsrc> ... <dst> :
+  Appends the contents of all the given local files to the given dst file. The dst
+  file will be created if it does not exist. If <localSrc> is -, then the input is
+  read from stdin.
+  
+[cloudera@quickstart ~]$ ls -ltr *.txt
+-rw-rw-r-- 1 cloudera cloudera  9 Jul 18 13:24 sun1.txt
+-rw-rw-r-- 1 cloudera cloudera 21 Jul 18 13:25 sun2.txt
+-rw-rw-r-- 1 cloudera cloudera 14 Jul 18 13:25 sun3.txt
+
+[cloudera@quickstart ~]$ cat sun1.txt sun2.txt sun3.txt
+hi sunil
+welcome to accenture
+get your card
+
+[cloudera@quickstart ~]$ hdfs dfs -appendToFile sun1.txt sun2.txt sun3.txt demo/sun1
+[cloudera@quickstart ~]$ hdfs dfs -cat demo/sun1
+hi sunil
+welcome to accenture
+get your card
+
+---As sun2 was not existing already and hence created. We can also specify pattern matching for local files.
+
+[cloudera@quickstart ~]$ hdfs dfs -appendToFile sun1.txt sun2.txt sun3.txt demo/sun2
+[cloudera@quickstart ~]$ hdfs dfs -cat demo/sun2
+hi sunil
+welcome to accenture
+get your card
+
+
+
+
+
+
+
 
