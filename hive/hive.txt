@@ -1,1 +1,315 @@
+# ---> Hive Shell Files. At the installation directory we have hive & hiveserver2 shell scripts.
+# ---> The /usr/bin contains almost all user commands. Some commands are in /usr/bin or in /usr/local/bin
+
+[cloudera@quickstart bin]$ pwd
+/usr/bin
+[cloudera@quickstart bin]$ ls -ltr hive*
+-rwxr-xr-x 1 root root 328 Mar 23 11:40 hiveserver2
+-rwxr-xr-x 1 root root 321 Mar 23 11:40 hive
+
+
+# ---> We can check both above shell files pointing $HIVE_HOME/bin to your PATH.
+
+[cloudera@quickstart bin]$ cat hive
+#!/bin/bash
+.......
+.......
+export HIVE_HOME=/usr/lib/hive
+exec /usr/lib/hive/bin/hive "$@"
+
+[cloudera@quickstart bin]$ cat hiveserver2
+#!/bin/bash
+.....
+.....
+export HIVE_HOME=/usr/lib/hive
+exec /usr/lib/hive/bin/hiveserver2 "$@"
+
+# ---> The directory /usr/lib contains unchanging data files for programs and subsystems including some site-wide configuration files. ---Originally libraries of programming subroutines were stored in /usr/lib.
+
+[cloudera@quickstart lib]$ pwd
+/usr/lib
+[cloudera@quickstart lib]$ ls -ltr hive
+total 432
+-rw-r--r-- 1 root root 376416 Mar 23 11:29 RELEASE_NOTES.txt
+-rw-r--r-- 1 root root    397 Mar 23 11:29 NOTICE
+-rw-r--r-- 1 root root  23169 Mar 23 11:29 LICENSE
+drwxr-xr-x 3 root root   4096 Apr  6 00:59 bin
+drwxr-xr-x 3 root root   4096 Apr  6 00:59 data
+lrwxrwxrwx 1 root root     14 Apr  6 00:59 conf -> /etc/hive/conf
+drwxr-xr-x 2 root root   4096 Apr  6 00:59 cloudera
+drwxr-xr-x 6 root root   4096 Apr  6 00:59 docs
+drwxr-xr-x 3 root root   4096 Apr  6 00:59 scripts
+drwxr-xr-x 3 root root   4096 Apr  6 00:59 sentry
+drwxr-xr-x 4 root root  12288 Apr  6 01:24 lib
+
+Note: As we can see that Hive has a symbolic link to the configuration files directory. We can explore in the above directory.
+
+[cloudera@quickstart lib]$ cd /etc/hive/conf
+[cloudera@quickstart conf]$ pwd
+/etc/hive/conf
+[cloudera@quickstart conf]$ ls -ltr
+total 20
+-rw-r--r-- 1 root root 3505 Mar 23 11:29 hive-log4j.properties
+-rw-r--r-- 1 root root 2662 Mar 23 11:29 hive-exec-log4j.properties
+-rw-r--r-- 1 root root 2378 Mar 23 11:29 hive-env.sh.template
+-rw-r--r-- 1 root root 1196 Mar 23 11:29 beeline-log4j.properties.template
+-rw-rw-r-- 1 root root 1937 Apr  5 16:02 hive-site.xml
+
+# ---> Hadoop has configuration files at below location (tested under CDH 5.4) 
+
+1) All Hadoop jar files can be located under directory.
+
+[cloudera@quickstart hadoop]$ pwd
+/usr/lib/hadoop
+
+2) Hadoop configuration files can be located under below directory.
+
+[cloudera@quickstart etc]$ ls -ltr
+total 0
+lrwxrwxrwx 1 root root 16 Apr  6 00:59 hadoop -> /etc/hadoop/conf
+
+[cloudera@quickstart etc]$ cd /etc/hadoop/conf
+[cloudera@quickstart conf]$ ls -ltr
+total 40
+-rwxr-xr-x 1 root root  2375 Feb 23 01:25 yarn-site.xml
+-rwxr-xr-x 1 root root  1104 Feb 23 01:25 README
+-rwxr-xr-x 1 root root  2890 Feb 23 01:25 hadoop-metrics.properties
+-rwxr-xr-x 1 root root  1366 Feb 23 01:25 hadoop-env.sh
+-rwxr-xr-x 1 root root 11291 Mar 23 12:01 log4j.properties
+-rw-rw-r-- 1 root root  1546 Apr  5 16:02 mapred-site.xml
+-rw-rw-r-- 1 root root  3739 Apr  5 16:02 hdfs-site.xml
+-rw-rw-r-- 1 root root  1915 Apr  5 16:02 core-site.xml
+
+------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+[cloudera@quickstart medcine]$ hive
+
+Logging initialized using configuration in file:/etc/hive/conf.dist/hive-log4j.properties
+WARNING: Hive CLI is deprecated and migration to Beeline is recommended.
+hive> dfs -ls
+    > ;
+Found 2 items
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 10:11 sqoop_import
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 09:48 test
+hive> CREATE DATABASE IF NOT EXISTS health;
+OK
+Time taken: 21.014 seconds
+
+--Now after creating database we can check under below mentioned directory that a database with name health.db is created.
+
+hive> dfs -ls /user/hive/warehouse;
+Found 1 items
+drwxrwxrwx   - cloudera supergroup          0 2016-07-16 05:50 /user/hive/warehouse/health.db
+
+--Also note down there is nothing initially as we just created database.
+
+hive> dfs -ls /user/hive/warehouse/health.db;
+hive> 
+
+--create a table with below ddl.
+
+hive> CREATE TABLE med_products(
+    > ID INT,
+    > PRODUCT_NAME STRING,
+    > STRENGTH STRING,
+    > MOLECULE STRING,
+    > THERAPY_AREA STRING,
+    > FORM STRING,
+    > PACK_SIZE STRING
+    > )
+    > ROW FORMAT DELIMITED FIELDS TERMINATED BY '|'
+    > STORED AS TEXTFILE;
+OK
+Time taken: 2.135 seconds
+
+hive> dfs -ls /user/hive/warehouse/health.db;
+hive> 
+
+!--warning-- As still i dont see table under the given database. Because we did not create it under database health.
+
+--Hence First of all we need to switch to the database and then create database under it (As we do in MySql)
+
+hive> use health;
+OK
+Time taken: 0.097 seconds
+hive> CREATE TABLE med_products(
+    > ID INT,
+    > PRODUCT_NAME STRING,
+    > STRENGTH STRING,
+    > MOLECULE STRING,
+    > THERAPY_AREA STRING,
+    > FORM STRING,
+    > PACK_SIZE STRING
+    > )
+    > ROW FORMAT DELIMITED FIELDS TERMINATED BY '|'
+    > STORED AS TEXTFILE;
+OK
+Time taken: 0.111 seconds
+hive> dfs -ls /user/hive/warehouse/health.db;
+Found 1 items
+drwxrwxrwx   - cloudera supergroup          0 2016-07-16 06:14 /user/hive/warehouse/health.db/med_products
+
+--Now its time to load data in the table.
+
+hive> LOAD DATA LOCAL INPATH '/home/cloudera/healthcare/medcine/product1.txt' INTO TABLE med_products;
+Loading data to table health.med_products
+Table health.med_products stats: [numFiles=1, totalSize=8850]
+OK
+Time taken: 1.839 seconds
+
+--Now let's check the metastore for Hive. In cloudera the directory /etc/hive/conf contains configuration file hive-site.xml
+
+[cloudera@quickstart conf]$ pwd
+/etc/hive/conf
+[cloudera@quickstart conf]$ ls -ltr
+total 20
+-rw-r--r-- 1 root root 3505 Mar 23 11:29 hive-log4j.properties
+-rw-r--r-- 1 root root 2662 Mar 23 11:29 hive-exec-log4j.properties
+-rw-r--r-- 1 root root 2378 Mar 23 11:29 hive-env.sh.template
+-rw-r--r-- 1 root root 1196 Mar 23 11:29 beeline-log4j.properties.template
+-rw-rw-r-- 1 root root 1937 Apr  5 16:02 hive-site.xml
+
+--Here we can see that the metastore is managed in MySql database
+
+[cloudera@quickstart conf]$ cat hive-site.xml | head -24 | tail -10
+    <name>javax.jdo.option.ConnectionURL</name>
+    <value>jdbc:mysql://127.0.0.1/metastore?createDatabaseIfNotExist=true</value>
+    <description>JDBC connect string for a JDBC metastore</description>
+  </property>
+
+  <property>
+    <name>javax.jdo.option.ConnectionDriverName</name>
+    <value>com.mysql.jdbc.Driver</value>
+    <description>Driver class name for a JDBC metastore</description>
+  </property>
+
+--We can check in MySql
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| metastore          |
++--------------------+
+2 rows in set (0.00 sec)
+
+mysql> use metastore;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
+
+--Now few important metastore tables to explore.
+
+mysql> desc TBLS;
++--------------------+--------------+------+-----+---------+-------+
+| Field              | Type         | Null | Key | Default | Extra |
++--------------------+--------------+------+-----+---------+-------+
+| TBL_ID             | bigint(20)   | NO   | PRI | NULL    |       |
+| CREATE_TIME        | int(11)      | NO   |     | NULL    |       |
+| DB_ID              | bigint(20)   | YES  | MUL | NULL    |       |
+| LAST_ACCESS_TIME   | int(11)      | NO   |     | NULL    |       |
+| OWNER              | varchar(767) | YES  |     | NULL    |       |
+| RETENTION          | int(11)      | NO   |     | NULL    |       |
+| SD_ID              | bigint(20)   | YES  | MUL | NULL    |       |
+| TBL_NAME           | varchar(128) | YES  | MUL | NULL    |       |
+| TBL_TYPE           | varchar(128) | YES  |     | NULL    |       |
+| VIEW_EXPANDED_TEXT | mediumtext   | YES  |     | NULL    |       |
+| VIEW_ORIGINAL_TEXT | mediumtext   | YES  |     | NULL    |       |
+| LINK_TARGET_ID     | bigint(20)   | YES  | MUL | NULL    |       |
++--------------------+--------------+------+-----+---------+-------+
+12 rows in set (0.00 sec)
+
+mysql> select TBL_ID,DB_ID,OWNER,TBL_NAME,TBL_TYPE,VIEW_EXPANDED_TEXT,VIEW_ORIGINAL_TEXT from TBLS;
++--------+-------+----------+--------------+---------------+--------------------+--------------------+
+| TBL_ID | DB_ID | OWNER    | TBL_NAME     | TBL_TYPE      | VIEW_EXPANDED_TEXT | VIEW_ORIGINAL_TEXT |
++--------+-------+----------+--------------+---------------+--------------------+--------------------+
+|      1 |     1 | cloudera | med_products | MANAGED_TABLE | NULL               | NULL               |
+|      2 |     6 | cloudera | med_products | MANAGED_TABLE | NULL               | NULL               |
++--------+-------+----------+--------------+---------------+--------------------+--------------------+
+2 rows in set (0.00 sec)
+
+mysql> desc DBS;
++-----------------+---------------+------+-----+---------+-------+
+| Field           | Type          | Null | Key | Default | Extra |
++-----------------+---------------+------+-----+---------+-------+
+| DB_ID           | bigint(20)    | NO   | PRI | NULL    |       |
+| DESC            | varchar(4000) | YES  |     | NULL    |       |
+| DB_LOCATION_URI | varchar(4000) | NO   |     | NULL    |       |
+| NAME            | varchar(128)  | YES  | UNI | NULL    |       |
+| OWNER_NAME      | varchar(128)  | YES  |     | NULL    |       |
+| OWNER_TYPE      | varchar(10)   | YES  |     | NULL    |       |
++-----------------+---------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> select * from DBS;
++-------+-----------------------+---------------------------------------------------------------+---------+------------+------------+
+| DB_ID | DESC                  | DB_LOCATION_URI                                               | NAME    | OWNER_NAME | OWNER_TYPE |
++-------+-----------------------+---------------------------------------------------------------+---------+------------+------------+
+|     1 | Default Hive database | hdfs://quickstart.cloudera:8020/user/hive/warehouse           | default | public     | ROLE       |
+|     6 | NULL                  | hdfs://quickstart.cloudera:8020/user/hive/warehouse/health.db | health  | cloudera   | USER       |
++-------+-----------------------+---------------------------------------------------------------+---------+------------+------------+
+2 rows in set (0.00 sec)
+
+mysql> desc ROLES;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| ROLE_ID     | bigint(20)   | NO   | PRI | NULL    |       |
+| CREATE_TIME | int(11)      | NO   |     | NULL    |       |
+| OWNER_NAME  | varchar(128) | YES  |     | NULL    |       |
+| ROLE_NAME   | varchar(128) | YES  | UNI | NULL    |       |
++-------------+--------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select * from ROLES;
++---------+-------------+------------+-----------+
+| ROLE_ID | CREATE_TIME | OWNER_NAME | ROLE_NAME |
++---------+-------------+------------+-----------+
+|       1 |  1467777720 | admin      | admin     |
+|       2 |  1467777720 | public     | public    |
++---------+-------------+------------+-----------+
+2 rows in set (0.05 sec)
+
+mysql> desc SDS;
++---------------------------+---------------+------+-----+---------+-------+
+| Field                     | Type          | Null | Key | Default | Extra |
++---------------------------+---------------+------+-----+---------+-------+
+| SD_ID                     | bigint(20)    | NO   | PRI | NULL    |       |
+| CD_ID                     | bigint(20)    | YES  | MUL | NULL    |       |
+| INPUT_FORMAT              | varchar(4000) | YES  |     | NULL    |       |
+| IS_COMPRESSED             | bit(1)        | NO   |     | NULL    |       |
+| IS_STOREDASSUBDIRECTORIES | bit(1)        | NO   |     | NULL    |       |
+| LOCATION                  | varchar(4000) | YES  |     | NULL    |       |
+| NUM_BUCKETS               | int(11)       | NO   |     | NULL    |       |
+| OUTPUT_FORMAT             | varchar(4000) | YES  |     | NULL    |       |
+| SERDE_ID                  | bigint(20)    | YES  | MUL | NULL    |       |
++---------------------------+---------------+------+-----+---------+-------+
+9 rows in set (0.00 sec)
+
+mysql> select SD_ID,CD_ID,IS_STOREDASSUBDIRECTORIES,LOCATION from SDS;
++-------+-------+---------------------------+----------------------------------------------------------------------------+
+| SD_ID | CD_ID | IS_STOREDASSUBDIRECTORIES | LOCATION                                                                   |
++-------+-------+---------------------------+----------------------------------------------------------------------------+
+|     1 |     1 |                           | hdfs://quickstart.cloudera:8020/user/hive/warehouse/med_products           |
+|     2 |     2 |                           | hdfs://quickstart.cloudera:8020/user/hive/warehouse/health.db/med_products |
++-------+-------+---------------------------+----------------------------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
