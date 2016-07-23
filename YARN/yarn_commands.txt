@@ -1,0 +1,90 @@
+--- YARN commands are invoked by bin/yarn script. Without any option it displays all the available options.
+
+[cloudera@quickstart ~]$ yarn
+Usage: yarn [--config confdir] COMMAND
+where COMMAND is one of:
+  resourcemanager -format-state-store   deletes the RMStateStore
+  resourcemanager                       run the ResourceManager
+  nodemanager                           run a nodemanager on each slave
+  timelineserver                        run the timeline server
+  rmadmin                               admin tools
+  version                               print the version
+  jar <jar>                             run a jar file
+  application                           prints application(s)
+                                        report/kill application
+  applicationattempt                    prints applicationattempt(s)
+                                        report
+  container                             prints container(s) report
+  node                                  prints node report(s)
+  queue                                 prints queue information
+  logs                                  dump container logs
+  classpath                             prints the class path needed to
+                                        get the Hadoop jar and the
+                                        required libraries
+  daemonlog                             get/set the log level for each
+                                        daemon
+  top                                   run cluster usage tool
+ or
+  CLASSNAME                             run the class named CLASSNAME
+
+Most commands print help when invoked w/o parameters.
+
+--- Listing All Applications running in Hadoop.
+
+[cloudera@quickstart ~]$ yarn application -list -appStates ALL
+16/07/23 07:41:41 INFO client.RMProxy: Connecting to ResourceManager at /0.0.0.0:8032
+Total number of applications (application-types: [] and states: [NEW, NEW_SAVING, SUBMITTED, ACCEPTED, RUNNING, FINISHED, FAILED, KILLED]):7
+                Application-Id	    Application-Name	    Application-Type	      User	     Queue	             State	       Final-State	       Progress	                       Tracking-URL
+application_1468340257755_0006	        products.jar	           MAPREDUCE	  cloudera	root.cloudera	          FINISHED	         SUCCEEDED	           100%	http://quickstart.cloudera:19888/jobhistory/job/job_1468340257755_0006
+application_1468340257755_0005	          orders.jar	           MAPREDUCE	  cloudera	root.cloudera	          FINISHED	         SUCCEEDED	           100%	http://quickstart.cloudera:19888/jobhistory/job/job_1468340257755_0005
+application_1468340257755_0003	     departments.jar	           MAPREDUCE	  cloudera	root.cloudera	          FINISHED	         SUCCEEDED	           100%	http://quickstart.cloudera:19888/jobhistory/job/job_1468340257755_0003
+application_1468340257755_0004	     order_items.jar	           MAPREDUCE	  cloudera	root.cloudera	          FINISHED	         SUCCEEDED	           100%	http://quickstart.cloudera:19888/jobhistory/job/job_1468340257755_0004
+application_1468340257755_0002	       customers.jar	           MAPREDUCE	  cloudera	root.cloudera	          FINISHED	         SUCCEEDED	           100%	http://quickstart.cloudera:19888/jobhistory/job/job_1468340257755_0002
+application_1468340257755_0001	      categories.jar	           MAPREDUCE	  cloudera	root.cloudera	          FINISHED	         SUCCEEDED	           100%	http://quickstart.cloudera:19888/jobhistory/job/job_1468340257755_0001
+application_1468340257755_0007	select count(1) from med_products(Stage-1)	           MAPREDUCE	  cloudera	root.cloudera	          FINISHED	         SUCCEEDED	           100%	http://quickstart.cloudera:19888/jobhistory/job/job_1468340257755_0007
+
+Note : We have multiple options for application status eg ( ALL,NEW,NEW_SAVING,SUBMITTED,ACCEPTED,RUNNING,FINISHED,FAILED,KILLED ).
+
+--- For Checking the Status of a particular application we can run below commands.
+
+[cloudera@quickstart ~]$ yarn application -status application_1468340257755_0006
+16/07/23 07:50:24 INFO client.RMProxy: Connecting to ResourceManager at /0.0.0.0:8032
+Application Report : 
+	Application-Id : application_1468340257755_0006
+	Application-Name : products.jar
+	Application-Type : MAPREDUCE
+	User : cloudera
+	Queue : root.cloudera
+	Start-Time : 1468343482469
+	Finish-Time : 1468343587015
+	Progress : 100%
+	State : FINISHED
+	Final-State : SUCCEEDED
+	Tracking-URL : http://quickstart.cloudera:19888/jobhistory/job/job_1468340257755_0006
+	RPC Port : 33166
+	AM Host : quickstart.cloudera
+	Aggregate Resource Allocation : 755648 MB-seconds, 622 vcore-seconds
+	Log Aggregation Status : SUCCEEDED
+	Diagnostics : 
+
+Note: We can kill any running application with below command. Here "application_1468340257755_0006" is application id got from above yarn commands.
+
+[cloudera@quickstart ~]$ yarn application -kill application_1468340257755_0006
+
+--- To print the classpath needed to get the hadoop jar and the required libraries.
+
+[cloudera@quickstart ~]$ yarn classpath
+/etc/hadoop/conf:/etc/hadoop/conf:/etc/hadoop/conf:/usr/lib/hadoop/lib/*:/usr/lib/hadoop/.//*:/usr/lib/hadoop-hdfs/./:/usr/lib/hadoop-hdfs/lib/*:/usr/lib/hadoop-hdfs/.//*:/usr/lib/hadoop-yarn/lib/*:/usr/lib/hadoop-yarn/.//*:/usr/lib/hadoop-mapreduce/lib/*:/usr/lib/hadoop-mapreduce/.//*:/usr/lib/hadoop-yarn/.//*:/usr/lib/hadoop-yarn/lib/*
+
+--- To print container(s) report
+Usage: yarn container -status <ContainerId>
+[cloudera@quickstart ~]$ yarn container -status container_1468340257755_0006_01_000004
+
+--- To print the logs.
+
+[cloudera@quickstart ~]$ yarn logs -applicationId application_1468340257755_0006
+
+--- 
+
+
+
