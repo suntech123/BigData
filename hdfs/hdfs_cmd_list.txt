@@ -171,4 +171,17 @@ FSCK ended at Sat Jul 23 04:51:12 PDT 2016 in 1 milliseconds
 
 The filesystem under path '/user/hive/warehouse/health.db/med_products' is HEALTHY
 
----
+--- To print value of a particular key
+
+[cloudera@quickstart hadoop-conf]$ hdfs getconf -confKey dfs.safemode.min.datanodes
+1
+[cloudera@quickstart hadoop-conf]$ hdfs getconf -confKey dfs.permissions
+16/07/23 06:41:31 INFO Configuration.deprecation: dfs.permissions is deprecated. Instead, use dfs.permissions.enabled
+false
+[cloudera@quickstart hadoop-conf]$ hdfs getconf -confKey dfs.permissions.enabled
+false
+[cloudera@quickstart hadoop-conf]$ hdfs getconf -confKey hadoop.tmp.dir
+/var/lib/hadoop-hdfs/cache/cloudera
+
+
+--- 
