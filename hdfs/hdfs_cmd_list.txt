@@ -41,3 +41,134 @@ Usage: hdfs [--config confdir] COMMAND
 Connecting to namenode via http://quickstart.cloudera:50070
 The filesystem under path '/user' has 0 CORRUPT files
 
+--- To list out files being checked use -file option
+
+[cloudera@quickstart ~]$ hdfs fsck /user/cloudera/sqoop_import/customers -files
+Connecting to namenode via http://quickstart.cloudera:50070
+FSCK started by cloudera (auth:SIMPLE) from /127.0.0.1 for path /user/cloudera/sqoop_import/customers at Sat Jul 23 04:23:33 PDT 2016
+/user/cloudera/sqoop_import/customers <dir>
+/user/cloudera/sqoop_import/customers/_SUCCESS 0 bytes, 0 block(s):  OK
+/user/cloudera/sqoop_import/customers/part-m-00000 78238 bytes, 1 block(s):  OK
+/user/cloudera/sqoop_import/customers/part-m-00001 79618 bytes, 1 block(s):  OK
+/user/cloudera/sqoop_import/customers/part-m-00002 79366 bytes, 1 block(s):  OK
+/user/cloudera/sqoop_import/customers/part-m-00003 79413 bytes, 1 block(s):  OK
+/user/cloudera/sqoop_import/customers/part-m-00004 79130 bytes, 1 block(s):  OK
+/user/cloudera/sqoop_import/customers/part-m-00005 79345 bytes, 1 block(s):  OK
+/user/cloudera/sqoop_import/customers/part-m-00006 79139 bytes, 1 block(s):  OK
+/user/cloudera/sqoop_import/customers/part-m-00007 79463 bytes, 1 block(s):  OK
+/user/cloudera/sqoop_import/customers/part-m-00008 79490 bytes, 1 block(s):  OK
+/user/cloudera/sqoop_import/customers/part-m-00009 79742 bytes, 1 block(s):  OK
+/user/cloudera/sqoop_import/customers/part-m-00010 80218 bytes, 1 block(s):  OK
+/user/cloudera/sqoop_import/customers/part-m-00011 80363 bytes, 1 block(s):  OK
+Status: HEALTHY
+ Total size:	953525 B
+ Total dirs:	1
+ Total files:	13
+ Total symlinks:		0
+ Total blocks (validated):	12 (avg. block size 79460 B)
+ Minimally replicated blocks:	12 (100.0 %)
+ Over-replicated blocks:	0 (0.0 %)
+ Under-replicated blocks:	0 (0.0 %)
+ Mis-replicated blocks:		0 (0.0 %)
+ Default replication factor:	1
+ Average block replication:	1.0
+ Corrupt blocks:		0
+ Missing replicas:		0 (0.0 %)
+ Number of data-nodes:		1
+ Number of racks:		1
+FSCK ended at Sat Jul 23 04:23:33 PDT 2016 in 2 milliseconds
+
+
+The filesystem under path '/user/cloudera/sqoop_import/customers' is HEALTHY
+
+--- To print out the block report use -files -blocks( Notice the space between -files & -blocks).
+
+[cloudera@quickstart ~]$ hdfs fsck /user/hive/warehouse/health.db/med_products -files -blocks
+Connecting to namenode via http://quickstart.cloudera:50070
+FSCK started by cloudera (auth:SIMPLE) from /127.0.0.1 for path /user/hive/warehouse/health.db/med_products at Sat Jul 23 04:43:06 PDT 2016
+/user/hive/warehouse/health.db/med_products <dir>
+/user/hive/warehouse/health.db/med_products/product1.txt 8850 bytes, 1 block(s):  OK
+0. BP-87068705-127.0.0.1-1459931051666:blk_1073743533_2719 len=8850 Live_repl=1
+
+Status: HEALTHY
+ Total size:	8850 B
+ Total dirs:	1
+ Total files:	1
+ Total symlinks:		0
+ Total blocks (validated):	1 (avg. block size 8850 B)
+ Minimally replicated blocks:	1 (100.0 %)
+ Over-replicated blocks:	0 (0.0 %)
+ Under-replicated blocks:	0 (0.0 %)
+ Mis-replicated blocks:		0 (0.0 %)
+ Default replication factor:	1
+ Average block replication:	1.0
+ Corrupt blocks:		0
+ Missing replicas:		0 (0.0 %)
+ Number of data-nodes:		1
+ Number of racks:		1
+FSCK ended at Sat Jul 23 04:43:06 PDT 2016 in 0 milliseconds
+
+
+The filesystem under path '/user/hive/warehouse/health.db/med_products' is HEALTHY
+
+--- To print out the locations for every block in a hdfs path use the below command.
+
+[cloudera@quickstart ~]$ hdfs fsck /user/hive/warehouse/health.db/med_products -files -blocks -locations
+Connecting to namenode via http://quickstart.cloudera:50070
+FSCK started by cloudera (auth:SIMPLE) from /127.0.0.1 for path /user/hive/warehouse/health.db/med_products at Sat Jul 23 04:44:49 PDT 2016
+/user/hive/warehouse/health.db/med_products <dir>
+/user/hive/warehouse/health.db/med_products/product1.txt 8850 bytes, 1 block(s):  OK
+0. BP-87068705-127.0.0.1-1459931051666:blk_1073743533_2719 len=8850 Live_repl=1 [DatanodeInfoWithStorage[127.0.0.1:50010,DS-71f97c93-7e37-48a2-95b1-337a08e91002,DISK]]
+
+Status: HEALTHY
+ Total size:	8850 B
+ Total dirs:	1
+ Total files:	1
+ Total symlinks:		0
+ Total blocks (validated):	1 (avg. block size 8850 B)
+ Minimally replicated blocks:	1 (100.0 %)
+ Over-replicated blocks:	0 (0.0 %)
+ Under-replicated blocks:	0 (0.0 %)
+ Mis-replicated blocks:		0 (0.0 %)
+ Default replication factor:	1
+ Average block replication:	1.0
+ Corrupt blocks:		0
+ Missing replicas:		0 (0.0 %)
+ Number of data-nodes:		1
+ Number of racks:		1
+FSCK ended at Sat Jul 23 04:44:49 PDT 2016 in 25 milliseconds
+
+
+The filesystem under path '/user/hive/warehouse/health.db/med_products' is HEALTHY
+
+--- To print out network topology for data-node locations.
+
+[cloudera@quickstart ~]$ hdfs fsck /user/hive/warehouse/health.db/med_products -files -blocks -locations -racks
+Connecting to namenode via http://quickstart.cloudera:50070
+FSCK started by cloudera (auth:SIMPLE) from /127.0.0.1 for path /user/hive/warehouse/health.db/med_products at Sat Jul 23 04:51:12 PDT 2016
+/user/hive/warehouse/health.db/med_products <dir>
+/user/hive/warehouse/health.db/med_products/product1.txt 8850 bytes, 1 block(s):  OK
+0. BP-87068705-127.0.0.1-1459931051666:blk_1073743533_2719 len=8850 Live_repl=1 [/default-rack/127.0.0.1:50010]
+
+Status: HEALTHY
+ Total size:	8850 B
+ Total dirs:	1
+ Total files:	1
+ Total symlinks:		0
+ Total blocks (validated):	1 (avg. block size 8850 B)
+ Minimally replicated blocks:	1 (100.0 %)
+ Over-replicated blocks:	0 (0.0 %)
+ Under-replicated blocks:	0 (0.0 %)
+ Mis-replicated blocks:		0 (0.0 %)
+ Default replication factor:	1
+ Average block replication:	1.0
+ Corrupt blocks:		0
+ Missing replicas:		0 (0.0 %)
+ Number of data-nodes:		1
+ Number of racks:		1
+FSCK ended at Sat Jul 23 04:51:12 PDT 2016 in 1 milliseconds
+
+
+The filesystem under path '/user/hive/warehouse/health.db/med_products' is HEALTHY
+
+---
