@@ -70,11 +70,43 @@ products
 # -- Use the --table argument to select the table to import. For example, --table departments.
   -- This copies the data creating a directory with the name as table name in HDFS default directory (eg below command will create departments directory)
 
+[cloudera@quickstart ~]$ hdfs dfs -ls 
+Found 4 items
+drwxr-xr-x   - cloudera cloudera          0 2016-07-18 13:30 demo
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 10:11 sqoop_import
+-rw-r--r--   1 cloudera cloudera          0 2016-07-18 13:15 sun1
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 09:48 test
+
 [cloudera@quickstart ~]$ sqoop import \
 > --connect jdbc:mysql://127.0.0.1:3306/retail_db \
 > --username root \
 > --password cloudera \
 > --table departments
+
+--or in single liner command
+
+[cloudera@quickstart ~]$ sqoop list-tables --connect "jdbc:mysql://localhost:3306/retail_db" --username root --password cloudera --table departments
+
+Note1 : By default, sqoop will create a directory with the same name as the imported table inside your home directory on HDFS and import all data there. We can check a new directory with same name as imported table (i.e departments ) created in home directory.
+
+Note2 : For any hdfs user the default directory is /user/<username>. As the user in CDH is cloudera so we have our default directory 
+as /user/cloudera . We can check the directories under default HDFS directory for a user by (hdfs dfs -ls) command or more specifically (hdfs dfs -ls /user/cloudera).
+
+[cloudera@quickstart ~]$ hdfs dfs -ls
+Found 5 items
+drwxr-xr-x   - cloudera cloudera          0 2016-07-18 13:30 demo
+drwxr-xr-x   - cloudera cloudera          0 2016-07-24 22:16 departments
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 10:11 sqoop_import
+-rw-r--r--   1 cloudera cloudera          0 2016-07-18 13:15 sun1
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 09:48 test
+
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera
+Found 5 items
+drwxr-xr-x   - cloudera cloudera          0 2016-07-18 13:30 /user/cloudera/demo
+drwxr-xr-x   - cloudera cloudera          0 2016-07-24 22:16 /user/cloudera/departments
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 10:11 /user/cloudera/sqoop_import
+-rw-r--r--   1 cloudera cloudera          0 2016-07-18 13:15 /user/cloudera/sun1
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 09:48 /user/cloudera/test
 
 [cloudera@quickstart ~]$ hadoop fs -ls departments
 Found 5 items
@@ -92,36 +124,53 @@ Found 5 items
 6,Outdoors
 7,Fan Shop
 
-# -- You can select a subset of columns and control their ordering by using the --columns argument. 
-  -- This should include a comma-delimited list of columns to import. For example: --columns "name,employee_id,jobtitle".
-  
-  [cloudera@quickstart ~]$ sqoop import \
-> --connect "jdbc:mysql://localhost:3306/retail_db" \
-> --username root \
-> --password cloudera \
-> --table orders \
-> --columns "order_customer_id,order_id,order_status"
+--- The default directory can be changed to any arbitrary directory on your HDFS using option --target-dir. But keep in mind that this directory must not exist prior to running the sqoop command.
 
-[cloudera@quickstart ~]$ hadoop fs -ls orders
+--- This command will fail as /user/hdfs already exist.
+
+[cloudera@quickstart ~]$ sqoop import --connect "jdbc:mysql://localhost:3306/retail_db" --username root --password cloudera --table departments --target-dir /user/hdfs
+
+................
+.................
+16/07/24 22:40:54 ERROR tool.ImportTool: Encountered IOException running import job: org.apache.hadoop.mapred.FileAlreadyExistsException: Output directory hdfs://quickstart.cloudera:8020/user/hdfs already exists
+...............
+..............
+
+--- Because sun is not existing already hence below command will succeed.
+
+[cloudera@quickstart ~]$ sqoop import --connect "jdbc:mysql://localhost:3306/retail_db" --username root --password cloudera --table departments --target-dir /user/hdfs/sun
+
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/hdfs/
+Found 2 items
+drwxr-xr-x   - hdfs     supergroup          0 2016-07-05 21:08 /user/hdfs/.Trash
+drwxr-xr-x   - cloudera supergroup          0 2016-07-24 22:46 /user/hdfs/sun
+
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/hdfs/sun
 Found 5 items
--rw-r--r--   1 cloudera cloudera          0 2016-07-11 22:22 orders/_SUCCESS
--rw-r--r--   1 cloudera cloudera     362752 2016-07-11 22:22 orders/part-m-00000
--rw-r--r--   1 cloudera cloudera     374160 2016-07-11 22:22 orders/part-m-00001
--rw-r--r--   1 cloudera cloudera     373528 2016-07-11 22:22 orders/part-m-00002
--rw-r--r--   1 cloudera cloudera     374078 2016-07-11 22:22 orders/part-m-00003
+-rw-r--r--   1 cloudera supergroup          0 2016-07-24 22:46 /user/hdfs/sun/_SUCCESS
+-rw-r--r--   1 cloudera supergroup         21 2016-07-24 22:46 /user/hdfs/sun/part-m-00000
+-rw-r--r--   1 cloudera supergroup         10 2016-07-24 22:46 /user/hdfs/sun/part-m-00001
+-rw-r--r--   1 cloudera supergroup          7 2016-07-24 22:46 /user/hdfs/sun/part-m-00002
+-rw-r--r--   1 cloudera supergroup         22 2016-07-24 22:46 /user/hdfs/sun/part-m-00003
 
-[cloudera@quickstart ~]$ hadoop fs -cat orders/part*
-7456,68869,PROCESSING
-3343,68870,COMPLETE
-4960,68871,PENDING
-3354,68872,COMPLETE
-4545,68873,PENDING
-1601,68874,COMPLETE
-10637,68875,ON_HOLD
-4124,68876,COMPLETE
-9692,68877,ON_HOLD
-6753,68878,COMPLETE
-778,68879,COMPLETE
+[cloudera@quickstart ~]$ hdfs dfs -cat /user/hdfs/sun/part*
+2,Fitness
+3,Footwear
+4,Apparel
+5,Golf
+6,Outdoors
+7,Fan Shop
+
+--- But changing target directory if we want to run multiple sqoop jobs for multiple tables. Alternative is the parameter 
+    --warehouse-dir, which allows to specify only parent directory. It is similar to default option and if we try to run the same command again, it will throw error that /user/hdfs/departments already exists
+    
+[cloudera@quickstart ~]$ sqoop import --connect "jdbc:mysql://localhost:3306/retail_db" --username root --password cloudera --table departments --warehouse-dir /user/hdfs
+
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/hdfs/
+Found 3 items
+drwxr-xr-x   - hdfs     supergroup          0 2016-07-05 21:08 /user/hdfs/.Trash
+drwxr-xr-x   - cloudera supergroup          0 2016-07-24 23:11 /user/hdfs/departments
+drwxr-xr-x   - cloudera supergroup          0 2016-07-24 22:46 /user/hdfs/sun
 
 # -- You can append a WHERE clause to this with the --where argument. For example: --where "id > 400".
 
@@ -160,13 +209,44 @@ Found 5 items
 57,8,MLB Players
 58,8,NFL Players
 
+# -- You can select a subset of columns and control their ordering by using the --columns argument. 
+  -- This should include a comma-delimited list of columns to import. For example: --columns "name,employee_id,jobtitle".
+  
+  [cloudera@quickstart ~]$ sqoop import \
+> --connect "jdbc:mysql://localhost:3306/retail_db" \
+> --username root \
+> --password cloudera \
+> --table orders \
+> --columns "order_customer_id,order_id,order_status"
+
+[cloudera@quickstart ~]$ hadoop fs -ls orders
+Found 5 items
+-rw-r--r--   1 cloudera cloudera          0 2016-07-11 22:22 orders/_SUCCESS
+-rw-r--r--   1 cloudera cloudera     362752 2016-07-11 22:22 orders/part-m-00000
+-rw-r--r--   1 cloudera cloudera     374160 2016-07-11 22:22 orders/part-m-00001
+-rw-r--r--   1 cloudera cloudera     373528 2016-07-11 22:22 orders/part-m-00002
+-rw-r--r--   1 cloudera cloudera     374078 2016-07-11 22:22 orders/part-m-00003
+
+[cloudera@quickstart ~]$ hadoop fs -cat orders/part*
+7456,68869,PROCESSING
+3343,68870,COMPLETE
+4960,68871,PENDING
+3354,68872,COMPLETE
+4545,68873,PENDING
+1601,68874,COMPLETE
+10637,68875,ON_HOLD
+4124,68876,COMPLETE
+9692,68877,ON_HOLD
+6753,68878,COMPLETE
+778,68879,COMPLETE
+
+
+
 # -- By default sqoop will use query select min(<split-by>), max(<split-by>) from <table name> to find out boundaries for creating splits. 
   -- In some cases this query is not the most optimal so you can specify any arbitrary query returning two numeric columns 
      using --boundary-query argument.
 
 -----------need to specify example command here later.
-
-
 
 # --> Free Form Query Import
   --> Instead of using the --table, --columns and --where arguments, you can specify a SQL statement with the --query argument.
@@ -187,6 +267,72 @@ Found 5 items
 When importing query results in parallel, you must specify --split-by.
 Try --help for usage instructions.
   
+**************************************************************************************************************************************
+--- Using a file format other than CSV [ Avro format ]
+
+[cloudera@quickstart ~]$ sqoop import --connect "jdbc:mysql://localhost:3306/retail_db" --username root --password cloudera --table departments --as-avrodatafile
+
+--similarly it creates a directory with same name as table name.
+
+[cloudera@quickstart ~]$ hdfs dfs -ls
+Found 5 items
+drwxr-xr-x   - cloudera cloudera          0 2016-07-18 13:30 demo
+drwxr-xr-x   - cloudera cloudera          0 2016-07-25 00:50 departments
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 10:11 sqoop_import
+-rw-r--r--   1 cloudera cloudera          0 2016-07-18 13:15 sun1
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 09:48 test
+
+--But if we check the file blocks created are as below(with .avro extention)
+
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/departments
+Found 5 items
+-rw-r--r--   1 cloudera cloudera          0 2016-07-25 00:50 /user/cloudera/departments/_SUCCESS
+-rw-r--r--   1 cloudera cloudera        406 2016-07-25 00:50 /user/cloudera/departments/part-m-00000.avro
+-rw-r--r--   1 cloudera cloudera        394 2016-07-25 00:50 /user/cloudera/departments/part-m-00001.avro
+-rw-r--r--   1 cloudera cloudera        391 2016-07-25 00:50 /user/cloudera/departments/part-m-00002.avro
+-rw-r--r--   1 cloudera cloudera        407 2016-07-25 00:50 /user/cloudera/departments/part-m-00003.avro
+
+[cloudera@quickstart ~]$ hdfs dfs -cat /user/cloudera/departments/part*
+Objavro.schema�{"type":"record","name":"departments","doc":"Sqoop import of departments","fields":[{"name":"department_id","type":["null","int"],"default":null,"columnName":"department_id","sqlType":"4"},{"name":"department_name","type":["null","string"],"default":null,"columnName":"department_name","sqlType":"12"}],"tableName":"departments"}�[��`�3^��P���.FitnessFootwear�[��`�3^��P���Objavro.schema�{"type":"record","name":"departments","doc":"Sqoop import of departments","fields":[{"name":"department_id","type":["null","int"],"default":null,"columnName":"department_id","sqlType":"4"},{"name":"department_name","type":["null","string"],"default":null,"columnName":"department_name","sqlType":"12"}],"tableName":"departments"}�&�
+��s�-ET�=Apparel�&�
+��s�-ET�=Objavro.schema�{"type":"record","name":"departments","doc":"Sqoop import of departments","fields":[{"name":"department_id","type":["null","int"],"default":null,"columnName":"department_id","sqlType":"4"},{"name":"department_name","type":["null","string"],"default":null,"columnName":"department_name","sqlType":"12"}],"tableName":"departments"}���0���pB҃�
+Golf���0���pB҃�Objavro.schema�{"type":"record","name":"departments","doc":"Sqoop import of departments","fields":[{"name":"department_id","type":["null","int"],"default":null,"columnName":"department_id","sqlType":"4"},{"name":"department_name","type":["null","string"],"default":null,"columnName":"department_name","sqlType":"12"}],"tableName":"departments"}���F�(�#)�g��9�/0
+
+**************************************************************************************************************************************
+
+--- Using file format other than CSV [ Sequence File ]
+
+[cloudera@quickstart ~]$ sqoop import --connect "jdbc:mysql://localhost:3306/retail_db" --username root --password cloudera --table departments --as-sequencefile
+
+[cloudera@quickstart ~]$ hdfs dfs -ls 
+Found 5 items
+drwxr-xr-x   - cloudera cloudera          0 2016-07-18 13:30 demo
+drwxr-xr-x   - cloudera cloudera          0 2016-07-25 01:04 departments
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 10:11 sqoop_import
+-rw-r--r--   1 cloudera cloudera          0 2016-07-18 13:15 sun1
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 09:48 test
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/departments
+Found 5 items
+-rw-r--r--   1 cloudera cloudera          0 2016-07-25 01:04 /user/cloudera/departments/_SUCCESS
+-rw-r--r--   1 cloudera cloudera        133 2016-07-25 01:04 /user/cloudera/departments/part-m-00000
+-rw-r--r--   1 cloudera cloudera        102 2016-07-25 01:04 /user/cloudera/departments/part-m-00001
+-rw-r--r--   1 cloudera cloudera         99 2016-07-25 01:04 /user/cloudera/departments/part-m-00002
+-rw-r--r--   1 cloudera cloudera        134 2016-07-25 01:04 /user/cloudera/departments/part-m-00003
+
+[cloudera@quickstart ~]$ hdfs dfs -cat /user/cloudera/departments/part*
+SEQ!org.apache.hadoop.io.LongWritable
+                                      departments����G�u���y����FitnessFootwearSEQ!org.apache.hadoop.io.LongWritable
+                                                                                                                        departments�����jg��h�1
+                                                                                                                                                ApparelSEQ!org.apache.hadoop.io.LongWritable
+                                 departmentsv3��`$�V4���Q��jGolfSEQ!org.apache.hadoop.io.LongWritable
+&#OutdoorsFan Shop[cloudera@quickstart ~]$                                                           departments�;k�y�<�^
+
+
+**************************************************************************************************************************************
+
+
+
+
 
   
   
