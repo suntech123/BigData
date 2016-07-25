@@ -174,3 +174,93 @@ Found 7 items
 
 **************************************************************************************************************************************
 
+--- Incrementally importing mutable data:
+
+ -- Intially the data in the table.
+ 
+mysql> select * from prod;
++----+---------+---------------------+
+| id | name    | lnch_datetime       |
++----+---------+---------------------+
+|  1 | crocina | 2013-06-12 09:08:47 |
+|  2 | asprin  | 2014-06-12 09:08:47 |
+|  3 | disprin | 2015-06-12 09:08:47 |
++----+---------+---------------------+
+3 rows in set (0.00 sec)
+
+[cloudera@quickstart ~]$ sqoop import --connect "jdbc:mysql://localhost:3306/retail_db" --username root --password cloudera --table prod --incremental lastmodified --check-column lnch_datetime --last-value "2012-07-25 09:24"
+
+16/07/25 09:56:25 INFO tool.ImportTool: Incremental import complete!..............
+16/07/25 09:56:25 INFO tool.ImportTool:  --incremental lastmodified
+16/07/25 09:56:25 INFO tool.ImportTool:   --check-column lnch_datetime
+16/07/25 09:56:25 INFO tool.ImportTool:   --last-value 2016-07-25 09:55:52.0
+16/07/25 09:56:25 INFO tool.ImportTool: (Consider saving this with 'sqoop job --create')
+
+[cloudera@quickstart ~]$ hdfs dfs -ls
+Found 7 items
+drwxr-xr-x   - cloudera cloudera          0 2016-07-25 09:56 _sqoop
+drwxr-xr-x   - cloudera cloudera          0 2016-07-18 13:30 demo
+drwxr-xr-x   - cloudera cloudera          0 2016-07-25 08:15 item
+drwxr-xr-x   - cloudera cloudera          0 2016-07-25 09:56 prod
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 10:11 sqoop_import
+-rw-r--r--   1 cloudera cloudera          0 2016-07-18 13:15 sun1
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 09:48 test
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/prod
+Found 4 items
+-rw-r--r--   1 cloudera cloudera          0 2016-07-25 09:56 /user/cloudera/prod/_SUCCESS
+-rw-r--r--   1 cloudera cloudera         32 2016-07-25 09:56 /user/cloudera/prod/part-m-00000
+-rw-r--r--   1 cloudera cloudera         31 2016-07-25 09:56 /user/cloudera/prod/part-m-00001
+-rw-r--r--   1 cloudera cloudera         32 2016-07-25 09:56 /user/cloudera/prod/part-m-00002
+
+[cloudera@quickstart ~]$ hdfs dfs -cat /user/cloudera/prod/part*
+1,crocina,2013-06-12 09:08:47.0
+2,asprin,2014-06-12 09:08:47.0
+3,disprin,2015-06-12 09:08:47.0
+
+--- Now let's update one row and insert other.
+
+mysql> insert into prod values(4,'paracetamol','2016-07-25 09:55:55');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> update prod set name='asprinal', lnch_datetime='2016-07-25 09:56:02' where id=2;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from prod;
++----+-------------+---------------------+
+| id | name        | lnch_datetime       |
++----+-------------+---------------------+
+|  1 | crocina     | 2013-06-12 09:08:47 |
+|  2 | asprinal    | 2016-07-25 09:56:02 |
+|  3 | disprin     | 2015-06-12 09:08:47 |
+|  4 | paracetamol | 2016-07-25 09:55:55 |
++----+-------------+---------------------+
+4 rows in set (0.00 sec)
+
+--- Below is the incremental job ( Note : it was failing without option --merge-key parameter)
+
+[cloudera@quickstart ~]$ sqoop import --connect "jdbc:mysql://localhost:3306/retail_db" --username root --password cloudera --table prod --incremental lastmodified --check-column lnch_datetime --last-value "2016-07-25 09:55:52.0" --merge-key id
+
+[cloudera@quickstart ~]$ hdfs dfs -ls
+Found 7 items
+drwxr-xr-x   - cloudera cloudera          0 2016-07-25 10:19 _sqoop
+drwxr-xr-x   - cloudera cloudera          0 2016-07-18 13:30 demo
+drwxr-xr-x   - cloudera cloudera          0 2016-07-25 08:15 item
+drwxr-xr-x   - cloudera cloudera          0 2016-07-25 10:19 prod
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 10:11 sqoop_import
+-rw-r--r--   1 cloudera cloudera          0 2016-07-18 13:15 sun1
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 09:48 test
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/prod/
+Found 2 items
+-rw-r--r--   1 cloudera cloudera          0 2016-07-25 10:19 /user/cloudera/prod/_SUCCESS
+-rw-r--r--   1 cloudera cloudera        133 2016-07-25 10:19 /user/cloudera/prod/part-r-00000
+[cloudera@quickstart ~]$ hdfs dfs -cat /user/cloudera/prod/part*
+1,crocina,2013-06-12 09:08:47.0
+2,asprinal,2016-07-25 09:56:02.0
+3,disprin,2015-06-12 09:08:47.0
+4,paracetamol,2016-07-25 09:55:55.0
+
+
+**************************************************************************************************************************************
+
+
