@@ -330,6 +330,195 @@ SEQ!org.apache.hadoop.io.LongWritable
 
 **************************************************************************************************************************************
 
+--- Compressing imported data ( Use parameter --compress )
+
+[cloudera@quickstart ~]$ sqoop import --connect "jdbc:mysql://localhost:3306/retail_db" --username root --password cloudera --table departments --compress
+
+[cloudera@quickstart ~]$ hdfs dfs -ls
+Found 5 items
+drwxr-xr-x   - cloudera cloudera          0 2016-07-18 13:30 demo
+drwxr-xr-x   - cloudera cloudera          0 2016-07-25 01:21 departments
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 10:11 sqoop_import
+-rw-r--r--   1 cloudera cloudera          0 2016-07-18 13:15 sun1
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 09:48 test
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/departments/
+Found 5 items
+-rw-r--r--   1 cloudera cloudera          0 2016-07-25 01:21 /user/cloudera/departments/_SUCCESS
+-rw-r--r--   1 cloudera cloudera         41 2016-07-25 01:21 /user/cloudera/departments/part-m-00000.gz
+-rw-r--r--   1 cloudera cloudera         30 2016-07-25 01:21 /user/cloudera/departments/part-m-00001.gz
+-rw-r--r--   1 cloudera cloudera         27 2016-07-25 01:21 /user/cloudera/departments/part-m-00002.gz
+-rw-r--r--   1 cloudera cloudera         42 2016-07-25 01:21 /user/cloudera/departments/part-m-00003.gz
+
+Note: By default output files will be compressed using Gzip and files will end up with .gz extension. To choose any other compression method use parameter --compression-codec parameter. AS using below example uses BZip2 and files will end up with .bz2 extention.
+
+[cloudera@quickstart ~]$ sqoop import --connect "jdbc:mysql://localhost:3306/retail_db" --username root --password cloudera --table departments --compress --compression-codec org.apache.hadoop.io.compress.BZip2Codec
+
+[cloudera@quickstart ~]$ hdfs dfs -ls 
+Found 5 items
+drwxr-xr-x   - cloudera cloudera          0 2016-07-18 13:30 demo
+drwxr-xr-x   - cloudera cloudera          0 2016-07-25 01:43 departments
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 10:11 sqoop_import
+-rw-r--r--   1 cloudera cloudera          0 2016-07-18 13:15 sun1
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 09:48 test
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/departments
+Found 5 items
+-rw-r--r--   1 cloudera cloudera          0 2016-07-25 01:43 /user/cloudera/departments/_SUCCESS
+-rw-r--r--   1 cloudera cloudera         63 2016-07-25 01:43 /user/cloudera/departments/part-m-00000.bz2
+-rw-r--r--   1 cloudera cloudera         55 2016-07-25 01:43 /user/cloudera/departments/part-m-00001.bz2
+-rw-r--r--   1 cloudera cloudera         49 2016-07-25 01:43 /user/cloudera/departments/part-m-00002.bz2
+-rw-r--r--   1 cloudera cloudera         69 2016-07-25 01:43 /user/cloudera/departments/part-m-00003.bz2
+
+**************************************************************************************************************************************
+
+---Speeding up import speed by using native utilities provided by the database.
+
+[cloudera@quickstart ~]$ sqoop import --connect "jdbc:mysql://localhost:3306/retail_db" --username root --password cloudera --table departments --direct
+
+[cloudera@quickstart ~]$ hdfs dfs -ls
+Found 5 items
+drwxr-xr-x   - cloudera cloudera          0 2016-07-18 13:30 demo
+drwxr-xr-x   - cloudera cloudera          0 2016-07-25 02:01 departments
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 10:11 sqoop_import
+-rw-r--r--   1 cloudera cloudera          0 2016-07-18 13:15 sun1
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 09:48 test
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/departments
+Found 5 items
+-rw-r--r--   1 cloudera cloudera          0 2016-07-25 02:01 /user/cloudera/departments/_SUCCESS
+-rw-r--r--   1 cloudera cloudera         21 2016-07-25 02:01 /user/cloudera/departments/part-m-00000
+-rw-r--r--   1 cloudera cloudera         10 2016-07-25 02:01 /user/cloudera/departments/part-m-00001
+-rw-r--r--   1 cloudera cloudera          7 2016-07-25 02:01 /user/cloudera/departments/part-m-00002
+-rw-r--r--   1 cloudera cloudera         22 2016-07-25 02:01 /user/cloudera/departments/part-m-00003
+
+Note: Using native utilities will greatly improve performance, as these are optimizrd to provide best possible transfer speed while putting less burden on the database server. But there are several limitation as below.
+
+ 1. Not all databases have available native utilities.
+ 2. SQOOP has direct support only for MySql and PostgreSql.
+ 3. We need to make sure that native utilities are available on all of your Hadoop TaskTracker nodes.
+    eg both mysqldump and mysqlimport utilities must be installed on all nodes hosting a TaskTracker service.
+ 4. Another limitation not all parameters are supported. Native utilities usually support text output.
+ 5. Also parameters that customize the escape characters, type mapping, col and row delimiters, or the NULL substituition strings might not be supported in all the cases.
+ 
+ 
+**************************************************************************************************************************************
+
+--- Overriding Type Mapping  [ to provide examples after clearance ]
+
+
+**************************************************************************************************************************************
+
+--- Controlling Parallelism
+ -- By default sqoop uses four concurrent map tasks to transfer data to Hadoop. Sometime tranfering bigger tables with more concurrent tasks should decrease the time required to transfer all data.
+ 
+[cloudera@quickstart ~]$ sqoop import \
+> --connect "jdbc:mysql://localhost:3306/retail_db" \
+> --username root \
+> --password cloudera \
+> --table orders \
+> --num-mappers 10
+
+[cloudera@quickstart ~]$ hdfs dfs -ls
+Found 5 items
+drwxr-xr-x   - cloudera cloudera          0 2016-07-18 13:30 demo
+drwxr-xr-x   - cloudera cloudera          0 2016-07-25 02:52 orders
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 10:11 sqoop_import
+-rw-r--r--   1 cloudera cloudera          0 2016-07-18 13:15 sun1
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 09:48 test
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/orders
+Found 11 items
+-rw-r--r--   1 cloudera cloudera          0 2016-07-25 02:52 /user/cloudera/orders/_SUCCESS
+-rw-r--r--   1 cloudera cloudera     292973 2016-07-25 02:52 /user/cloudera/orders/part-m-00000
+-rw-r--r--   1 cloudera cloudera     298045 2016-07-25 02:52 /user/cloudera/orders/part-m-00001
+-rw-r--r--   1 cloudera cloudera     301249 2016-07-25 02:52 /user/cloudera/orders/part-m-00002
+-rw-r--r--   1 cloudera cloudera     301346 2016-07-25 02:52 /user/cloudera/orders/part-m-00003
+-rw-r--r--   1 cloudera cloudera     301023 2016-07-25 02:52 /user/cloudera/orders/part-m-00004
+-rw-r--r--   1 cloudera cloudera     300917 2016-07-25 02:52 /user/cloudera/orders/part-m-00005
+-rw-r--r--   1 cloudera cloudera     301036 2016-07-25 02:52 /user/cloudera/orders/part-m-00006
+-rw-r--r--   1 cloudera cloudera     300931 2016-07-25 02:52 /user/cloudera/orders/part-m-00007
+-rw-r--r--   1 cloudera cloudera     301150 2016-07-25 02:52 /user/cloudera/orders/part-m-00008
+-rw-r--r--   1 cloudera cloudera     301274 2016-07-25 02:52 /user/cloudera/orders/part-m-00009
+
+**************************************************************************************************************************************
+
+--- Encoding NULL values: By default Sqoop encodes database NULL values using the null string constant. But downstream processing   (Hive Queries, custom MapReducejob, or Pig Script) use a different constant for encoding missing values.
+
+[cloudera@quickstart ~]$ sqoop import \
+> --connect "jdbc:mysql://localhost:3306/information_schema" \
+> --username root \
+> --password cloudera \
+> --table statistics
+
+Note: The above command failed because there is no primary key in the table. In such a scenario, we need to specify --split-by parameter so that it can be used by Sqoop for spawning multiple MapR threads or otherwise read the table sequentially by using parameter '-m 1'
+
+16/07/25 03:39:07 ERROR tool.ImportTool: Error during import: No primary key could be found for table statistics. Please specify one with --split-by or perform a sequential import with '-m 1'.
+
+---Hence below command is used.
+
+[cloudera@quickstart ~]$ sqoop import \
+> --connect "jdbc:mysql://localhost:3306/information_schema" \
+> --username root \
+> --password cloudera \
+> --table statistics \
+> --split-by TABLE_CATALOG
+
+[cloudera@quickstart ~]$ hdfs dfs -ls 
+Found 5 items
+drwxr-xr-x   - cloudera cloudera          0 2016-07-18 13:30 demo
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 10:11 sqoop_import
+drwxr-xr-x   - cloudera cloudera          0 2016-07-25 03:50 statistics
+-rw-r--r--   1 cloudera cloudera          0 2016-07-18 13:15 sun1
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 09:48 test
+
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/statistics
+Found 2 items
+-rw-r--r--   1 cloudera cloudera          0 2016-07-25 03:50 /user/cloudera/statistics/_SUCCESS
+-rw-r--r--   1 cloudera cloudera      45178 2016-07-25 03:50 /user/cloudera/statistics/part-m-00000
+
+[cloudera@quickstart ~]$ hdfs dfs -cat  /user/cloudera/statistics/part* | head -10
+null,hue,auth_group,0,hue,PRIMARY,1,id,A,3,null,null,,BTREE,
+null,hue,auth_group,0,hue,name,1,name,A,3,null,null,,BTREE,
+null,hue,auth_group_permissions,0,hue,PRIMARY,1,id,A,0,null,null,,BTREE,
+null,hue,auth_group_permissions,0,hue,group_id,1,group_id,A,0,null,null,,BTREE,
+null,hue,auth_group_permissions,0,hue,group_id,2,permission_id,A,0,null,null,,BTREE,
+null,hue,auth_group_permissions,1,hue,auth_group_permissions_5f412f9a,1,group_id,A,0,null,null,,BTREE,
+null,hue,auth_group_permissions,1,hue,auth_group_permissions_83d7f98b,1,permission_id,A,0,null,null,,BTREE,
+null,hue,auth_permission,0,hue,PRIMARY,1,id,A,225,null,null,,BTREE,
+null,hue,auth_permission,0,hue,content_type_id,1,content_type_id,A,225,null,null,,BTREE,
+null,hue,auth_permission,0,hue,content_type_id,2,codename,A,225,null,null,,BTREE,
+cat: Unable to write to output stream.
+
+NOTE: As we can see the database NULL values are imported as null string in HDFS. SUB_PART is a numeric column and TABLE_CATALOG is character column.
+
+mysql> select TABLE_CATALOG,TABLE_SCHEMA,NON_UNIQUE,SUB_PART from statistics where table_name = 'auth_permission';
++---------------+--------------+------------+----------+
+| TABLE_CATALOG | TABLE_SCHEMA | NON_UNIQUE | SUB_PART |
++---------------+--------------+------------+----------+
+| NULL          | hue          |          0 |     NULL |
+| NULL          | hue          |          0 |     NULL |
+| NULL          | hue          |          0 |     NULL |
+| NULL          | hue          |          1 |     NULL |
++---------------+--------------+------------+----------+
+4 rows in set (0.00 sec)
+
+[cloudera@quickstart ~]$ hdfs dfs -copyToLocal /user/cloudera/statistics/part-m-00000 /home/cloudera/
+[cloudera@quickstart ~]$ ls -ltr part*
+-rw-r--r-- 1 cloudera cloudera 45178 Jul 25 04:11 part-m-00000
+
+[cloudera@quickstart ~]$ sqoop import --connect "jdbc:mysql://localhost:3306/information_schema" --username root --password cloudera --table statistics --null-string '\\N' --null-non-string '\\N' --split-by TABLE_CATALOG
+
+---Without encoding NULL values
+
+null,hue,auth_permission,0,hue,PRIMARY,1,id,A,225,null,null,,BTREE,
+null,hue,auth_permission,0,hue,content_type_id,1,content_type_id,A,225,null,null,,BTREE,
+null,hue,auth_permission,0,hue,content_type_id,2,codename,A,225,null,null,,BTREE,
+null,hue,auth_permission,1,hue,auth_permission_37ef4eb4,1,content_type_id,A,225,null,null,,BTREE,
+
+---After encoding NULL values
+
+\N,hue,auth_permission,0,hue,PRIMARY,1,id,A,225,\N,\N,,BTREE,
+\N,hue,auth_permission,0,hue,content_type_id,1,content_type_id,A,225,\N,\N,,BTREE,
+\N,hue,auth_permission,0,hue,content_type_id,2,codename,A,225,\N,\N,,BTREE,
+\N,hue,auth_permission,1,hue,auth_permission_37ef4eb4,1,content_type_id,A,225,\N,\N,,BTREE,
+
 
 
 
