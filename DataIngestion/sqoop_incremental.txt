@@ -50,8 +50,9 @@ mysql> select * from item;
 > --check-column item_id \
 > --last-value 1
 
----with other log it has below extra information.
+---In log it has below extra information.
 
+............
 16/07/25 05:59:28 INFO tool.ImportTool: Incremental import complete! To run another incremental import of all data following this import, supply the following arguments:
 16/07/25 05:59:28 INFO tool.ImportTool:  --incremental append
 16/07/25 05:59:28 INFO tool.ImportTool:   --check-column item_id
@@ -72,7 +73,7 @@ Found 3 items
 -rw-r--r--   1 cloudera cloudera          7 2016-07-25 05:39 /user/cloudera/item/part-m-00000
 -rw-r--r--   1 cloudera cloudera          9 2016-07-25 05:59 /user/cloudera/item/part-m-00001
 
---- Now lets check adding some 10 values in the table and then run incremental load.
+--- Now lets check adding some values in the table and then run incremental load.
 
 mysql> select * from item order by item_id;
 +---------+-----------+
@@ -107,4 +108,69 @@ mysql> select * from item order by item_id;
 |      27 | book100   |
 +---------+-----------+
 27 rows in set (0.01 sec)
+
+[cloudera@quickstart ~]$ sqoop import \
+> --connect "jdbc:mysql://localhost:3306/retail_db" \
+> --username root \
+> --password cloudera \
+> --table item \
+> --incremental append \
+> --check-column item_id \
+> --last-value 2
+
+16/07/25 08:15:10 INFO tool.ImportTool: Incremental import complete! To run another incremental import of all data following this import, supply the following arguments:
+16/07/25 08:15:10 INFO tool.ImportTool:  --incremental append
+16/07/25 08:15:10 INFO tool.ImportTool:   --check-column item_id
+16/07/25 08:15:10 INFO tool.ImportTool:   --last-value 27
+16/07/25 08:15:10 INFO tool.ImportTool: (Consider saving this with 'sqoop job --create')
+
+
+[cloudera@quickstart ~]$ hdfs dfs -ls
+Found 6 items
+drwxr-xr-x   - cloudera cloudera          0 2016-07-25 08:15 _sqoop
+drwxr-xr-x   - cloudera cloudera          0 2016-07-18 13:30 demo
+drwxr-xr-x   - cloudera cloudera          0 2016-07-25 08:15 item
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 10:11 sqoop_import
+-rw-r--r--   1 cloudera cloudera          0 2016-07-18 13:15 sun1
+drwxr-xr-x   - cloudera cloudera          0 2016-07-12 09:48 test
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/item/
+Found 7 items
+-rw-r--r--   1 cloudera cloudera          0 2016-07-25 05:39 /user/cloudera/item/_SUCCESS
+-rw-r--r--   1 cloudera cloudera          7 2016-07-25 05:39 /user/cloudera/item/part-m-00000
+-rw-r--r--   1 cloudera cloudera          9 2016-07-25 05:59 /user/cloudera/item/part-m-00001
+-rw-r--r--   1 cloudera cloudera         60 2016-07-25 08:15 /user/cloudera/item/part-m-00002
+-rw-r--r--   1 cloudera cloudera         65 2016-07-25 08:15 /user/cloudera/item/part-m-00003
+-rw-r--r--   1 cloudera cloudera         66 2016-07-25 08:15 /user/cloudera/item/part-m-00004
+-rw-r--r--   1 cloudera cloudera         77 2016-07-25 08:15 /user/cloudera/item/part-m-00005
+
+[cloudera@quickstart ~]$ hdfs dfs -cat /user/cloudera/item/part*
+1,book
+2,pencil
+3,book100
+4,book100
+5,book100
+6,book100
+7,book100
+8,book100
+9,book100
+10,book100
+11,book100
+12,book100
+13,book100
+14,book100
+15,book100
+16,book100
+17,book100
+18,book100
+19,book100
+20,book100
+21,book100
+22,book100
+23,book100
+24,book100
+25,book100
+26,book100
+27,book100
+
+**************************************************************************************************************************************
 
