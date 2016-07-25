@@ -519,6 +519,20 @@ null,hue,auth_permission,1,hue,auth_permission_37ef4eb4,1,content_type_id,A,225,
 \N,hue,auth_permission,0,hue,content_type_id,2,codename,A,225,\N,\N,,BTREE,
 \N,hue,auth_permission,1,hue,auth_permission_37ef4eb4,1,content_type_id,A,225,\N,\N,,BTREE,
 
+**************************************************************************************************************************************
+
+--- Importing All your Tables.
+
+[cloudera@quickstart ~]$ sqoop import-all-tables \
+> --connect "jdbc:mysql://localhost:3306/retail_db" \
+> --username root \
+> --password cloudera
+
+[cloudera@quickstart ~]$ sqoop import-all-tables \
+> --connect "jdbc:mysql://localhost:3306/retail_db" \
+> --username root \
+> --password cloudera \
+> --exclude-tables products,orders
 
 
 
