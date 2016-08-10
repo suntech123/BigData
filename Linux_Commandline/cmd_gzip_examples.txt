@@ -1,0 +1,32 @@
+--------------------------------------------Compression Techniques------------------------------------------------------------------------
+
+--- To display help on gzip command.
+
+pskumarbehl@ubuntu:~$ gzip --help
+Usage: gzip [OPTION]... [FILE]...
+Compress or uncompress FILEs (by default, compress FILES in-place).
+
+Mandatory arguments to long options are mandatory for short options too.
+
+  -c, --stdout      write on standard output, keep original files unchanged
+  -d, --decompress  decompress
+  -f, --force       force overwrite of output file and compress links
+  -h, --help        give this help
+  -k, --keep        keep (don't delete) input files
+.........................
+.............
+.......
+
+******************************************************************************************************************************************
+
+--- To compress a single file. By default it compresses the file in place replacing the original file.
+
+pskumarbehl@ubuntu:~$ gzip sun.txt
+pskumarbehl@ubuntu:~$ ls -ltr sun*
+-rw-rw-r-- 1 pskumarbehl pskumarbehl 28 Jun  6 10:04 sun.txt.gz
+
+pskumarbehl@ubuntu:~$ gzip -d sun.txt.gz
+pskumarbehl@ubuntu:~$ ls -ltr sun*
+-rw-rw-r-- 1 pskumarbehl pskumarbehl 0 Jun  6 10:04 sun.txt
+
+
