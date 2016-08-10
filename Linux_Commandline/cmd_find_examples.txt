@@ -1,0 +1,30 @@
+------------------------------------------------Practical find command examples---------------------------------------------------------------------
+
+--- find command can find files according to 
+    1) File Names  2) File Types   3) File Permission  4) File Owners  5) Modified Date and Time
+    6) File Size   7) Mix of all above plus different opeations.
+    
+--- To display the help on find command.
+
+pskumarbehl@ubuntu:~$ find --help
+Usage: find [-H] [-L] [-P] [-Olevel] [-D help|tree|search|stat|rates|opt|exec] [path...] [expression]
+
+default path is the current directory; default expression is -print
+expression may consist of: operators, options, tests, and actions:
+
+operators (decreasing precedence; -and is implicit where no others are given):
+      ( EXPR )   ! EXPR   -not EXPR   EXPR1 -a EXPR2   EXPR1 -and EXPR2
+      EXPR1 -o EXPR2   EXPR1 -or EXPR2   EXPR1 , EXPR2
+..................................
+.......................
+............
+
+*****************************************************************************************************************************************
+
+--- To find files with names.
+
+pskumarbehl@ubuntu:~$ find /home -name sun.txt
+/home/pskumarbehl/Desktop/sun.txt
+/home/pskumarbehl/sun.txt
+
+Note: Linux/Unix allows creation of files with same name but different case in the same folder.
