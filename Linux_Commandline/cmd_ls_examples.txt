@@ -1,0 +1,147 @@
+
+------------------------------------------------------Working With File System---------------------------------------------------------
+
+ls : list files and directories
+
+--- To display the version of the ls command.
+
+pskumarbehl@ubuntu:~$ ls --version
+ls (GNU coreutils) 8.21
+Copyright (C) 2013 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Richard M. Stallman and David MacKenzie.
+
+--- To display a long listing of files use ( -l ) option.
+
+pskumarbehl@ubuntu:~$ ls -l
+total 64
+-rw-rw-r-- 1 pskumarbehl pskumarbehl  726 Jul  3 03:45 20160703_034540.log
+-rw-rw-r-- 1 pskumarbehl pskumarbehl  801 Jul  3 03:46 20160703_034625.log
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Jul  3 03:43 Desktop
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Documents
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Downloads
+-rw-r--r-- 1 pskumarbehl pskumarbehl 8980 Apr 30 14:52 examples.desktop
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Music
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Pictures
+-rwxrwxrwx 1 pskumarbehl pskumarbehl 9030 Jul  5 10:09 product.csv
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Public
+-rw-rw-r-- 1 pskumarbehl pskumarbehl    0 Jun  6 10:04 sun.txt
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Templates
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Videos
+
+--- To Order Files Based on Last Modified Time use ( -t ) option with long listing. By default latest files are listed first.
+
+pskumarbehl@ubuntu:~$ ls -lt
+total 64
+-rwxrwxrwx 1 pskumarbehl pskumarbehl 9030 Jul  5 10:09 product.csv
+-rw-rw-r-- 1 pskumarbehl pskumarbehl  801 Jul  3 03:46 20160703_034625.log
+-rw-rw-r-- 1 pskumarbehl pskumarbehl  726 Jul  3 03:45 20160703_034540.log
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Jul  3 03:43 Desktop
+-rw-rw-r-- 1 pskumarbehl pskumarbehl    0 Jun  6 10:04 sun.txt
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Documents
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Downloads
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Music
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Pictures
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Public
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Templates
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Videos
+-rw-r--r-- 1 pskumarbehl pskumarbehl 8980 Apr 30 14:52 examples.desktop
+
+--- To get a sorted list by size in descending order (use -S option with long listing). By default size are listed in descending order.
+
+pskumarbehl@ubuntu:~$ ls -lS
+total 64
+-rwxrwxrwx 1 pskumarbehl pskumarbehl 9030 Jul  5 10:09 product.csv
+-rw-r--r-- 1 pskumarbehl pskumarbehl 8980 Apr 30 14:52 examples.desktop
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Jul  3 03:43 Desktop
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Documents
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Downloads
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Music
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Pictures
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Public
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Templates
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Videos
+-rw-rw-r-- 1 pskumarbehl pskumarbehl  801 Jul  3 03:46 20160703_034625.log
+-rw-rw-r-- 1 pskumarbehl pskumarbehl  726 Jul  3 03:45 20160703_034540.log
+-rw-rw-r-- 1 pskumarbehl pskumarbehl    0 Jun  6 10:04 sun.txt
+
+--- To reverse the default order in any listing ( based on modified time or size ) we can use ( -r ) option.
+
+pskumarbehl@ubuntu:~$ ls -ltr
+total 64
+-rw-r--r-- 1 pskumarbehl pskumarbehl 8980 Apr 30 14:52 examples.desktop
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Videos
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Templates
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Public
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Pictures
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Music
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Downloads
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Documents
+-rw-rw-r-- 1 pskumarbehl pskumarbehl    0 Jun  6 10:04 sun.txt
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Jul  3 03:43 Desktop
+-rw-rw-r-- 1 pskumarbehl pskumarbehl  726 Jul  3 03:45 20160703_034540.log
+-rw-rw-r-- 1 pskumarbehl pskumarbehl  801 Jul  3 03:46 20160703_034625.log
+-rwxrwxrwx 1 pskumarbehl pskumarbehl 9030 Jul  5 10:09 product.csv
+
+
+pskumarbehl@ubuntu:~$ ls -lSr
+total 64
+-rw-rw-r-- 1 pskumarbehl pskumarbehl    0 Jun  6 10:04 sun.txt
+-rw-rw-r-- 1 pskumarbehl pskumarbehl  726 Jul  3 03:45 20160703_034540.log
+-rw-rw-r-- 1 pskumarbehl pskumarbehl  801 Jul  3 03:46 20160703_034625.log
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Videos
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Templates
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Public
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Pictures
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Music
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Downloads
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Apr 30 18:30 Documents
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Jul  3 03:43 Desktop
+-rw-r--r-- 1 pskumarbehl pskumarbehl 8980 Apr 30 14:52 examples.desktop
+-rwxrwxrwx 1 pskumarbehl pskumarbehl 9030 Jul  5 10:09 product.csv
+
+--- To list files in human readable format use option (-h)
+
+pskumarbehl@ubuntu:~$ ls -lh
+total 64K
+-rw-rw-r-- 1 pskumarbehl pskumarbehl  726 Jul  3 03:45 20160703_034540.log
+-rw-rw-r-- 1 pskumarbehl pskumarbehl  801 Jul  3 03:46 20160703_034625.log
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4.0K Jul  3 03:43 Desktop
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4.0K Apr 30 18:30 Documents
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4.0K Apr 30 18:30 Downloads
+-rw-r--r-- 1 pskumarbehl pskumarbehl 8.8K Apr 30 14:52 examples.desktop
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4.0K Apr 30 18:30 Music
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4.0K Apr 30 18:30 Pictures
+-rwxrwxrwx 1 pskumarbehl pskumarbehl 8.9K Jul  5 10:09 product.csv
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4.0K Apr 30 18:30 Public
+-rw-rw-r-- 1 pskumarbehl pskumarbehl    0 Jun  6 10:04 sun.txt
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4.0K Apr 30 18:30 Templates
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4.0K Apr 30 18:30 Videos
+
+
+--- Useful ls Command Aliases. We can put below aliases in shell startup files according to our requirements.
+
+alias ls="ls -l"
+alias ll="ls -lh"
+alias lv="ls -F"
+alias ls="ls -F --color=auto"
+
+--- To check documentation help on ls command we can use below.
+
+pskumarbehl@ubuntu:~$ ls --help
+Usage: ls [OPTION]... [FILE]...
+List information about the FILEs (the current directory by default).
+Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.
+
+Mandatory arguments to long options are mandatory for short options too.
+  -a, --all                  do not ignore entries starting with .
+  -A, --almost-all           do not list implied . and ..
+      --author               with -l, print the author of each file
+  -b, --escape               print C-style escapes for nongraphic characters
+...............................................................................
+.....................................................
+................................
+
