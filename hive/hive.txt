@@ -300,6 +300,66 @@ mysql> select SD_ID,CD_ID,IS_STOREDASSUBDIRECTORIES,LOCATION from SDS;
 +-------+-------+---------------------------+----------------------------------------------------------------------------+
 2 rows in set (0.00 sec)
 
+**************************************************************************************************************************************
+
+--- To create a table with numeric data types and checking the table in metastore.
+
+hive> create table customer ( id bigint, age tinyint );
+OK
+Time taken: 0.41 seconds
+hive> desc customer;
+OK
+id                  	bigint              	                    
+age                 	tinyint             	                    
+Time taken: 3.098 seconds, Fetched: 2 row(s)
+
+hive> show tables;
+OK
+customer
+med_products
+Time taken: 0.019 seconds, Fetched: 2 row(s)
+
+--- To check table created in metastore.
+
+mysql> use metastore;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> select TBL_ID,DB_ID,OWNER,TBL_NAME,TBL_TYPE,VIEW_EXPANDED_TEXT,VIEW_ORIGINAL_TEXT from TBLS;
++--------+-------+----------+--------------+---------------+--------------------+--------------------+
+| TBL_ID | DB_ID | OWNER    | TBL_NAME     | TBL_TYPE      | VIEW_EXPANDED_TEXT | VIEW_ORIGINAL_TEXT |
++--------+-------+----------+--------------+---------------+--------------------+--------------------+
+|      1 |     1 | cloudera | med_products | MANAGED_TABLE | NULL               | NULL               |
+|      2 |     6 | cloudera | med_products | MANAGED_TABLE | NULL               | NULL               |
+|      3 |     6 | cloudera | customer     | MANAGED_TABLE | NULL               | NULL               |
++--------+-------+----------+--------------+---------------+--------------------+--------------------+
+3 rows in set (0.00 sec)
+
+--- Lets create another table customer_order.
+
+hive> create table customer_order (id bigint, price decimal(10,2));
+OK
+Time taken: 0.124 seconds
+
+mysql> select TBL_ID,DB_ID,OWNER,TBL_NAME,TBL_TYPE,VIEW_EXPANDED_TEXT,VIEW_ORIGINAL_TEXT from TBLS;
++--------+-------+----------+----------------+---------------+--------------------+--------------------+
+| TBL_ID | DB_ID | OWNER    | TBL_NAME       | TBL_TYPE      | VIEW_EXPANDED_TEXT | VIEW_ORIGINAL_TEXT |
++--------+-------+----------+----------------+---------------+--------------------+--------------------+
+|      1 |     1 | cloudera | med_products   | MANAGED_TABLE | NULL               | NULL               |
+|      2 |     6 | cloudera | med_products   | MANAGED_TABLE | NULL               | NULL               |
+|      3 |     6 | cloudera | customer       | MANAGED_TABLE | NULL               | NULL               |
+|      4 |     6 | cloudera | customer_order | MANAGED_TABLE | NULL               | NULL               |
++--------+-------+----------+----------------+---------------+--------------------+--------------------+
+4 rows in set (0.00 sec)
+
+*******************************************Using String Data Types********************************************************************
+
+--- Three types STRING, VARCHAR, CHAR.
+1. STRING : sequence of characters enclosed in double or single quotes.
+2. VARCHAR : variable length character type. VARCHAR(max_length).
+3. CHAR : fixed-length character type.
+
 
 
 
