@@ -360,7 +360,119 @@ mysql> select TBL_ID,DB_ID,OWNER,TBL_NAME,TBL_TYPE,VIEW_EXPANDED_TEXT,VIEW_ORIGI
 2. VARCHAR : variable length character type. VARCHAR(max_length).
 3. CHAR : fixed-length character type.
 
+--- To use available STRING data types.
 
+hive> create table customer1 ( id bigint, name string, sex char(6), role varchar(64) );
+OK
+Time taken: 0.119 seconds
+hive> desc customer1;
+OK
+id                  	bigint              	                    
+name                	string              	                    
+sex                 	char(6)             	                    
+role                	varchar(64)         	                    
+Time taken: 0.285 seconds, Fetched: 4 row(s)
+
+
+**************************************** Using DateTime Data Type ********************************************************************
+--- Hive supports two Date/Time related fields.
+1. Timestamp : used to represent a particular time with the date and time value. Supports traditional UNIX timestamp variable length             encoding  with an optional nanosconds precision.
+
+2. Date : Used to represent only the date part of timestamp.
+
+--- To use Date/Time data types.
+
+hive> create table timestamp_example ( id int, created_at date, updated_at timestamp );
+OK
+Time taken: 0.088 seconds
+hive> desc timestamp_example;
+OK
+id                  	int                 	                    
+created_at          	date                	                    
+updated_at          	timestamp           	                    
+Time taken: 0.108 seconds, Fetched: 3 row(s)
+
+mysql> select TBL_ID,DB_ID,OWNER,TBL_NAME,TBL_TYPE,VIEW_EXPANDED_TEXT,VIEW_ORIGINAL_TEXT from TBLS;
++--------+-------+----------+-------------------+---------------+--------------------+--------------------+
+| TBL_ID | DB_ID | OWNER    | TBL_NAME          | TBL_TYPE      | VIEW_EXPANDED_TEXT | VIEW_ORIGINAL_TEXT |
++--------+-------+----------+-------------------+---------------+--------------------+--------------------+
+|      1 |     1 | cloudera | med_products      | MANAGED_TABLE | NULL               | NULL               |
+|      2 |     6 | cloudera | med_products      | MANAGED_TABLE | NULL               | NULL               |
+|      3 |     6 | cloudera | customer          | MANAGED_TABLE | NULL               | NULL               |
+|      4 |     6 | cloudera | customer_order    | MANAGED_TABLE | NULL               | NULL               |
+|      7 |     1 | cloudera | customer1         | MANAGED_TABLE | NULL               | NULL               |
+|      8 |     1 | cloudera | timestamp_example | MANAGED_TABLE | NULL               | NULL               |
++--------+-------+----------+-------------------+---------------+--------------------+--------------------+
+6 rows in set (0.00 sec)
+
+hive> create table abc( id bigint) comment 'My sunil table h ye toh bhai';
+OK
+Time taken: 0.101 seconds
+hive> desc abc;
+OK
+id                  	bigint              	                    
+Time taken: 0.204 seconds, Fetched: 1 row(s)
+
+Note: Any parameters on a table are stored in Hive Metastore Table ( TABLE_PARAMS ).
+
+mysql> select * from TABLE_PARAMS where TBL_ID=9;
++--------+-----------------------+------------------------------+
+| TBL_ID | PARAM_KEY             | PARAM_VALUE                  |
++--------+-----------------------+------------------------------+
+|      9 | comment               | My sunil table h ye toh bhai |
+|      9 | transient_lastDdlTime | 1471055573                   |
++--------+-----------------------+------------------------------+
+2 rows in set (0.00 sec)
+
+--- Hence Some important Metastore tables are.
+
+1. TBLS : contains the information about Hive Tables;
+2. TABLE_PARAMS : Contains table parameters and their description.
+3. COLUMNS_V2 : contains column names and their types.
+
+************************************** Using Miscellaneous Data Types ****************************************************************
+
+1. Boolean : accepts true or false values.
+2. Binary : will update later.
+
+
+************************************* Using Complex Data Types ***********************************************************************
+
+hive> create table customer2 ( id int, name struct<firstname:string, lastname:string>);
+OK
+Time taken: 0.213 seconds
+hive> desc customer2;
+OK
+id                  	int                 	                    
+name                	struct<firstname:string,lastname:string>	                    
+Time taken: 0.127 seconds, Fetched: 2 row(s)
+
+mysql> select TBL_ID,DB_ID,OWNER,TBL_NAME,TBL_TYPE,VIEW_EXPANDED_TEXT,VIEW_ORIGINAL_TEXT  from TBLS where TBL_ID=10;
++--------+-------+----------+-----------+---------------+--------------------+--------------------+
+| TBL_ID | DB_ID | OWNER    | TBL_NAME  | TBL_TYPE      | VIEW_EXPANDED_TEXT | VIEW_ORIGINAL_TEXT |
++--------+-------+----------+-----------+---------------+--------------------+--------------------+
+|     10 |     1 | cloudera | customer2 | MANAGED_TABLE | NULL               | NULL               |
++--------+-------+----------+-----------+---------------+--------------------+--------------------+
+1 row in set (0.00 sec)
+
+mysql> select * from COLUMNS_V2 where CD_ID=10;
++-------+---------+-------------+------------------------------------------+-------------+
+| CD_ID | COMMENT | COLUMN_NAME | TYPE_NAME                                | INTEGER_IDX |
++-------+---------+-------------+------------------------------------------+-------------+
+|    10 | NULL    | id          | int                                      |           0 |
+|    10 | NULL    | name        | struct<firstname:string,lastname:string> |           1 |
++-------+---------+-------------+------------------------------------------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from TABLE_PARAMS where TBL_ID=10;
++--------+-----------------------+-------------+
+| TBL_ID | PARAM_KEY             | PARAM_VALUE |
++--------+-----------------------+-------------+
+|     10 | transient_lastDdlTime | 1471059883  |
++--------+-----------------------+-------------+
+1 row in set (0.00 sec)
+
+Note: TABLE_PARAMS contains at least one parameter for each hive table. Any additional parameters will be stored if defined.
 
 
 
