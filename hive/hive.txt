@@ -474,6 +474,141 @@ mysql> select * from TABLE_PARAMS where TBL_ID=10;
 
 Note: TABLE_PARAMS contains at least one parameter for each hive table. Any additional parameters will be stored if defined.
 
+************************************* Creating Databases *****************************************************************************
+
+--- To create a database with optional comment parameter.
+
+hive> create database financials comment 'Holds all financial tables';
+OK
+Time taken: 1.208 seconds
+
+mysql> select d.desc,db_location_uri,name,OWNER_NAME from DBS d;
++----------------------------+-------------------------------------------------------------------+------------+------------+
+| desc                       | db_location_uri                                                   | name       | OWNER_NAME |
++----------------------------+-------------------------------------------------------------------+------------+------------+
+| Default Hive database      | hdfs://quickstart.cloudera:8020/user/hive/warehouse               | default    | public     |
+| NULL                       | hdfs://quickstart.cloudera:8020/user/hive/warehouse/health.db     | health     | cloudera   |
+| Holds all financial tables | hdfs://quickstart.cloudera:8020/user/hive/warehouse/financials.db | financials | cloudera   |
++----------------------------+-------------------------------------------------------------------+------------+------------+
+3 rows in set (0.00 sec)
+
+Note: Hive will create a directory for each database with exception in default database. The directory is created under a top level     directory specified by the property hive.metastore.warehouse.dir
+
+--- Assuming we are using a default value for this property, /user/hive/warehouse, when financial database is created , Hive will create the directory /user/hive/warehouse/financials.db and note down the .db extension.
+
+--- We can override the default location for the new directory as by below example.
+
+hive> create database suntech location '/user/hive/sundb';
+OK
+Time taken: 0.134 seconds
+
+Warning: On CDH 5.7.0 i have found the above statement creates the database but there is no directory created under specified location      with .db extention. I need to resolve this on some BigData forum.
+
+mysql> select d.desc,db_location_uri,name,OWNER_NAME from DBS d;
++----------------------------+-------------------------------------------------------------------+------------+------------+
+| desc                       | db_location_uri                                                   | name       | OWNER_NAME |
++----------------------------+-------------------------------------------------------------------+------------+------------+
+| Default Hive database      | hdfs://quickstart.cloudera:8020/user/hive/warehouse               | default    | public     |
+| NULL                       | hdfs://quickstart.cloudera:8020/user/hive/warehouse/health.db     | health     | cloudera   |
+| Holds all financial tables | hdfs://quickstart.cloudera:8020/user/hive/warehouse/financials.db | financials | cloudera   |
+| NULL                       | hdfs://quickstart.cloudera:8020/user/hive/sundb                   | suntech    | cloudera   |
++----------------------------+-------------------------------------------------------------------+------------+------------+
+4 rows in set (0.00 sec)
+
+--- To drop a database. By default Hive won't permit you to drop a database if it contains tables.
+
+hive> drop database if exists health;
+FAILED: Execution Error, return code 1 from org.apache.hadoop.hive.ql.exec.DDLTask. InvalidOperationException(message:Database health is not empty. One or more tables exist.)
+
+hive> drop database if exists financials;
+OK
+Time taken: 0.109 seconds
+
+--- To drop a non-empty database either drop the tables first or append the CASCADE keyword to the command.
+
+hive> drop database if exists health cascade;
+
+--- We can associate some database key-value properties with the database at the time of creation.
+
+hive> create database retail with dbproperties ( 'creatore' = 'sunil kumar', 'date' = '2016-08-13' );
+OK
+Time taken: 0.154 seconds
+
+mysql> select d.desc,db_location_uri,name,OWNER_NAME from DBS d;
++-----------------------+---------------------------------------------------------------+---------+------------+
+| desc                  | db_location_uri                                               | name    | OWNER_NAME |
++-----------------------+---------------------------------------------------------------+---------+------------+
+| Default Hive database | hdfs://quickstart.cloudera:8020/user/hive/warehouse           | default | public     |
+| NULL                  | hdfs://quickstart.cloudera:8020/user/hive/warehouse/health.db | health  | cloudera   |
+| NULL                  | hdfs://quickstart.cloudera:8020/user/hive/sundb               | suntech | cloudera   |
+| NULL                  | hdfs://quickstart.cloudera:8020/user/hive/warehouse/retail.db | retail  | cloudera   |
++-----------------------+---------------------------------------------------------------+---------+------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from DATABASE_PARAMS;
++-------+-----------+-------------+
+| DB_ID | PARAM_KEY | PARAM_VALUE |
++-------+-----------+-------------+
+|    14 | creatore  | sunil kumar |
+|    14 | date      | 2016-08-13  |
++-------+-----------+-------------+
+2 rows in set (0.00 sec)
+
+hive> create database telecome comment 'stores all telecom tables'
+    > with dbproperties ( 'developer'='sunil kumar behl', 'table_type'='landing tables', 'max capacity'='30' );
+OK
+Time taken: 0.155 seconds
+
+mysql> select db_id,d.desc,db_location_uri,name,OWNER_NAME from DBS d;
++-------+---------------------------+-----------------------------------------------------------------+----------+------------+
+| db_id | desc                      | db_location_uri                                                 | name     | OWNER_NAME |
++-------+---------------------------+-----------------------------------------------------------------+----------+------------+
+|     1 | Default Hive database     | hdfs://quickstart.cloudera:8020/user/hive/warehouse             | default  | public     |
+|     6 | NULL                      | hdfs://quickstart.cloudera:8020/user/hive/warehouse/health.db   | health   | cloudera   |
+|    13 | NULL                      | hdfs://quickstart.cloudera:8020/user/hive/sundb                 | suntech  | cloudera   |
+|    14 | NULL                      | hdfs://quickstart.cloudera:8020/user/hive/warehouse/retail.db   | retail   | cloudera   |
+|    15 | stores all telecom tables | hdfs://quickstart.cloudera:8020/user/hive/warehouse/telecome.db | telecome | cloudera   |
++-------+---------------------------+-----------------------------------------------------------------+----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from DATABASE_PARAMS where db_id=15;
++-------+--------------+------------------+
+| DB_ID | PARAM_KEY    | PARAM_VALUE      |
++-------+--------------+------------------+
+|    15 | developer    | sunil kumar behl |
+|    15 | max capacity | 30               |
+|    15 | table_type   | landing tables   |
++-------+--------------+------------------+
+3 rows in set (0.00 sec)
+
+hive> desc database extended telecome;
+OK
+telecome	stores all telecom tables	hdfs://quickstart.cloudera:8020/user/hive/warehouse/telecome.db	cloudera	USER	{developer=sunil kumar behl, max capacity=30, table_type=landing tables}
+Time taken: 0.062 seconds, Fetched: 1 row(s)
+
+--- To alter database. Only key-value pairs in DBPROPERTIES can be set again using the ALTER DATABASE command. No other metadata can be changed including its name and directory location.
+
+hive> alter database telecome set dbproperties ('developer'='behl sunil', 'max capacity'='25' );
+OK
+Time taken: 0.253 seconds
+
+mysql> select * from DATABASE_PARAMS where db_id=15;
++-------+--------------+----------------+
+| DB_ID | PARAM_KEY    | PARAM_VALUE    |
++-------+--------------+----------------+
+|    15 | developer    | behl sunil     |
+|    15 | max capacity | 25             |
+|    15 | table_type   | landing tables |
++-------+--------------+----------------+
+3 rows in set (0.00 sec)
+
+************************************************************* Creating Tables ********************************************************
+
+
+
+
+
+
 
 
 
