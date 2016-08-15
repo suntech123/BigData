@@ -1,0 +1,64 @@
+************************************************ Partitioned Managed Tables ************************************************************
+
+--- Partitioned tables have important performance benefits. To create a partitioned managed table.
+
+hive> create table employees(
+    > name string,
+    > salary float,
+    > subordinates array<string>,
+    > deductions map<string,float>,
+    > address struct<street:string, city:string, state:string, zip:int>
+    > )
+    > partitioned by (country string, state string)
+    > ;
+OK
+Time taken: 0.94 seconds
+
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/hive/warehouse/health.db;
+Found 4 items
+drwxrwxrwx   - cloudera supergroup          0 2016-08-11 20:49 /user/hive/warehouse/health.db/customer
+drwxrwxrwx   - cloudera supergroup          0 2016-08-11 20:59 /user/hive/warehouse/health.db/customer_order
+drwxrwxrwx   - cloudera supergroup          0 2016-08-14 23:10 /user/hive/warehouse/health.db/employees
+drwxrwxrwx   - cloudera supergroup          0 2016-07-16 06:23 /user/hive/warehouse/health.db/med_products
+
+mysql> select TBL_ID,DB_ID,OWNER,TBL_NAME,TBL_TYPE,VIEW_EXPANDED_TEXT,VIEW_ORIGINAL_TEXT  from TBLS where tbl_id=11;
++--------+-------+----------+-----------+---------------+--------------------+--------------------+
+| TBL_ID | DB_ID | OWNER    | TBL_NAME  | TBL_TYPE      | VIEW_EXPANDED_TEXT | VIEW_ORIGINAL_TEXT |
++--------+-------+----------+-----------+---------------+--------------------+--------------------+
+|     11 |     6 | cloudera | employees | MANAGED_TABLE | NULL               | NULL               |
++--------+-------+----------+-----------+---------------+--------------------+--------------------+
+1 row in set (0.00 sec)
+
+mysql> select * from TABLE_PARAMS where TBL_ID=11;
++--------+-----------------------+-------------+
+| TBL_ID | PARAM_KEY             | PARAM_VALUE |
++--------+-----------------------+-------------+
+|     11 | transient_lastDdlTime | 1471241435  |
++--------+-----------------------+-------------+
+1 row in set (0.00 sec)
+
+hive> describe extended employees;
+OK
+name                	string              	                    
+salary              	float               	                    
+subordinates        	array<string>       	                    
+deductions          	map<string,float>   	                    
+address             	struct<street:string,city:string,state:string,zip:int>	                    
+country             	string              	                    
+state               	string              	                    
+	 	 
+# Partition Information	 	 
+# col_name            	data_type           	comment             
+	 	 
+country             	string              	                    
+state               	string              	                    
+
+
+--- To check partition information we can use SHOW PARTITIONS command.
+
+hive> show partitions employees;
+OK
+Time taken: 0.269 seconds
+
+Note: As table is empty and hence partiotions are not shown. Let's check again once data is available.
+
