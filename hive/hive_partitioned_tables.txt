@@ -268,5 +268,5 @@ state=UTTAR PRADESH
 state=WEST BENGAL
 Time taken: 0.197 seconds, Fetched: 35 row(s)
 
-
+Note : One of the observations we can make is the name of the partitions. The partitions will be named along with column name. Both column + form combined together are the folder names. And if you go inside the folder and open the data files, you will not see the state column.
 
