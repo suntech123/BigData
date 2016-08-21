@@ -62,3 +62,86 @@ Time taken: 0.269 seconds
 
 Note: As table is empty and hence partiotions are not shown. Let's check again once data is available.
 
+======================================================================================================================================
+========================================= Hive Partitions – Explained with Example ===================================================
+======================================================================================================================================
+
+--- Create a database for this exercise
+
+hive> CREATE DATABASE HIVE_PARTITION;
+OK
+Time taken: 3.807 seconds
+
+hive> USE HIVE_PARTITION;
+OK
+Time taken: 0.233 seconds
+
+--- There are two ways to load data to a partitioned table.
+ --> First we will create a temporary table without partitions.
+ --> Then load the data into this temporary non-partitioned table.
+ --> Next, we create the actual table with partitions.
+ --> Load data from temporary table into partitioned table.
+ 
+--- To create a temp table without partitions.
+
+hive> CREATE TABLE temp_India (
+    > OFFICE_NAME STRING,
+    > OFFICE_STATUS     STRING,
+    > PINCODE           INT,
+    > TELEPHONE   BIGINT,
+    > TALUK       STRING,
+    > DISTRICT    STRING,
+    > STATE       STRING,
+    > POSTAL_DIVISION   STRING,
+    > POSTAL_REGION     STRING,
+    > POSTAL_CIRCLE     STRING
+    > )
+    > ROW FORMAT DELIMITED
+    > FIELDS TERMINATED BY ','
+    > STORED AS TEXTFILE;
+OK
+Time taken: 0.753 seconds
+
+--- Load data into temporary table
+
+hive> LOAD DATA LOCAL INPATH '/home/cloudera/Downloads/All_States_PinCode.csv' INTO TABLE temp_India;
+Loading data to table hive_partition.temp_india
+Table hive_partition.temp_india stats: [numFiles=1, totalSize=6565443]
+OK
+Time taken: 3.686 seconds
+
+--- Create partitioned table
+
+hive> CREATE TABLE India (
+    > OFFICE_NAME STRING,
+    > OFFICE_STATUS     STRING,
+    > PINCODE           INT,
+    > TELEPHONE   BIGINT,
+    > TALUK       STRING,
+    > DISTRICT    STRING,
+    > POSTAL_DIVISION   STRING,
+    > POSTAL_REGION     STRING,
+    > POSTAL_CIRCLE     STRING
+    > )
+    > PARTITIONED BY (STATE STRING)
+    > ROW FORMAT DELIMITED
+    > FIELDS TERMINATED BY ','
+    > STORED AS TEXTFILE;
+OK
+Time taken: 0.37 seconds
+
+[cloudera@quickstart Downloads]$ hdfs dfs -ls /user/hive/warehouse/hive_partition.db
+Found 2 items
+drwxrwxrwx   - cloudera supergroup          0 2016-08-21 00:37 /user/hive/warehouse/hive_partition.db/india
+drwxrwxrwx   - cloudera supergroup          0 2016-08-21 00:30 /user/hive/warehouse/hive_partition.db/temp_india
+
+[cloudera@quickstart Downloads]$ hdfs dfs -ls /user/hive/warehouse/hive_partition.db/india
+[cloudera@quickstart Downloads]$ 
+
+[cloudera@quickstart Downloads]$ hdfs dfs -ls /user/hive/warehouse/hive_partition.db/temp_india
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup    6565443 2016-08-21 00:30 /user/hive/warehouse/hive_partition.db/temp_india/All_States_PinCode.csv
+--- Instruct hive to dynamically load partitions
+
+
+
