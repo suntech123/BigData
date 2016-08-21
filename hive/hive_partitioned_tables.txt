@@ -1,4 +1,4 @@
-************************************************ Partitioned Managed Tables ************************************************************
+================================================= Partitioned Managed Tables =========================================================
 
 --- Partitioned tables have important performance benefits. To create a partitioned managed table.
 
@@ -141,7 +141,92 @@ drwxrwxrwx   - cloudera supergroup          0 2016-08-21 00:30 /user/hive/wareho
 [cloudera@quickstart Downloads]$ hdfs dfs -ls /user/hive/warehouse/hive_partition.db/temp_india
 Found 1 items
 -rwxrwxrwx   1 cloudera supergroup    6565443 2016-08-21 00:30 /user/hive/warehouse/hive_partition.db/temp_india/All_States_PinCode.csv
+
 --- Instruct hive to dynamically load partitions
+
+hive> SET hive.exec.dynamic.partition = true;
+hive> SET hive.exec.dynamic.partition.mode = nonstrict;
+
+--- Import data into partitioned table from temporary table.
+
+hive> INSERT OVERWRITE TABLE India PARTITION (STATE)
+    > SELECT
+    > OFFICE_NAME,
+    > OFFICE_STATUS,
+    > PINCODE,
+    > TELEPHONE,
+    > TALUK,
+    > DISTRICT,
+    > STATE,
+    > POSTAL_DIVISION,
+    > POSTAL_REGION,
+    > POSTAL_CIRCLE
+    > FROM temp_India;
+
+[cloudera@quickstart Downloads]$ hdfs dfs -ls /user/hive/warehouse/hive_partition.db/
+Found 2 items
+drwxrwxrwx   - cloudera supergroup          0 2016-08-21 02:02 /user/hive/warehouse/hive_partition.db/india
+drwxrwxrwx   - cloudera supergroup          0 2016-08-21 00:30 /user/hive/warehouse/hive_partition.db/temp_india
+
+[cloudera@quickstart Downloads]$ hdfs dfs -ls /user/hive/warehouse/hive_partition.db/india
+Found 35 items
+drwxrwxrwx   - cloudera supergroup          0 2016-08-21 02:02 /user/hive/warehouse/hive_partition.db/india/state=AMBALA  HQ
+drwxrwxrwx   - cloudera supergroup          0 2016-08-21 02:02 /user/hive/warehouse/hive_partition.db/india/state=ANDHRA PRADESH
+drwxrwxrwx   - cloudera supergroup          0 2016-08-21 02:02 /user/hive/warehouse/hive_partition.db/india/state=ASSAM
+drwxrwxrwx   - cloudera supergroup          0 2016-08-21 02:02 /user/hive/warehouse/hive_partition.db/india/state=BERHAMPUR
+..........
+...................
+
+[cloudera@quickstart Downloads]$ hdfs dfs -ls /user/hive/warehouse/hive_partition.db/india/state=ASSAM
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup     195309 2016-08-21 02:02 /user/hive/warehouse/hive_partition.db/india/state=ASSAM/000000_0
+
+--- We can see the partition table information.
+
+hive> desc formatted india;
+OK
+# col_name            	data_type           	comment             
+	 	 
+office_name         	string              	                    
+office_status       	string              	                    
+pincode             	int                 	                    
+telephone           	bigint              	                    
+taluk               	string              	                    
+district            	string              	                    
+postal_division     	string              	                    
+postal_region       	string              	                    
+postal_circle       	string              	                    
+	 	 
+# Partition Information	 	 
+# col_name            	data_type           	comment             
+	 	 
+state               	string              	                    
+	 	 
+# Detailed Table Information	 	 
+Database:           	hive_partition      	 
+Owner:              	cloudera            	 
+CreateTime:         	Sun Aug 21 00:37:38 PDT 2016	 
+LastAccessTime:     	UNKNOWN             	 
+Protect Mode:       	None                	 
+Retention:          	0                   	 
+Location:           	hdfs://quickstart.cloudera:8020/user/hive/warehouse/hive_partition.db/india	 
+Table Type:         	MANAGED_TABLE       	 
+Table Parameters:	 	 
+	transient_lastDdlTime	1471765058          
+	 	 
+# Storage Information	 	 
+SerDe Library:      	org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe	 
+InputFormat:        	org.apache.hadoop.mapred.TextInputFormat	 
+OutputFormat:       	org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat	 
+Compressed:         	No                  	 
+Num Buckets:        	-1                  	 
+Bucket Columns:     	[]                  	 
+Sort Columns:       	[]                  	 
+Storage Desc Params:	 	 
+	field.delim         	,                   
+	serialization.format	,                   
+Time taken: 0.216 seconds, Fetched: 40 row(s)
+
 
 
 
