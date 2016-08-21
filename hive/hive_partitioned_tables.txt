@@ -227,6 +227,46 @@ Storage Desc Params:
 	serialization.format	,                   
 Time taken: 0.216 seconds, Fetched: 40 row(s)
 
+--- To check on partitions only info on a table.
+
+hive> show partitions india;
+OK
+state=AMBALA  HQ
+state=ANDHRA PRADESH
+state=ASSAM
+state=BERHAMPUR
+state=BIHAR
+state=CALICUT
+state=CHANDIGARH REGION
+state=CHATTISGARH
+state=DELHI
+state=GOA-PANAJI
+state=GUJARAT
+state=HARYANA
+state=HIMACHAL PRADESH
+state=HYDERABAD
+state=JAIPUR HQ
+state=JAMMUKASHMIR
+state=JHARKHAND
+state=JODHPUR
+state=KARNATAKA
+state=KERALA
+state=MADHYA PRADESH
+state=MAHARASHTRA
+state=MUMBAI
+state=NAGPUR
+state=NORTH EASTERN
+state=NORTH KARNATAKA
+state=ORISSA
+state=PUNJAB
+state=RAIPUR
+state=RAJASTHAN
+state=SAMBALPUR
+state=SRINAGAR HQ
+state=TAMILNADU
+state=UTTAR PRADESH
+state=WEST BENGAL
+Time taken: 0.197 seconds, Fetched: 35 row(s)
 
 
 
