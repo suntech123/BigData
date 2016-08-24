@@ -1,0 +1,7 @@
+==================================================== Oozie Workflow Scheduler ===========================================================
+
+--- To check whether the oozie scheduler is up and running.
+
+[cloudera@quickstart ~]$ oozie admin -oozie http://quickstart.cloudera:11000/oozie -status
+System mode: NORMAL
+
