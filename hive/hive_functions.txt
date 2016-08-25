@@ -1,0 +1,102 @@
+========================================================================================================================================
+===================================================== Hive Functions ===================================================================
+
+--- to use concat function
+
+hive> select pid,concat(name,phno) from person where pid < 105;
+OK
+100	Finn03 57 19 43 74
+101	Abbot 1281 Nunc Ave"
+102	Ezra Rd."
+103	Hu04 70 24 13 64
+104	Brody05 71 64 82 38
+Time taken: 0.248 seconds, Fetched: 5 row(s)
+
+hive> select pid,concat(name," ",phno) from person where pid < 105;
+OK
+100	Finn 03 57 19 43 74
+101	Abbot  1281 Nunc Ave"
+102	Ezra  Rd."
+103	Hu 04 70 24 13 64
+104	Brody 05 71 64 82 38
+Time taken: 0.217 seconds, Fetched: 5 row(s)
+hive> select pid,concat(name,"\t ",phno) from person where pid < 105;
+OK
+100	Finn	 03 57 19 43 74
+101	Abbot	  1281 Nunc Ave"
+102	Ezra	  Rd."
+103	Hu	 04 70 24 13 64
+104	Brody	 05 71 64 82 38
+Time taken: 0.19 seconds, Fetched: 5 row(s)
+
+**************************************************************************************************************************************
+
+--- To use SUBSTR(STRING, INT start) function.
+
+hive> select * from person where pid < 105;
+OK
+100	Finn	459-4478 Facilisis Ave	03 57 19 43 74	"$7
+101	Abbot	"P.O. Box 865	 1281 Nunc Ave"	08 29 01 69 92
+102	Ezra	"Ap #121-3355 Dui	 Rd."	06 93 84 92 14
+103	Hu	231-9516 Est. Rd.	04 70 24 13 64	"$5
+104	Brody	278-8823 Lorem Road	05 71 64 82 38	"$7
+Time taken: 0.275 seconds, Fetched: 5 row(s)
+
+hive> select pid,substr(name, 2) from person where pid < 105;
+OK
+100	inn
+101	bbot
+102	zra
+103	u
+104	rody
+Time taken: 0.114 seconds, Fetched: 5 row(s)
+
+--- To use SUBSTR(STRING, int start, int length) function.
+
+hive> select pid,substr(name, 2,2) from person where pid < 105;
+OK
+100	in
+101	bb
+102	zr
+103	u
+104	ro
+Time taken: 0.185 seconds, Fetched: 5 row(s)
+
+**************************************************************************************************************************************
+
+--- Using upper(string) and lower(string) functions.
+
+hive> select upper(name), lower(name) from person where pid < 105;
+OK
+FINN	finn
+ABBOT	abbot
+EZRA	ezra
+HU	hu
+BRODY	brody
+Time taken: 0.199 seconds, Fetched: 5 row(s)
+
+**************************************************************************************************************************************
+
+--- To use trim(string), ltrim(string), rtrim(string)
+
+
+
+
+
+
+**************************************************************************************************************************************
+
+--- regexp_replace(string A, string B, string C) 
+
+hive> select upper(name), lower(name),regexp_replace(name, 'o', 'oyo') from person where pid < 105;
+OK
+FINN	finn	Finn
+ABBOT	abbot	Abboyot
+EZRA	ezra	Ezra
+HU	hu	Hu
+BRODY	brody	Broyody
+Time taken: 0.091 seconds, Fetched: 5 row(s)
+
+
+
+
