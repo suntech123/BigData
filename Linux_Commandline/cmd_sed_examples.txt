@@ -63,9 +63,50 @@ Note : With this approach we can implement horizontal cutting of a file ( select
 9    Shafira    02 57 40 61 79    9644
 10    Illana    05 41 33 69 84    6865
 
+--- To delete lines from 3rd line till end of the file.
+
+[cloudera@quickstart ~]$ sed '3,$d' demo.txt
+gdhsdgs dhsgdhsd hsgdhsd gshdgshd sunny
+dhsgds hsgdhsd hsgd sdhgshd sdgs sdgshdsa 
+
+Note: This type of commands can be used to remove header/footer from files.
+
 --- To print only lines matching the pattern.
 
 [cloudera@quickstart ~]$ sed -n '/[Ss]ybil/p' sed_demo1.txt 
 6    Sybil    06 86 81 69 69    7832
 
---- To delete lines containing a pattern. 
+--- To delete lines containing a pattern.
+
+
+
+--- To print lines containing a specified word at the beginning of line.
+
+[cloudera@quickstart ~]$ sed -n '/^munny/p' demo.txt
+munny sgdhs hgsdhs dhgds dhgds dhsdgs dhs 
+
+--- To print lines conatining a specified word at the end of the line.
+
+[cloudera@quickstart ~]$ sed -n '/sunny$/p' demo.txt
+gdhsdgs dhsgdhsd hsgdhsd gshdgshd sunny
+
+*************************************************************************************************************************************
+
+--- Substitution: The s command.
+
+[cloudera@quickstart ~]$ cat demo.txt
+gdhsdgs dhsgdhsd hsgdhsd gshdgshd sunny
+dhsgds hsgdhsd hsgd sdhgshd sdgs sdgshdsa 
+gdhsdsds hgdhsgd  sdhs shd sgdsh shdd sadg
+gdhsdsdhs hsghsd hdgsa dshhs dsashadgs dsh
+munny sgdhs hgsdhs dhgds dhgds dhsdgs dhs 
+
+[cloudera@quickstart ~]$ sed 's/dsh/sunil/g' demo.txt
+gdhsdgs dhsgdhsd hsgdhsd gshdgshd sunny
+dhsgds hsgdhsd hsgd sdhgshd sdgs sdgshdsa 
+gdhsdsds hgdhsgd  sdhs shd sgsunil shdd sadg
+gdhsdsdhs hsghsd hdgsa sunilhs dsashadgs sunil
+munny sgdhs hgsdhs dhgds dhgds dhsdgs dhs 
+
+
+
