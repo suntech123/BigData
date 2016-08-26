@@ -108,5 +108,20 @@ gdhsdsds hgdhsgd  sdhs shd sgsunil shdd sadg
 gdhsdsdhs hsghsd hdgsa sunilhs dsashadgs sunil
 munny sgdhs hgsdhs dhgds dhgds dhsdgs dhs 
 
+**************************************************************************************************************************************
+
+--- Multiple edits: The e command.
+
+[cloudera@quickstart ~]$ cat sun_demo1.txt 
+sunil kumar behl 234
+mohit kumar saini 45
+amandeep singh chauhan 34
+gad gahd gahd dghd 567
+[cloudera@quickstart ~]$ sed -e '3d' -e 's/kumar/singh/' sun_demo1.txt 
+sunil singh behl 234
+mohit singh saini 45
+gad gahd gahd dghd 567
+
+
 
 
