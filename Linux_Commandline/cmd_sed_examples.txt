@@ -1,0 +1,71 @@
+=========================================================================================================================================
+============================================= sed command practical examples ============================================================
+
+### Working
+ -- sed is a non-interactive editor. It lets you type your editing commands at the command line. 
+ -- It does not change your file unless you save the output with shell redirection.
+ -- It processes a file ( or input ) one line at a time and sends its output to the screen.
+ -- It stores the line it is currently processing in a temporary buffer, called a pattern space.
+ -- By storing each line in a temporary buffer and performing edits on that line, the original file is never altered or destroyed.
+###
+
+### Addressing
+ -- Addressing used to specify which lines to be edited.
+ -- The address can be in the form of numbers and regex or both.
+ -- If no address specified it processes all lineds of input file.
+ -- If address is number it represents a line number.
+ -- A dollar sign ( $ ) represent the last line.
+ -- Conmma seperated two line numbers are within that range of lines, including first and last line in the range.
+###
+
+****************************************************************************************************************************************
+
+--- General format.
+
+sed 'command' filename(s)
+
+--- Working file
+
+[cloudera@quickstart ~]$ cat sed_demo1.txt 
+1    Mercedes    07 88 20 34 97    6050
+2    Sloane    05 51 41 94 24    6355
+3    Shafira    02 41 97 96 62    9449
+4    Hedwig    03 62 09 80 97    9122
+5    Genevieve    07 09 40 90 24    7191
+6    Sybil    06 86 81 69 69    7832
+7    Genevieve    07 89 95 29 18    9571
+8    Jenna    09 69 89 97 69    6771
+9    Shafira    02 57 40 61 79    9644
+10    Illana    05 41 33 69 84    6865
+
+--- To print all the lines of a file except a range of lines ( eg except lines 2,3,4 )
+
+[cloudera@quickstart ~]$ sed '2,4d' sed_demo1.txt 
+1    Mercedes    07 88 20 34 97    6050
+5    Genevieve    07 09 40 90 24    7191
+6    Sybil    06 86 81 69 69    7832
+7    Genevieve    07 89 95 29 18    9571
+8    Jenna    09 69 89 97 69    6771
+9    Shafira    02 57 40 61 79    9644
+10    Illana    05 41 33 69 84    6865
+
+Note : With this approach we can implement horizontal cutting of a file ( selection ).
+       Also helpful if you want to remove the header/tailer from a file.
+
+[cloudera@quickstart ~]$ sed '1d' sed_demo1.txt 
+2    Sloane    05 51 41 94 24    6355
+3    Shafira    02 41 97 96 62    9449
+4    Hedwig    03 62 09 80 97    9122
+5    Genevieve    07 09 40 90 24    7191
+6    Sybil    06 86 81 69 69    7832
+7    Genevieve    07 89 95 29 18    9571
+8    Jenna    09 69 89 97 69    6771
+9    Shafira    02 57 40 61 79    9644
+10    Illana    05 41 33 69 84    6865
+
+--- To print only lines matching the pattern.
+
+[cloudera@quickstart ~]$ sed -n '/[Ss]ybil/p' sed_demo1.txt 
+6    Sybil    06 86 81 69 69    7832
+
+--- To delete lines containing a pattern. 
