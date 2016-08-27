@@ -203,6 +203,324 @@ pskumarbehl@ubuntu:~$ sed '$d' suntech1.txt
 8    Jenna    09 69 89 97 69    6771
 9    Shafira    02 57 40 61 79    9644
 
+--- To deletes the line from which matches the given pattern and 2 lines next to that.
+
+pskumarbehl@ubuntu:~$ sed '/Sybil/,+2d' suntech1.txt 
+1    Mercedes    07 88 20 34 97    6050
+2    Sloane    05 51 41 94 24    6355
+3    Shafira    02 41 97 96 62    9449
+4    Hedwig    03 62 09 80 97    9122
+5    Genevieve    07 09 40 90 24    7191
+9    Shafira    02 57 40 61 79    9644
+10    Illana    05 41 33 69 84    6865
+
+
+--- To delete blank Line from a file using sed
+pskumarbehl@ubuntu:~$ cat blankline.txt 
+skdjksdkdjksjdkdksjdd ddhsjad hsddja hsadjhsj
+
+sdshdjhdhsdhsdsd jhsad jhsdj jshdj jhdsjd asd
+
+
+sdhjdhdhdsjhdjhdd jshdjs jhsjd jhdsa jshdsa dsd
+
+sahdjdhdsdjhdj jshdjsad jhdj sjdsd jdhsajd d
+pskumarbehl@ubuntu:~$ sed '/^$/d' blankline.txt
+skdjksdkdjksjdkdksjdd ddhsjad hsddja hsadjhsj
+sdshdjhdhsdhsdsd jhsad jhsdj jshdj jhdsjd asd
+sdhjdhdhdsjhdjhdd jshdjs jhsjd jhdsa jshdsa dsd
+sahdjdhdsdjhdj jshdjsad jhdj sjdsd jdhsajd d
+
+*****************************************************************
+**************<< How To Write to a File Using Sed >>*************
+*****************************************************************
+
+Syntax: 
+#sed 'ADDERSSw outputfile' inputfilename
+#sed '/PATTERN/w outputfile' inputfilename
+
+Sed reads a line and place it in a pattern buffer and writes the pattern buffer 
+to the given output file according to the supplied commands.
+
+--- Write 1st line of the file ( remember to use -n option here to suprress default printing option)
+
+pskumarbehl@ubuntu:~$ cat suntech2.txt
+1. Linux - Sysadmin, Scripting etc.
+2. Databases - Oracle, mySQL etc.
+3. Hardware
+4. Security (Firewall, Network, Online Security etc)
+5. Storage
+6. Cool gadgets and websites
+7. Productivity (Too many technologies to explore, not much time available)
+8. Website Design
+9. Software Development
+10.Windows- Sysadmin, reboot etc.
+
+pskumarbehl@ubuntu:~$ sed -n '1w abc.txt' suntech2.txt
+pskumarbehl@ubuntu:~$ cat abc.txt
+1. Linux - Sysadmin, Scripting etc.
+
+Note : output file (eg abc.txt) will be created.
+
+--- Write first & last line of the file.
+
+pskumarbehl@ubuntu:~$ sed -n -e '1w first_last.txt' -e '$w first_last.txt' suntech2.txt
+pskumarbehl@ubuntu:~$ cat first_last.txt 
+1. Linux - Sysadmin, Scripting etc.
+10.Windows- Sysadmin, reboot etc.
+
+--- Write the lines matches with the pattern Storage or Sysadmin.
+
+pskumarbehl@ubuntu:~$ sed -n -e '/Storage/w output.txt' -e '/Sysadmin/w output.txt' suntech2.txt
+pskumarbehl@ubuntu:~$ cat output.txt
+1. Linux - Sysadmin, Scripting etc.
+5. Storage
+10.Windows- Sysadmin, reboot etc.
+
+
+******************************************************************
+*********** < Find and Replace Text Inside a File Using RegEx >***
+******************************************************************
+
+The `s’ command is probably the most important in `sed’ and has a lot of different options.
+
+Syntax:
+#sed 'ADDRESSs/REGEXP/REPLACEMENT/FLAGS' filename
+#sed 'PATTERNs/REGEXP/REPLACEMENT/FLAGS' filename
+
+/ is a delimiter
+
+FLAGS can be any of the following
+
+1. g Replace all the instance of REGEXP with REPLACEMENT
+2. n Could be any number,replace nth instance of the REGEXP with REPLACEMENT.
+3. p If substitution was made, then prints the new pattern space.
+4. i match REGEXP in a case-insensitive manner.
+5. w file If substitution was made, write out the result to the given file.
+6. We can use different delimiters ( one of @ % ; : ) instead of /
+
+--- Working file for this exercise.
+
+pskumarbehl@ubuntu:~$ cat stuff.txt
+# Instruction Guides
+1. Linux Sysadmin, Linux Scripting etc.
+2. Databases - Oracle, mySQL etc.
+3. Security (Firewall, Network, Online Security etc)
+4. Storage in Linux
+5. Productivity (Too many technologies to explore, not much time available)
+#  Additional FAQS
+6. Windows- Sysadmin, reboot etc.
+
+--- Substitute Word “Linux” to “Linux-Unix” Using sed s//
+
+pskumarbehl@ubuntu:~$ sed 's/Linux/Linux-Unix/' stuff.txt
+# Instruction Guides
+1. Linux-Unix Sysadmin, Linux Scripting etc.
+2. Databases - Oracle, mySQL etc.
+3. Security (Firewall, Network, Online Security etc)
+4. Storage in Linux-Unix
+5. Productivity (Too many technologies to explore, not much time available)
+#  Additional FAQS
+6. Windows- Sysadmin, reboot etc.
+
+Note : Without any flag we can see only first occurence of the word per line only replaced.
+
+--- Substitute all Appearances of a Word Using sed s//g
+
+pskumarbehl@ubuntu:~$ sed 's/Linux/Linux-Unix/g' stuff.txt
+# Instruction Guides
+1. Linux-Unix Sysadmin, Linux-Unix Scripting etc.
+2. Databases - Oracle, mySQL etc.
+3. Security (Firewall, Network, Online Security etc)
+4. Storage in Linux-Unix
+5. Productivity (Too many technologies to explore, not much time available)
+#  Additional FAQS
+6. Windows- Sysadmin, reboot etc.
+
+--- Substitute Only 2nd Occurrence of a Word Using sed s//2
+
+pskumarbehl@ubuntu:~$ sed 's/Linux/Linux-Unix/2' stuff.txt
+# Instruction Guides
+1. Linux Sysadmin, Linux-Unix Scripting etc.
+2. Databases - Oracle, mySQL etc.
+3. Security (Firewall, Network, Online Security etc)
+4. Storage in Linux
+5. Productivity (Too many technologies to explore, not much time available)
+#  Additional FAQS
+6. Windows- Sysadmin, reboot etc.
+
+Note : Only the second occurence per line will be replaced.
+
+--- Write Changes to a File and Print the Changes Using sed s//gpw
+
+pskumarbehl@ubuntu:~$ sed -n 's/Linux/Linux-Unix/gpw test.txt' stuff.txt
+1. Linux-Unix Sysadmin, Linux-Unix Scripting etc.
+4. Storage in Linux-Unix
+pskumarbehl@ubuntu:~$ cat test.txt
+1. Linux-Unix Sysadmin, Linux-Unix Scripting etc.
+4. Storage in Linux-Unix
+
+--- Delete Last X Number of Characters From Each Line Using sed
+
+pskumarbehl@ubuntu:~$ sed 's/...$//' stuff.txt
+# Instruction Gui
+1. Linux Sysadmin, Linux Scripting e
+2. Databases - Oracle, mySQL e
+3. Security (Firewall, Network, Online Security e
+4. Storage in Li
+5. Productivity (Too many technologies to explore, not much time availab
+#  Additional F
+6. Windows- Sysadmin, reboot e
+
+--- Eliminate Comments Using sed
+
+pskumarbehl@ubuntu:~$ sed -e 's/#.*//' stuff.txt
+
+1. Linux Sysadmin, Linux Scripting etc.
+2. Databases - Oracle, mySQL etc.
+3. Security (Firewall, Network, Online Security etc)
+4. Storage in Linux
+5. Productivity (Too many technologies to explore, not much time available)
+
+6. Windows- Sysadmin, reboot etc.
+
+--- Eliminate Comments and Empty Lines Using sed
+
+In this example, there are two commands seperated by ‘;’
+
+First command replaces the lines starting with the # to the blank lines
+Second command deletes the empty lines.
+
+pskumarbehl@ubuntu:~$ sed -e 's/#.*//;/^$/d' stuff.txt
+1. Linux Sysadmin, Linux Scripting etc.
+2. Databases - Oracle, mySQL etc.
+3. Security (Firewall, Network, Online Security etc)
+4. Storage in Linux
+5. Productivity (Too many technologies to explore, not much time available)
+6. Windows- Sysadmin, reboot etc.
+
+--- Convert DOS newlines (CR/LF) to Unix format Using sed
+
+sed 's/.$//' filename
+
+--- Eliminate HTML Tags from file Using sed
+
+sed -e 's/<[^>]*>//g'
+
+***************************************************************
+*             Advanced Sed Substitution Examples              *
+***************************************************************
+
+1. Sed Substitution Delimiter
+2. Sed ‘&’ Get Matched String
+3. Grouping and Back-references in Sed
+
+we can use the different delimiters such as @ % | ; : in sed substitute command.
+
+--- work file for this exercise.
+pskumarbehl@ubuntu:~$ cat path.txt
+/usr/kbos/bin:/usr/local/bin:/usr/jbin:/usr/bin:/usr/sas/bin
+/usr/local/sbin:/sbin:/bin/:/usr/sbin:/usr/bin:/opt/omni/bin:
+/opt/omni/lbin:/opt/omni/sbin:/root/bin
+
+
+--- sed @ delimiter: Substitute /opt/omni/lbin to /opt/tools/bin
+
+pskumarbehl@ubuntu:~$ sed 's@/opt/omni/lbin@/opt/tools/bin@g' path.txt
+/usr/kbos/bin:/usr/local/bin:/usr/jbin:/usr/bin:/usr/sas/bin
+/usr/local/sbin:/sbin:/bin/:/usr/sbin:/usr/bin:/opt/omni/bin:
+/opt/tools/bin:/opt/omni/sbin:/root/bin
+
+--- sed / delimiter: Substitute /opt/omni/lbin to /opt/tools/bin
+
+When you should use ‘/’ in path name related substitution, you have to escape ‘/’ 
+in the substitution data as shown below. In this sed example, the delimiter ‘/’ 
+was escaped in the REGEXP and REPLACEMENT part.
+
+pskumarbehl@ubuntu:~$ sed 's/\/opt\/omni\/lbin/\/opt\/tools\/bin/g' path.txt
+/usr/kbos/bin:/usr/local/bin:/usr/jbin:/usr/bin:/usr/sas/bin
+/usr/local/sbin:/sbin:/bin/:/usr/sbin:/usr/bin:/opt/omni/bin:
+/opt/tools/bin:/opt/omni/sbin:/root/bin
+
+--- sed & Usage: Substitute /usr/bin/ to /usr/bin/local
+
+The precise part of an input line on which the Regular Expression 
+matches is represented by &, which can then be used in the replacement part.
+
+2. Sed ‘&’ Get Matched String
+
+sed & Usage: Substitute /usr/bin/ to /usr/bin/local
+
+pskumarbehl@ubuntu:~$ sed 's@/usr/bin@&/local@g' path.txt
+/usr/kbos/bin:/usr/local/bin:/usr/jbin:/usr/bin/local:/usr/sas/bin
+/usr/local/sbin:/sbin:/bin/:/usr/sbin:/usr/bin/local:/opt/omni/bin:
+/opt/omni/lbin:/opt/omni/sbin:/root/bin
+
+--- sed & Usage: Match the whole line
+
+pskumarbehl@ubuntu:~$ sed 's@^.*$@<<<&>>>@g' path.txt
+<<</usr/kbos/bin:/usr/local/bin:/usr/jbin:/usr/bin:/usr/sas/bin>>>
+<<</usr/local/sbin:/sbin:/bin/:/usr/sbin:/usr/bin:/opt/omni/bin:>>>
+<<</opt/omni/lbin:/opt/omni/sbin:/root/bin>>>
+
+3. Grouping and Back-references in Sed
+
+Example 1: Get only the first path in each line
+
+$ sed 's/\(\/[^:]*\).*/\1/g' path.txt
+/usr/kbos/bin
+/usr/local/sbin
+/opt/omni/lbin
+In the above example, \(\/[^:]*\) matches the path available before first : comes. \1 replaces the first matched group.
+
+Example 2: Multigrouping
+
+In the file path.txt change the order of field in the last line of the file.
+
+$ sed '$s@\([^:]*\):\([^:]*\):\([^:]*\)@\3:\2:\1@g' path.txt
+/usr/kbos/bin:/usr/local/bin:/usr/jbin:/usr/bin:/usr/sas/bin
+/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin:/opt/omni/bin:
+/root/bin:/opt/omni/sbin:/opt/omni/lbin
+In the above command $ specifies substitution to happen only for the last line.Output shows that the order of the path values in the last line has been reversed.
+
+Example 3: Get the list of usernames in /etc/passwd file
+
+This sed example displays only the first field from the /etc/passwd file.
+
+$sed 's/\([^:]*\).*/\1/' /etc/passwd
+root
+bin
+daemon
+adm
+lp
+sync
+shutdown
+Example 4: Parenthesize first character of each word
+
+This sed example prints the first character of every word in paranthesis.
+
+$ echo "Welcome To The Geek Stuff" | sed 's/\(\b[A-Z]\)/\(\1\)/g'
+(W)elcome (T)o (T)he (G)eek (S)tuff
+Example 5: Commify the simple number.
+
+Let us create file called numbers which has list of numbers. The below sed command example is used to commify the numbers till thousands.
+
+$ cat  numbers
+1234
+12121
+3434
+123
+
+$sed 's/\(^\|[^0-9.]\)\([0-9]\+\)\([0-9]\{3\}\)/\1\2,\3/g' numbers
+1,234
+12,121
+3,434
+123
+
+
+
+
+
 
 
 
