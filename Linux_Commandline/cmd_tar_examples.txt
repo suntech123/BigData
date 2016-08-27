@@ -1,0 +1,214 @@
+====== Tar Command Tutorial =============================
+
+-- On Unix platform, tar command is the primary archiving utility. 
+-- 
+
+--- Creating an archive using tar command
+
+Creating an uncompressed tar archive using option cvf
+This is the basic command to create a tar archive.
+
+pskumarbehl@ubuntu:~/sunny$ ls -ltr
+total 0
+-rw-rw-r-- 1 pskumarbehl pskumarbehl 0 Aug 27 12:16 h
+-rw-rw-r-- 1 pskumarbehl pskumarbehl 0 Aug 27 12:16 g
+-rw-rw-r-- 1 pskumarbehl pskumarbehl 0 Aug 27 12:16 f
+-rw-rw-r-- 1 pskumarbehl pskumarbehl 0 Aug 27 12:16 e
+-rw-rw-r-- 1 pskumarbehl pskumarbehl 0 Aug 27 12:16 d
+-rw-rw-r-- 1 pskumarbehl pskumarbehl 0 Aug 27 12:16 c
+-rw-rw-r-- 1 pskumarbehl pskumarbehl 0 Aug 27 12:16 b
+-rw-rw-r-- 1 pskumarbehl pskumarbehl 0 Aug 27 12:16 a
+
+
+pskumarbehl@ubuntu:~$ tar cvf sunny.tar sunny/
+sunny/
+sunny/d
+sunny/h
+sunny/g
+sunny/f
+sunny/a
+sunny/e
+sunny/b
+sunny/c
+
+pskumarbehl@ubuntu:~$ ls *tar
+sunny.tar
+
+---> In the above command:
+     c – create a new archive
+     v – verbosely list files which are processed.
+     f – following is the archive file name
+
+Note : The above tar cvf option, does not provide any compression. 
+To use a gzip compression on the tar archive, use the z option as shown below.
+
+*****************************************************************
+
+--- Creating a tar gzipped archive using option cvzf
+
+pskumarbehl@ubuntu:~$ tar cvzf sunny1.tar.gz sunny1/
+sunny1/
+sunny1/d
+sunny1/h
+sunny1/g
+sunny1/f
+sunny1/a
+sunny1/e
+sunny1/b
+sunny1/c
+
+pskumarbehl@ubuntu:~$ ls -lt | head -4
+total 844
+-rw-rw-r-- 1 pskumarbehl pskumarbehl    219 Aug 27 12:34 sunny1.tar.gz
+drwxrwxr-x 2 pskumarbehl pskumarbehl   4096 Aug 27 12:33 sunny1
+-rw-rw-r-- 1 pskumarbehl pskumarbehl  10240 Aug 27 12:20 sunny.tar
+
+Note : The difference is obvious with the size of tar zipped folder.
+
+********************************************************************
+Extracting (untar) an archive using tar command
+********************************************************************
+
+--- Extract a *.tar file using option xvf
+
+pskumarbehl@ubuntu:~$ tar xvf sunny.tar
+sunny/
+sunny/d
+sunny/h
+sunny/g
+sunny/f
+sunny/a
+sunny/e
+sunny/b
+sunny/c
+
+Note : x – extract files from archive
+
+--- Extract a gzipped tar archive ( *.tar.gz ) using option xvzf
+
+pskumarbehl@ubuntu:~/archive$ cp ~/sunny1.tar.gz ./
+pskumarbehl@ubuntu:~/archive$ ls -ltr
+total 4
+-rw-rw-r-- 1 pskumarbehl pskumarbehl 219 Aug 27 13:05 sunny1.tar.gz
+
+pskumarbehl@ubuntu:~/archive$ tar xvzf sunny1.tar.gz 
+sunny1/
+sunny1/d
+sunny1/h
+sunny1/g
+sunny1/f
+sunny1/a
+sunny1/e
+sunny1/b
+sunny1/c
+
+pskumarbehl@ubuntu:~/archive$ ls -ltr
+total 8
+drwxrwxr-x 2 pskumarbehl pskumarbehl 4096 Aug 27 12:33 sunny1
+-rw-rw-r-- 1 pskumarbehl pskumarbehl  219 Aug 27 13:05 sunny1.tar.gz
+
+Note: In all the above commands v is optional, which lists the file being processed.
+
+************************************************************
+Listing an archive using tar command
+***********************************************************
+
+--- view the *.tar file content before extracting as shown below.
+
+pskumarbehl@ubuntu:~$ tar tvf sunny.tar
+drwxrwxr-x pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/d
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/h
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/g
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/f
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/a
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/e
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/b
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/c
+
+--- view the *.tar.gz file content before extracting as shown below.
+
+pskumarbehl@ubuntu:~/archive$ tar tvzf sunny1.tar.gz 
+drwxrwxr-x pskumarbehl/pskumarbehl 0 2016-08-27 12:33 sunny1/
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:33 sunny1/d
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:33 sunny1/h
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:33 sunny1/g
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:33 sunny1/f
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:33 sunny1/a
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:33 sunny1/e
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:33 sunny1/b
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:33 sunny1/c
+
+******************************************************************
+Adding a file or directory to an existing archive using option -r
+******************************************************************
+
+--- You can add additional files to an existing tar archive as shown below. 
+    For example, to append a file to *.tar file do the following:
+    
+pskumarbehl@ubuntu:~$ tar tvf sunny.tar
+drwxrwxr-x pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/d
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/h
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/g
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/f
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/a
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/e
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/b
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/c
+pskumarbehl@ubuntu:~$ tar rvf sunny.tar path.txt
+path.txt
+pskumarbehl@ubuntu:~$ tar tvf sunny.tar
+drwxrwxr-x pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/d
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/h
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/g
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/f
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/a
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/e
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/b
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/c
+-rw-rw-r-- pskumarbehl/pskumarbehl 163 2016-08-27 11:29 path.txt
+
+--- Adding a directory to the tar is also similar.
+
+pskumarbehl@ubuntu:~$ tar rvf sunny.tar Downloads/
+Downloads/
+pskumarbehl@ubuntu:~$ tar tvf sunny.tar
+drwxrwxr-x pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/d
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/h
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/g
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/f
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/a
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/e
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/b
+-rw-rw-r-- pskumarbehl/pskumarbehl 0 2016-08-27 12:16 sunny/c
+-rw-rw-r-- pskumarbehl/pskumarbehl 163 2016-08-27 11:29 path.txt
+drwxr-xr-x pskumarbehl/pskumarbehl   0 2016-08-27 06:40 Downloads/
+
+Note: You cannot add file or directory to a compressed archive. 
+If you try to do so, you will get “tar: Cannot update compressed 
+archives” error as shown below.
+
+***************************************************************
+Estimate the tar archive size
+***************************************************************
+
+The following command, estimates the tar file size ( in KB ) before you create the tar file.
+
+$ tar -cf - /directory/to/archive/ | wc -c
+20480
+
+The following command, estimates the compressed tar file size ( in KB ) 
+before you create the tar.gz, tar.bz2 files.
+
+$ tar -czf - /directory/to/archive/ | wc -c
+508
+
+$ tar -cjf - /directory/to/archive/ | wc -c
+428
+
+
+
+
