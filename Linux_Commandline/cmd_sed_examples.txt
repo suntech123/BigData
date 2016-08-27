@@ -1,8 +1,9 @@
-=========================================================================================================================================
-============================================= sed command practical examples ============================================================
+======================================================================================================================================
+========================================== sed command practical examples ============================================================
 
 ### Working
- -- sed is a non-interactive editor. It lets you type your editing commands at the command line. 
+ -- sed is a non-interactive editor. It lets you type your editing commands at the command line.
+ -- Since its a non-interactive, it can be used to automate editing if desired.
  -- It does not change your file unless you save the output with shell redirection.
  -- It processes a file ( or input ) one line at a time and sends its output to the screen.
  -- It stores the line it is currently processing in a temporary buffer, called a pattern space.
@@ -18,12 +19,91 @@
  -- Conmma seperated two line numbers are within that range of lines, including first and last line in the range.
 ###
 
-****************************************************************************************************************************************
+*************************************************************************************************************************************
 
 --- General format.
 
 sed 'command' filename(s)
 
+**************************************** Sed ADDRESS Format Examples ****************************************************************
+
+[1] NUMBER
+[2] NUMBER1~NUMBER2
+[3] START,END
+[4] ‘$’ Last Line
+[5] NUMBER,$
+[6] 
+
+--- Working file
+pskumarbehl@ubuntu:~$ cat suntech1.txt
+1    Mercedes    07 88 20 34 97    6050
+2    Sloane    05 51 41 94 24    6355
+3    Shafira    02 41 97 96 62    9449
+4    Hedwig    03 62 09 80 97    9122
+5    Genevieve    07 09 40 90 24    7191
+6    Sybil    06 86 81 69 69    7832
+7    Genevieve    07 89 95 29 18    9571
+8    Jenna    09 69 89 97 69    6771
+9    Shafira    02 57 40 61 79    9644
+10    Illana    05 41 33 69 84    6865
+
+[1] NUMBER        -- use case
+
+pskumarbehl@ubuntu:~$ sed -n '2'p suntech1.txt
+2    Sloane    05 51 41 94 24    6355
+
+[2] NUMBER1~NUMBER2    -- Use case : M~N with “p” command prints every Nth line starting from line M.
+
+pskumarbehl@ubuntu:~$ sed -n '2~3'p suntech1.txt
+2    Sloane    05 51 41 94 24    6355
+5    Genevieve    07 09 40 90 24    7191
+8    Jenna    09 69 89 97 69    6771
+
+pskumarbehl@ubuntu:~$ sed -n '3~2'p suntech1.txt
+3    Shafira    02 41 97 96 62    9449
+5    Genevieve    07 09 40 90 24    7191
+7    Genevieve    07 89 95 29 18    9571
+9    Shafira    02 57 40 61 79    9644
+
+[3] START,END         -- Use case : M,N with “p” command prints Mth line to Nth line.
+
+pskumarbehl@ubuntu:~$ sed -n '3,5'p suntech1.txt
+3    Shafira    02 41 97 96 62    9449
+4    Hedwig    03 62 09 80 97    9122
+5    Genevieve    07 09 40 90 24    7191
+
+Note: One important point to note here is that sed doesn't work in reverse order. It doesn't give any error.
+
+pskumarbehl@ubuntu:~$ sed -n '3,2'p suntech1.txt
+3    Shafira    02 41 97 96 62    9449
+
+[4] $ Last line      --- Use case : $ with “p” command matches only the last line from the input.
+
+pskumarbehl@ubuntu:~$ sed -n '$'p suntech1.txt
+10    Illana    05 41 33 69 84    6865
+
+[5] NUMBER,$    --- Use case : N,$ with “p” command prints from Nth line to end of file.
+
+pskumarbehl@ubuntu:~$ sed -n '3,$'p suntech1.txt
+3    Shafira    02 41 97 96 62    9449
+4    Hedwig    03 62 09 80 97    9122
+5    Genevieve    07 09 40 90 24    7191
+6    Sybil    06 86 81 69 69    7832
+7    Genevieve    07 89 95 29 18    9571
+8    Jenna    09 69 89 97 69    6771
+9    Shafira    02 57 40 61 79    9644
+10    Illana    05 41 33 69 84    6865
+
+===================================================================
+
+Sed PATTERN Format Examples
+
+
+
+
+
+
+===================================================================
 --- Working file
 
 [cloudera@quickstart ~]$ cat sed_demo1.txt 
