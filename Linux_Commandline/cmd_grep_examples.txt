@@ -1,0 +1,66 @@
+************************************************************************
+================== grep Command Examples In Linux/UNIX =================
+************************************************************************
+
+--- Working file for this exercise.
+
+pskumarbehl@ubuntu:~$ ls -lt | head -4
+total 852
+-rw-rw-r-- 1 pskumarbehl pskumarbehl    233 Aug 28 04:50 demo_file.txt
+-rw-rw-r-- 1 pskumarbehl pskumarbehl  10240 Aug 27 13:35 sunny.tar
+drwxrwxr-x 3 pskumarbehl pskumarbehl   4096 Aug 27 13:06 archive
+
+pskumarbehl@ubuntu:~$ cat demo_file.txt 
+THIS LINE IS THE 1ST UPPER CASE LINE IN THIS FILE.
+this line is the 1st lower case line in this file.
+This Line Has All Its First Character Of The Word With Upper Case.
+
+Two lines above this line is empty.
+And this is the last line.
+
+--- Search for the given string in a single file.
+
+pskumarbehl@ubuntu:~$ grep "this" demo_file.txt 
+this line is the 1st lower case line in this file.
+Two lines above this line is empty.
+And this is the last line.
+
+
+--- Checking for the given string in multiple files.
+
+pskumarbehl@ubuntu:~$ grep "this" demo_*
+
+
+--- Case insensitive search using grep -i
+
+pskumarbehl@ubuntu:~$ grep -i "the" demo_file.txt 
+THIS LINE IS THE 1ST UPPER CASE LINE IN THIS FILE.
+this line is the 1st lower case line in this file.
+This Line Has All Its First Character Of The Word With Upper Case.
+And this is the last line.
+
+
+--- Match regular expression in files.
+
+pskumarbehl@ubuntu:~$ grep "lines.*empty" demo_file.txt 
+Two lines above this line is empty.
+
+Note: Above command searches for lines[then anything inbetween]empty in the given file. My confusion is why not 
+      "lines*empty" used. But "lines*empty" will match anything having lineempty or linesempty or linesssssempty etc.
+      
+? The preceding item is optional and matched at most once.
+* The preceding item will be matched zero or more times.
++ The preceding item will be matched one or more times.
+{n} The preceding item is matched exactly n times.
+{n,} The preceding item is matched n or more times.
+{,m} The preceding item is matched at most m times.
+{n,m} The preceding item is matched at least n times, but not more than m times.
+
+--- Checking for full words, not for sub-strings using grep -w
+
+pskumarbehl@ubuntu:~$ grep -wi "is" demo_file.txt 
+THIS LINE IS THE 1ST UPPER CASE LINE IN THIS FILE.
+this line is the 1st lower case line in this file.
+Two lines above this line is empty.
+And this is the last line.
+
