@@ -1,0 +1,102 @@
+========================= sqoop-export ================================
+
+# The export tool exports a set of files from HDFS back to an RDBMS.
+# The target table must already exist in the database.
+# The input files are read and parsed into a set of records according to the user-specified delimiters.
+# The default operation is to transform these into a set of INSERT statements that inject the records into the database.
+# In "update mode," Sqoop will generate UPDATE statements that replace existing records in the database.
+# In "call mode" Sqoop will make a stored procedure call for each record.
+
+--- Syntax
+
+$ sqoop export (generic-args) (export-args)
+$ sqoop-export (generic-args) (export-args)
+
+1. The Hadoop generic arguments must preceed any export arguments.
+2. The export arguments can be entered in any order with respect to one another.
+
+--- We can use help command for listing out parms ( Below is formated list )
+
+[cloudera@quickstart ~]$ sqoop help export
+
+Common arguments:
+   --connect <jdbc-uri>                         Specify JDBC connect string
+   --connection-manager <class-name>            Specify connection manager class name
+   --connection-param-file <properties-file>    Specify connection parameters file
+   --driver <class-name>                        Manually specify JDBC driver class to use
+   --hadoop-home <hdir>                         Override $HADOOP_MAPRED_HOME_ARG
+   --hadoop-mapred-home <dir>                   Override $HADOOP_MAPRED_HOME_ARG
+   --help                                       Print usage instructions
+
+-P                                              Read password from console
+   --password <password>                        Set authentication password
+   --password-alias <password-alias>            Credential provider password alias
+   --password-file <password-file>              Set authentication password file path
+   --relaxed-isolation                          Use read-uncommitted isolation for imports
+   --skip-dist-cache                            Skip copying jars to distributed cache
+   --username <username>                        Set authentication username
+   --verbose                                    Print more information while working
+
+Export control arguments:
+   --batch                      Indicates underlying statements to be executed in batch mode
+   --call <arg>                 Populate the table using this stored procedure (one call per row)
+   --clear-staging-table        Indicates that any data in staging table can be deleted
+   --columns <col,col,col...>   Columns to export to table
+   --direct                     Use direct export fast path
+   --export-dir <dir>           HDFS source path for the export
+
+-m,--num-mappers <n>            Use 'n' map tasks to export in parallel
+   --mapreduce-job-name <name>  Set name for generated mapreduce job
+   --staging-table <table-name> Intermediate staging table
+   --table <table-name>         Table to populate 
+   --update-key <key>           Update records by specified key column
+   --update-mode <mode>         Specifies how updates are performed when new rows are found with non-matching keys in database
+   
+Input parsing arguments:
+   --input-enclosed-by <char>               Sets a required field encloser
+   --input-escaped-by <char>                Sets the input escape character
+   --input-fields-terminated-by <char>      Sets the input field separator
+   --input-lines-terminated-by <char>       Sets the input end-of-line char
+   --input-optionally-enclosed-by <char>    Sets a field enclosing character
+   
+Output line formatting arguments:
+   --enclosed-by <char>             Sets a required field enclosing character
+   --escaped-by <char>              Sets the escape character
+   --fields-terminated-by <char>    Sets the field separator character
+   --lines-terminated-by <char>     Sets the end-of-line character
+   --mysql-delimiters               Uses MySQL's default delimiter set: fields: ,  lines: \n  escaped-by: \ optionally-enclosed-by: '
+   --optionally-enclosed-by <char>  Sets a field enclosing character
+   
+--- To use export command for a file terminated by comma.
+
+[cloudera@quickstart ~]$ sqoop export --connect "jdbc:mysql://localhost:3306/export_demo" --username root --password cloudera --table item --export-dir "/user/cloudera/export_demo" --input-fields-terminated-by ',';
+
+[cloudera@quickstart ~]$ hdfs dfs -cat /user/cloudera/export_demo/item.csv
+1,pencil
+2,pen
+3,scale
+4,notebook
+5,marker
+6,book
+7,thermostat
+8,headphone
+9,colour
+10,mouse
+
+
+mysql> select * from item order by id;
++------+------------+
+| id   | name       |
++------+------------+
+|    1 | pencil     |
+|    2 | pen        |
+|    3 | scale      |
+|    4 | notebook   |
+|    5 | marker     |
+|    6 | book       |
+|    7 | thermostat |
+|    8 | headphone  |
+|    9 | colour     |
+|   10 | mouse      |
++------+------------+
+10 rows in set (0.00 sec)
