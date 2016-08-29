@@ -100,3 +100,4 @@ mysql> select * from item order by id;
 |   10 | mouse      |
 +------+------------+
 10 rows in set (0.00 sec)
+
