@@ -1,11 +1,18 @@
 ========================= sqoop-export ================================
 
+It is nothing but exporting data from HDFS to database. To use ‘export‘ command, a table in database should already exist.
+then only export functionality in sqoop will works.
+
 # The export tool exports a set of files from HDFS back to an RDBMS.
 # The target table must already exist in the database.
 # The input files are read and parsed into a set of records according to the user-specified delimiters.
 # The default operation is to transform these into a set of INSERT statements that inject the records into the database.
 # In "update mode," Sqoop will generate UPDATE statements that replace existing records in the database.
 # In "call mode" Sqoop will make a stored procedure call for each record.
+
+## export command will works in two ways-
+    1. insert
+    2. update
 
 --- Syntax
 
@@ -285,7 +292,7 @@ mysql> select * from item;
 
 --update-mode <mode>         Specifies how updates are performed when new rows are found with non-matching keys in database
 
-Note: we are choosing <mode> as allowinsert.
+Note: <mode> has values updateonly and allowinsert. updateonly is the default and allowinsert activates upsert(update else insert)       mode.
 
 [cloudera@quickstart data_files]$ sqoop export \
 > --connect "jdbc:mysql://quickstart.cloudera:3306/sun_export_db" \
@@ -317,5 +324,5 @@ mysql> select * from item;
 +----+---------------+
 10 rows in set (0.00 sec)
 
-Note: Data is updated as well as inserted at the same time.
+Note: Data is updated as well as inserted at the same time. 
 
