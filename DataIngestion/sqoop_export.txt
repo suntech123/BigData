@@ -101,3 +101,221 @@ mysql> select * from item order by id;
 +------+------------+
 10 rows in set (0.00 sec)
 
+--- To use export command for multiple files in HDFS dir.
+
+[cloudera@quickstart data_files]$ hdfs dfs -ls /user/cloudera/sqoop_demo/
+Found 2 items
+-rw-r--r--   1 cloudera cloudera         47 2016-08-31 00:09 /user/cloudera/sqoop_demo/item1.csv
+-rw-r--r--   1 cloudera cloudera         28 2016-08-31 00:09 /user/cloudera/sqoop_demo/item2.csv
+
+[cloudera@quickstart data_files]$ hdfs dfs -cat /user/cloudera/sqoop_demo/item1.csv
+1,pen
+2,pencil
+3,duster
+4,eraser
+5,whiteboard
+
+[cloudera@quickstart data_files]$ hdfs dfs -cat /user/cloudera/sqoop_demo/item2.csv
+6,roster
+7,mouse
+8,notebook
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--- To update the existing table with records by using the below parameter.
+    --update-key <key>           Update records by specified key column
+    
+[1] Existing data in the table item.
+
+mysql> select * from item;
++----+------------+
+| id | name       |
++----+------------+
+|  1 | pen        |
+|  2 | pencil     |
+|  3 | duster     |
+|  4 | eraser     |
+|  5 | whiteboard |
+|  6 | roster     |
+|  7 | mouse      |
+|  8 | notebook   |
++----+------------+
+8 rows in set (0.00 sec)
+
+[2] Data is updated in the files for some keys in the export HDFS directory.
+
+[cloudera@quickstart data_files]$ hdfs dfs -cat /user/cloudera/sqoop_demo/item1.csv
+1,pen
+2,long pencil
+3,duster
+4,eraser
+5,whiteboard
+[cloudera@quickstart data_files]$ hdfs dfs -cat /user/cloudera/sqoop_demo/item2.csv
+6,roster
+7,optical mouse
+8,notebook
+
+[3] Running the sqoop export command with the update parameters.
+
+[cloudera@quickstart data_files]$ sqoop export \
+> --connect "jdbc:mysql://quickstart.cloudera:3306/sun_export_db" \
+> --username root \
+> --password cloudera \
+> --table item \
+> --update-key id \
+> --export-dir /user/cloudera/sqoop_demo \
+> --input-fields-terminated-by ',' \
+> ;
+
+[4] Validate the updated records in table item.
+
+mysql> select * from item;
++----+---------------+
+| id | name          |
++----+---------------+
+|  1 | pen           |
+|  2 | long pencil   |
+|  3 | duster        |
+|  4 | eraser        |
+|  5 | whiteboard    |
+|  6 | roster        |
+|  7 | optical mouse |
+|  8 | notebook      |
++----+---------------+
+8 rows in set (0.00 sec)
+
+
+--- To 
+
+[1] Existing data in item table.
+
+mysql> select * from item;
++----+---------------+
+| id | name          |
++----+---------------+
+|  1 | pen           |
+|  2 | long pencil   |
+|  3 | duster        |
+|  4 | eraser        |
+|  5 | whiteboard    |
+|  6 | roster        |
+|  7 | optical mouse |
+|  8 | notebook      |
++----+---------------+
+8 rows in set (0.00 sec)
+
+[2] Data is updated as well inserted into input files.
+
+[cloudera@quickstart data_files]$ hdfs dfs -cat /user/cloudera/sqoop_demo/item1.csv
+1,pen
+2,long pencil
+3,duster
+4,super eraser
+5,whiteboard
+[cloudera@quickstart data_files]$ hdfs dfs -cat /user/cloudera/sqoop_demo/item2.csv
+6,roster
+7,optical mouse
+8,notebook
+9,keyboard
+10,desktop
+
+Note: As we can see one record in item1.csv updated and 2 records added in item2.csv.
+
+[3] Run the sqoop export with only --update-key parameter.
+
+[cloudera@quickstart data_files]$ sqoop export \
+> --connect "jdbc:mysql://quickstart.cloudera:3306/sun_export_db" \
+> --username root \
+> --password cloudera \
+> --table item \
+> --export-dir /user/cloudera/sqoop_demo \
+> --input-fields-terminated-by ',' \
+> --update-key id \
+> ;
+
+[4] Validate data after export.
+
+mysql> select * from item;
++----+---------------+
+| id | name          |
++----+---------------+
+|  1 | pen           |
+|  2 | long pencil   |
+|  3 | duster        |
+|  4 | super eraser  |
+|  5 | whiteboard    |
+|  6 | roster        |
+|  7 | optical mouse |
+|  8 | notebook      |
++----+---------------+
+8 rows in set (0.00 sec)
+ 
+Note: As we can observe only updated record is visible but no extra added record visible which as per our expectation should have been    inserted.
+
+[5] Now placing the original data in the table from backup.
+
+mysql> select * from item;
++----+---------------+
+| id | name          |
++----+---------------+
+|  1 | pen           |
+|  2 | long pencil   |
+|  3 | duster        |
+|  4 | eraser        |
+|  5 | whiteboard    |
+|  6 | roster        |
+|  7 | optical mouse |
+|  8 | notebook      |
++----+---------------+
+8 rows in set (0.00 sec)
+
+[6] Running the sqoop job with added parameter.
+
+--update-mode <mode>         Specifies how updates are performed when new rows are found with non-matching keys in database
+
+Note: we are choosing <mode> as allowinsert.
+
+[cloudera@quickstart data_files]$ sqoop export \
+> --connect "jdbc:mysql://quickstart.cloudera:3306/sun_export_db" \
+> --username root \
+> --password cloudera \
+> --table item \
+> --export-dir /user/cloudera/sqoop_demo \
+> --input-fields-terminated-by ',' \
+> --update-key id \
+> --update-mode allowinsert \
+> ;
+
+[7] Validating data in item table.
+
+mysql> select * from item;
++----+---------------+
+| id | name          |
++----+---------------+
+|  1 | pen           |
+|  2 | long pencil   |
+|  3 | duster        |
+|  4 | super eraser  |
+|  5 | whiteboard    |
+|  6 | roster        |
+|  7 | optical mouse |
+|  8 | notebook      |
+|  9 | keyboard      |
+| 10 | desktop       |
++----+---------------+
+10 rows in set (0.00 sec)
+
+Note: Data is updated as well as inserted at the same time.
+
