@@ -1,4 +1,4 @@
-------------------------------------------------Practical find command examples---------------------------------------------------------------------
+========= Practical find command examples =========
 
 --- find command can find files according to 
     1) File Names  2) File Types   3) File Permission  4) File Owners  5) Modified Date and Time
@@ -28,3 +28,52 @@ pskumarbehl@ubuntu:~$ find /home -name sun.txt
 /home/pskumarbehl/sun.txt
 
 Note: Linux/Unix allows creation of files with same name but different case in the same folder.
+
+--- To find file names case insensitive.
+
+root@ubuntu:/home/pskumarbehl# find / -iname profile
+find: ‘/run/user/1000/gvfs’: Permission denied
+/etc/dconf/profile
+/etc/profile
+/sys/kernel/security/apparmor/features/namespaces/profile
+/usr/include/c++/5/profile
+/usr/share/base-files/profile
+/usr/share/doc/adduser/examples/adduser.local.conf.examples/profile
+/usr/src/linux-headers-4.4.0-31-generic/include/config/branch/profile
+/usr/src/linux-headers-4.4.0-31-generic/include/config/arch/has/gcov/profile
+
+
+--- To search only for directories.
+
+root@ubuntu:/home/pskumarbehl# find / -type d -name etc
+find: ‘/run/user/1000/gvfs’: Permission denied
+/etc
+/usr/src/linux-headers-4.4.0-31/zfs/etc
+/usr/local/etc
+
+Note: By default it searches for files and directories both. But by providing -type option we can restrict.
+
+================== Search Based on File Permission =====================
+
+--- search file with name and permission.
+
+root@ubuntu:~# find / -perm 755 -iname sun1.txt
+find: ‘/run/user/1000/gvfs’: Permission denied
+/home/pskumarbehl/sun1.txt
+
+pskumarbehl@ubuntu:~$ ls -lt sun1.txt
+-rwxr-xr-x 1 pskumarbehl pskumarbehl 0 Sep  1 15:15 sun1.txt
+
+================ Search Files Based on Ownership =======================
+
+root@ubuntu:~# find / -user pskumarbehl -name sun1.txt
+find: ‘/run/user/1000/gvfs’: Permission denied
+/home/pskumarbehl/sun1.txt
+
+root@ubuntu:~# find / -group pskumarbehl -name sun1.txt
+find: ‘/run/user/1000/gvfs’: Permission denied
+/home/pskumarbehl/sun1.txt
+
+============== Search Based on Modified Date/Time ======================
+
+
