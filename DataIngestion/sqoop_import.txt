@@ -470,6 +470,139 @@ null,hue,auth_permission,1,hue,auth_permission_37ef4eb4,1,content_type_id,A,225,
 
 *************************************************************************************************************************************
 
+--- Importing a table into HDFS - basic import
+
+[cloudera@quickstart ~]$ sqoop import \
+> --connect "jdbc:mysql://quickstart.cloudera:3306/sun_export_db" \
+> --username root \
+> --password cloudera \
+> --table item \
+> -m 1 \
+> --target-dir /user/cloudera/sqoop_import \
+> ;
+
+Note: The target directory specified MUST already existing otherwise error will be thrown.
+
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/
+Found 2 items
+drwxr-xr-x   - cloudera cloudera          0 2016-08-31 01:44 /user/cloudera/sqoop_demo
+drwxr-xr-x   - cloudera cloudera          0 2016-08-31 19:12 /user/cloudera/sqoop_import
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/sqoop_import
+Found 2 items
+-rw-r--r--   1 cloudera cloudera          0 2016-08-31 19:12 /user/cloudera/sqoop_import/_SUCCESS
+-rw-r--r--   1 cloudera cloudera        115 2016-08-31 19:12 /user/cloudera/sqoop_import/part-m-00000
+[cloudera@quickstart ~]$ hdfs dfs -cat /user/cloudera/sqoop_import/part-m-00000
+1,pen
+2,long pencil
+3,duster
+4,super eraser
+5,whiteboard
+6,roster
+7,optical mouse
+8,notebook
+9,keyboard
+10,desktop
+
+--- Executing imports with an options file for static information
+
+[cloudera@quickstart ~]$ sqoop --options-file /home/cloudera/param_file.txt \
+> -m 1 \
+> --table item \
+> --target-dir /user/cloudera/sqoop_import \
+> ;
+
+
+--- Import all rows of a table in mySQL, but specific columns of the table
+
+[cloudera@quickstart ~]$ sqoop --options-file /home/cloudera/param_file.txt \
+> -m 1 \
+> --table item_order \
+> --columns order_id,item_name,order_date,qty \
+> --target-dir /user/cloudera/sqoop_import2 \
+> ;
+
+Note: Pay attention to the comma seperated column list.
+
+--- Import all columns, filter rows using where clause.
+
+[cloudera@quickstart ~]$ sqoop --options-file /home/cloudera/param_file.txt \
+> -m 1 \
+> --table item_order \
+> --where 'order_id > 105 and item_id > 3' \
+> --target-dir /user/cloudera/sqoop_import3 \
+> ;
+
+Note: Whenever a condition is provided in --where parameter it MUST be quoted( either single or double quotes will work) whether it is     on single column or on multiple columns.
+
+--- In spite of changing directory each time we can specify --warehouse-dir parameter.
+
+[cloudera@quickstart ~]$ sqoop --options-file /home/cloudera/param_file.txt \
+> -m 1 \
+> --table item \
+> --warehouse-dir /user/cloudera/sqoop_import \
+> ;
+
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/
+Found 2 items
+drwxr-xr-x   - cloudera cloudera          0 2016-08-31 01:44 /user/cloudera/sqoop_demo
+drwxr-xr-x   - cloudera cloudera          0 2016-08-31 22:45 /user/cloudera/sqoop_import
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/sqoop_import
+Found 1 items
+drwxr-xr-x   - cloudera cloudera          0 2016-08-31 22:45 /user/cloudera/sqoop_import/item
+
+[cloudera@quickstart ~]$ sqoop --options-file /home/cloudera/param_file.txt -m 1 --table item_order --columns order_id,item_name,order_date,qty --warehouse-dir /user/cloudera/sqoop_import ;
+
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/sqoop_import
+Found 2 items
+drwxr-xr-x   - cloudera cloudera          0 2016-08-31 22:45 /user/cloudera/sqoop_import/item
+drwxr-xr-x   - cloudera cloudera          0 2016-08-31 22:55 /user/cloudera/sqoop_import/item_order
+
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/sqoop_import/item_order
+Found 2 items
+-rw-r--r--   1 cloudera cloudera          0 2016-08-31 22:55 /user/cloudera/sqoop_import/item_order/_SUCCESS
+-rw-r--r--   1 cloudera cloudera        392 2016-08-31 22:55 /user/cloudera/sqoop_import/item_order/part-m-00000
+
+[cloudera@quickstart ~]$ hdfs dfs -cat /user/cloudera/sqoop_import/item_order/part-m-00000
+100,sed,2016-12-21 22:20:27.0,8
+101,adipiscing,2016-04-08 15:29:05.0,2
+102,imperdiet,2017-08-21 02:59:02.0,7
+103,nec,2015-10-03 01:30:15.0,3
+104,augue,2016-07-24 04:15:31.0,6
+105,vestibulum,2017-05-16 15:55:01.0,9
+106,Nam,2017-07-11 22:26:46.0,6
+107,feugiat,2016-05-14 22:15:03.0,6
+108,natoque,2016-10-04 07:55:39.0,1
+109,erat,2016-12-23 20:05:11.0,6
+110,pellentesque,2016-01-31 12:52:44.0,1
+
+[cloudera@quickstart ~]$ sqoop --options-file /home/cloudera/param_file.txt -m 1 --table item_order --where 'order_id > 105' --warehouse-dir /user/cloudera/sqoop_import ;
+...
+...
+ception: Output directory hdfs://quickstart.cloudera:8020/user/cloudera/sqoop_import/item_order already exists
+16/08/31 23:01:27 ERROR tool.ImportTool: Encountered IOException running import job: org.apache.hadoop.mapred.FileAlreadyExistsException: Output directory hdfs://quickstart.cloudera:8020/user/cloudera/sqoop_import/item_order already exists
+
+Note: In normal mode if we try to import same table with different conditions it will throw above error as in case of --target-dir option. If we need to support this activity we need to implement incremental import.
+
+--- Import with a free form query without where clause
+
+$ sqoop --options-file SqoopImportOptions.txt \
+--query 'select EMP_NO,FIRST_NAME,LAST_NAME from employees where $CONDITIONS' \
+-m 1 \
+--target-dir /user/airawat/sqoop-mysql/employeeFrfrmQrySmpl2
+
+Note: Case of the column needs to match that used to create table, or else the import fails.
+
+--- Import with a free form query with where clause.
+
+$ sqoop --options-file SqoopImportOptions.txt \
+--query 'select EMP_NO,FIRST_NAME,LAST_NAME from employees where EMP_NO < 20000 AND
+$CONDITIONS' \
+-m 1 \
+--target-dir /user/airawat/sqoop-mysql/employeeFrfrmQry1
+
+
+
+
 
 
   
