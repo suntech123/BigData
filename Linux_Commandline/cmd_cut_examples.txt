@@ -1,0 +1,112 @@
+============== Linux cut command ================
+
+** Linux command cut is used for text processing.
+** Extract portion of text from a file by selecting columns.
+** With no FILE, or when FILE is -, read standard input.
+
+--- Select Column of Characters
+
+pskumarbehl@ubuntu:~$ cat test.txt 
+cat command for file oriented operations.
+cp command for copy files or directories.
+ls command to list out files and directories with its attributes.
+pskumarbehl@ubuntu:~$ cut -c 2 test.txt
+a
+p
+s
+pskumarbehl@ubuntu:~$ cut -c2 test.txt
+a
+p
+s
+
+Note: Notice the space between -c & 2 hence we can give space(s) or no space.
+
+--- Select Column of Characters using Range
+
+pskumarbehl@ubuntu:~$ cut -c6-10 test.txt
+omman
+mmand
+mmand
+
+pskumarbehl@ubuntu:~$ cut -c6- test.txt
+ommand for file oriented operations.
+mmand for copy files or directories.
+mmand to list out files and directories with its attributes.
+
+Note: Notice if range end is not specified it consider till end of line.
+
+pskumarbehl@ubuntu:~$ cut -c-6 test.txt
+cat co
+cp com
+ls com
+
+Note: If we don't specify start of the range 
+
+pskumarbehl@ubuntu:~$ cat test.txt
+cat command for file oriented operations.
+cp command for copy files or directories.
+ls command to list out files and directories with its attributes.
+pskumarbehl@ubuntu:~$ cut -d' ' -f2 test.txt
+command
+command
+command
+
+--- Select Multiple Fields from a File
+
+pskumarbehl@ubuntu:~$ cut -d' ' -f2,3 test.txt
+command for
+command for
+command to
+
+pskumarbehl@ubuntu:~$ cut -d' ' -f2-4 test.txt
+command for file
+command for copy
+command to list
+
+pskumarbehl@ubuntu:~$ cut -d' ' -f2- test.txt
+command for file oriented operations.
+command for copy files or directories.
+command to list out files and directories with its attributes.
+
+pskumarbehl@ubuntu:~$ cut -d' ' -f2-4,6 test.txt
+command for file operations.
+command for copy or
+command to list files
+
+--- Select All Fields Except the Specified Fields.
+
+pskumarbehl@ubuntu:~$ cat test.txt
+cat command for file oriented operations.
+cp command for copy files or directories.
+ls command to list out files and directories with its attributes.
+
+pskumarbehl@ubuntu:~$ cut -d' ' --complement -f2 test.txt
+cat for file oriented operations.
+cp for copy files or directories.
+ls to list out files and directories with its attributes.
+
+pskumarbehl@ubuntu:~$ cut -d' ' --complement -f4 test.txt
+cat command for oriented operations.
+cp command for files or directories.
+ls command to out files and directories with its attributes.
+
+--- Change Output Delimiter for Display
+
+pskumarbehl@ubuntu:~$ cut -d' ' -f4,6 --output-delimiter='#' test.txt
+file#operations.
+copy#or
+list#files
+
+--- Change Output Delimiter to Newline.
+
+pskumarbehl@ubuntu:~$ cut -d' ' -f4,6 --output-delimiter=$'\n' test.txt
+file
+operations.
+copy
+or
+list
+files
+
+--- Combine Cut with Other Unix Command Output
+
+ps axu | grep python | sed 's/\s\+/ /g' | cut -d' ' -f2,11-
