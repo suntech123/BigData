@@ -236,6 +236,31 @@ Dow,Juila 24 29 20 20
 --- Print column 5 if column 3 contains 31 in it.
 
 
-    
+--- To print something at the start of the output.
+
+pskumarbehl@ubuntu:~$ awk 'BEGIN{print "This is filtered output"}(NR>4){print $3}' db.txt
+This is filtered output
+29
+30
+29
+29
+21
+21
+
+--- To print something at the end of the output.
+
+pskumarbehl@ubuntu:~$ awk 'BEGIN{print "This is filtered output"}(NR>4){print $3}END{print "This is footer"}' db.txtThis is filtered output
+29
+30
+29
+29
+21
+21
+This is footer
+
+
+################################ AWK printf examples ####################
+
+
 
 
