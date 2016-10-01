@@ -1,6 +1,3 @@
-if has("win32") 
-    set runtimepath=~/gvim/Sam-s-Vim-Config/.vim,$VIMRUNTIME,~/gvim/Sam-s-Vim-Config/.vim/after
-endif
 " Forget being compatible with good ol' vi
 set nocompatible
 
