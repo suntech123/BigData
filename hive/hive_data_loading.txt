@@ -1,3 +1,53 @@
 =========================================== Loading Data in Hive Tables =================================================================
 
---- 
+
+
+
+# Efficient Data Storage with Parquet.
+
+[STEP 1] --- Imported data in paraquet format with below sqoop script.
+
+[cloudera@quickstart ~]$ sqoop import --connect "jdbc:mysql://127.0.0.1:3306/retail_db" --username root --password cloudera --table categories --as-parquetfile --target-dir /user/cloudera/demo1_parquet
+
+
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/demo1_parquet
+Found 6 items
+drwxr-xr-x   - cloudera cloudera          0 2016-10-02 06:34 /user/cloudera/demo1_parquet/.metadata
+drwxr-xr-x   - cloudera cloudera          0 2016-10-02 06:34 /user/cloudera/demo1_parquet/.signals
+-rw-r--r--   1 cloudera cloudera       1266 2016-10-02 06:34 /user/cloudera/demo1_parquet/31420419-79b8-4651-9af5-84a1c13c4c7c.parquet
+-rw-r--r--   1 cloudera cloudera       1312 2016-10-02 06:34 /user/cloudera/demo1_parquet/6f614944-63d4-41cb-8e75-d9c9c5f04450.parquet
+-rw-r--r--   1 cloudera cloudera       1264 2016-10-02 06:34 /user/cloudera/demo1_parquet/76aec8ba-2261-46ca-851d-9e34e3a17b33.parquet
+-rw-r--r--   1 cloudera cloudera       1241 2016-10-02 06:34 /user/cloudera/demo1_parquet/bf013d93-5d1c-454d-8507-c0113d17ff44.parquet
+
+[STEP 2] --- Created an external hive table imposing schema on the created directory having paraquet files.
+
+create external table categoies_ext_par (
+category_id int,
+category_department_id int,
+category_name string
+)
+stored as parquet 
+location '/user/cloudera/demo1_parquet'
+;
+
+[STEP 3] --- Load the actual table from the above external table.
+
+create table categoies_par (
+category_id int,
+category_department_id int,
+category_name string
+)
+stored as parquet;
+
+hive> insert overwrite table categoies_par select * from categoies_ext_par;
+
+hive> show tables;
+OK
+categoies_ext_par
+categoies_par
+orders_ext_par
+Time taken: 0.247 seconds, Fetched: 3 row(s)
+
+hive> dfs -ls /user/hive/warehouse/retail_db.db/categoies_par;
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup       1723 2016-10-02 07:22 /user/hive/warehouse/retail_db.db/categoies_par/000000_0
