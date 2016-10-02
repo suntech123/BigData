@@ -11,3 +11,23 @@ pskumarbehl@ubuntu:~$ shopt -s xpg_echo
 pskumarbehl@ubuntu:~$ echo "hello \nsunil kumar"
 hello 
 sunil kumar
+
+# Shell Option (extglob)
+
+--- extglob (extended pattern matching) – with this, a pattern can be almost as powerful as a regular expression.
+--- In addition to the standard asterisks, question marks and square brackets, we can also use the following five sub-patterns:
+    --- ?(pattern-list): Matches empty or one of the patterns
+    --- *(pattern-list): Matches empty or any number of occurrences of the patterns
+    --- +(pattern-list): Matches at least one occurrences of the patterns
+    --- @(pattern-list): Matches exactly one of the patterns
+    --- !(pattern-list): Matches anything EXCEPT any of the patterns
+
+The pattern-list represents one or more patterns, which can again contain these extended sub-patterns, delimited by pipe signs (|). Two simple examples:
+
+      rm -rf !(lost+found)
+      Removes everything except lost+found
+      
+      for x in *.@(jp?(e)g|gif|png)
+      Loops through all files having extension jpg, jpeg, gif, or png
+
+
