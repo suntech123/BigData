@@ -1,0 +1,13 @@
+# This file started to explain the shell options in a clear manner.
+
+# Shell Option (xpg_echo) 
+
+--- It determines if echo will process escape sequences.
+
+pskumarbehl@ubuntu:~$ shopt -u xpg_echo
+pskumarbehl@ubuntu:~$ echo "hello \nsunil kumar"
+hello \nsunil kumar
+pskumarbehl@ubuntu:~$ shopt -s xpg_echo
+pskumarbehl@ubuntu:~$ echo "hello \nsunil kumar"
+hello 
+sunil kumar
