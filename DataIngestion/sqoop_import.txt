@@ -601,6 +601,208 @@ $CONDITIONS' \
 --target-dir /user/airawat/sqoop-mysql/employeeFrfrmQry1
 
 
+##################################################################################################################################
+##################################################################################################################################
+
+--------------Importing data in text format and loading it in hive table with AVRO/Paraquet/ORC formats.
+
+
+[cloudera@quickstart ~]$ sqoop import \
+> --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" \
+> --username root \
+> --password cloudera \
+> --table order_items \
+> --fields-terminated-by , \
+> --target-dir '/user/cloudera/demo3'
+
+------------Error reading file in below mentioned external table if i use------------
+> --escaped-by \\ \
+> --enclosed-by '\"' \
+-------------------------------------------------------------------------------------
+
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/demo3
+Found 5 items
+-rw-r--r--   1 cloudera cloudera          0 2016-10-03 21:52 /user/cloudera/demo3/_SUCCESS
+-rw-r--r--   1 cloudera cloudera    1303818 2016-10-03 21:52 /user/cloudera/demo3/part-m-00000
+-rw-r--r--   1 cloudera cloudera    1343222 2016-10-03 21:52 /user/cloudera/demo3/part-m-00001
+-rw-r--r--   1 cloudera cloudera    1371917 2016-10-03 21:52 /user/cloudera/demo3/part-m-00002
+-rw-r--r--   1 cloudera cloudera    1389923 2016-10-03 21:52 /user/cloudera/demo3/part-m-00003
+
+--- STEP 2. Create an external table
+
+hive> CREATE EXTERNAL TABLE ORDER_ITEMS_EXT(
+    > order_item_id             int,
+    > order_item_order_id       int,
+    > order_item_product_id     int,
+    > order_item_quantity       tinyint,
+    > order_item_subtotal       float,
+    > order_item_product_price  float
+    >  )
+    > ROW FORMAT DELIMITED
+    > FIELDS TERMINATED BY ','
+    > STORED AS TEXTFILE
+    > location '/user/cloudera/demo3';
+OK
+Time taken: 0.072 seconds
+
+
+--- Step 3. Create the ORC table.
+
+hive> CREATE TABLE ORDER_ITEMS_ORC(
+    > order_item_id             int,
+    > order_item_order_id       int,
+    > order_item_product_id     int,
+    > order_item_quantity       tinyint,
+    > order_item_subtotal       float,
+    > order_item_product_price  float
+    >  )
+    > ROW FORMAT DELIMITED
+    > FIELDS TERMINATED BY ','
+    > STORED AS ORC;
+OK
+Time taken: 0.196 seconds
+
+--- Step 4. Insert the data from the external table to the Hive ORC table.
+
+hive> INSERT OVERWRITE TABLE ORDER_ITEMS_ORC SELECT * FROM ORDER_ITEMS_EXT;
+
+Query ID = cloudera_20161003230808_34a802fc-5cc1-4f5d-9181-ed6c56910d4b
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks is set to 0 since there's no reduce operator
+.........
+.........
+Total MapReduce CPU Time Spent: 2 seconds 860 msec
+OK
+Time taken: 14.507 seconds
+
+
+--- STEP 5. Verify that you imported the data into the ORC-formatted table correctly:
+
+hive> select * from ORDER_ITEMS_ORC limit 10;
+OK
+1	1	957	1	299.98	299.98
+2	2	1073	1	199.99	199.99
+3	2	502	5	250.0	50.0
+4	2	403	1	129.99	129.99
+5	4	897	2	49.98	24.99
+6	4	365	5	299.95	59.99
+7	4	502	3	150.0	50.0
+8	4	1014	4	199.92	49.98
+9	5	957	1	299.98	299.98
+10	5	365	5	299.95	59.99
+Time taken: 0.073 seconds, Fetched: 10 row(s)
+
+--- STEP 6. Verify the storage requirement for this ORC table in Hive.
+
+hive> dfs -ls -h /user/hive/warehouse/retail_db.db/order_items_orc;
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup    725.5 K 2016-10-03 23:41 /user/hive/warehouse/retail_db.db/order_items_orc/000000_0
+
+ Note: It is taking 725.5 kb of HDFS storage.
+ 
+--- STEP 7. Lets create the table in AVRO format.
+
+CREATE TABLE ORDER_ITEMS_AVRO(
+order_item_id             int,
+order_item_order_id       int,
+order_item_product_id     int,
+order_item_quantity       tinyint,
+order_item_subtotal       float,
+order_item_product_price  float
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS AVRO;
+
+INSERT OVERWRITE TABLE ORDER_ITEMS_AVRO SELECT * FROM ORDER_ITEMS_EXT;
+
+hive> dfs -ls -h /user/hive/warehouse/retail_db.db/order_items_avro;
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup      3.8 M 2016-10-03 23:58 /user/hive/warehouse/retail_db.db/order_items_avro/000000_0
+
+hive> select * from order_items_avro limit 5;
+OK
+1	1	957	1	299.98	299.98
+2	2	1073	1	199.99	199.99
+3	2	502	5	250.0	50.0
+4	2	403	1	129.99	129.99
+5	4	897	2	49.98	24.99
+Time taken: 0.082 seconds, Fetched: 5 row(s)
+
+
+--- STEP 8. Let us create same table with PARAQUET file format.
+
+CREATE TABLE ORDER_ITEMS_PAR(
+order_item_id             int,
+order_item_order_id       int,
+order_item_product_id     int,
+order_item_quantity       tinyint,
+order_item_subtotal       float,
+order_item_product_price  float
+ )
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS PARQUET;
+
+INSERT OVERWRITE TABLE ORDER_ITEMS_PAR SELECT * FROM ORDER_ITEMS_EXT;
+
+hive> dfs -ls -h /user/hive/warehouse/retail_db.db/order_items_par;
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup      1.7 M 2016-10-04 00:10 /user/hive/warehouse/retail_db.db/order_items_par/000000_0
+
+hive> select * from order_items_par limit 10;
+OK
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/usr/jars/parquet-pig-bundle-1.5.0-cdh5.7.0.jar!/shaded/parquet/org/slf4j/impl/StaticLoggerBinder.class]
+........
+.........
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [shaded.parquet.org.slf4j.helpers.NOPLoggerFactory]
+1	1	957	1	299.98	299.98
+2	2	1073	1	199.99	199.99
+3	2	502	5	250.0	50.0
+4	2	403	1	129.99	129.99
+5	4	897	2	49.98	24.99
+6	4	365	5	299.95	59.99
+7	4	502	3	150.0	50.0
+8	4	1014	4	199.92	49.98
+9	5	957	1	299.98	299.98
+10	5	365	5	299.95	59.99
+Time taken: 0.077 seconds, Fetched: 10 row(s)
+
+INSERT OVERWRITE TABLE ORDER_ITEMS_TEX SELECT * FROM ORDER_ITEMS_EXT;
+
+hive> dfs -ls -h /user/hive/warehouse/retail_db.db/order_items_tex;
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup      5.2 M 2016-10-04 00:21 /user/hive/warehouse/retail_db.db/order_items_tex/000000_0
+
+
+--- STEP 9. Let's create table with sequence format.
+
+CREATE TABLE ORDER_ITEMS_SEQ(
+order_item_id             int,
+order_item_order_id       int,
+order_item_product_id     int,
+order_item_quantity       tinyint,
+order_item_subtotal       float,
+order_item_product_price  float
+ )
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS SEQUENCEFILE;
+
+INSERT OVERWRITE TABLE ORDER_ITEMS_SEQ SELECT * FROM ORDER_ITEMS_EXT;
+
+hive> dfs -ls -h /user/hive/warehouse/retail_db.db/order_items_seq;
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup      7.2 M 2016-10-04 01:07 /user/hive/warehouse/retail_db.db/order_items_seq/000000_0
+
+
+
+
+
+
 
 
 
