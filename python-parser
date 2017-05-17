@@ -1,0 +1,60 @@
+#print(result[100])
+print 'BD|BD NAME|PROFILE ID|COMM ID|OFFICE|CUSIP|BS CODE|ACCT CATG|SOI|PRODUCT|ACCT TYPE'
+for str in result:
+    p1 = re.compile('(BD\s+:\s+)(\w+)')
+    p2 = re.compile('(BD NAME\s+:\s+)(\w+\s+\w+\s+\w+)')
+    p3 = re.compile('(PROFILE ID\s*:\s+)([a-zA-Z0-9*$./:\-%@#]*)')
+    p4 = re.compile('(COMM\. ID\s+:\s+)([a-zA-Z0-9*$./:\-%@#]*)')
+#    p5 = re.compile('(OFFICE\s+:\s+)([a-zA-Z0-9*$./:\-%@#]+[\s])')
+    p5 = re.compile('(OFFICE\s+:\s+)(.*)')
+    p6 = re.compile('(CUSIP\s+:)(.*)')
+    p7 = re.compile('(B[/]S CODE\s+:\s+)(.*)(ACCT CATG  :)')
+    p8 = re.compile('(ACCT CATG\s+:)(.*)')
+    p9 = re.compile('(SOI\s+:\s+)(.*)(TICKET TYPE:)')
+    p10 = re.compile('(PRODUCT\s+:\s+)(.*)(ACCT TYPE  :)')
+    p11 = re.compile('(ACCT TYPE\s+:)(.*)')
+    match_bd = re.search(p1,str)
+    match_bd_name = re.search(p2,str)
+    match_profile_id = re.search(p3,str)
+    match_comm_id = re.search(p4,str)
+    if re.search(p5,str):
+       match_office = re.search(p5,str)
+       match_office = match_office.group(2)
+    else:
+       match_office = ''
+    if re.search(p6,str):
+       match_cusip = re.search(p6,str)
+       match_cusip = match_cusip.group(2)
+    else:
+       match_cusip = ''
+    if re.search(p7,str):
+       match_bscd = re.search(p7,str)
+       match_bscd = match_bscd.group(2)
+    else:
+       match_bscd = ''
+    if re.search(p8,str):
+       match_accat = re.search(p8,str)
+       match_accat = match_accat.group(2)
+    else:
+       match_accat = ''
+
+    if re.search(p9,str):
+       match_soi = re.search(p9,str)
+       match_soi = match_soi.group(2)
+    else:
+       match_soi = ''
+
+    if re.search(p10,str):
+       match_prd = re.search(p10,str)
+       match_prd = match_prd.group(2)
+    else:
+       match_prd = ''
+
+    if re.search(p11,str):
+       match_actype = re.search(p11,str)
+       match_actype = match_actype.group(2)
+    else:
+       match_actype = ''
+
+    print "%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s" % (match_bd.group(2), match_bd_name.group(2),match_profile_id.group(2),match_comm_id.group(2),match_office.rstrip('\n'),match_cusip.rstrip('\n'),match_bscd.strip(),match_accat.rstrip('\n'),match_soi.strip(),match_prd.strip(),match_actype.rstrip('\n'))
+                                                                                                                                                  112,1         Bot
