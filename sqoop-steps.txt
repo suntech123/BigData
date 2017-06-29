@@ -1,0 +1,15 @@
+/home/splice/cetera/sqoop /extract-schema-load.sh
+                /home/splice/cetera/sqoop /run-sqoop-auto.sh
+
+
+run-sqoop-auto.sh[Parameters]    ---- $CONFIG     $TABLES    $SCHEMA    $IMPORTDIR   $UPSERTDIR   $QUERYDIR   $LOGFILE
+
+CONFIG=/home/splice/cetera/sqoop/$SCHEMA/$SCHEMA-config.txt
+TABLES=/home/splice/cetera/sqoop/runtemp/$SCHEMA-tables-$FREQUENCY-$RUNDATE.txt
+SCHEMA= <schemaname>
+IMPORTDIR=/home/splice/cetera/sqoop/$SCHEMA/import
+UPSERTDIR=/home/splice/cetera/sqoop/$SCHEMA/upsert
+QUERYDIR=/home/splice/cetera/sqoop/$SCHEMA/query
+LOGFILE=
+
+sqoop import -Dhadoop.security.credential.provider.path=jceks://hdfs/data/sqoop/keystore/hadoop-credentials-store --options-file $SQOOP_CONFIG_FILE --append --table $TABLE --split-by $COLUMN --target-dir /data/sqoop/$SPLICE_SCHEMA/$table --m $MAPPERS
