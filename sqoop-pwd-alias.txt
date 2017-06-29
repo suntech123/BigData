@@ -1,0 +1,15 @@
+Below are the steps to create password alias for encrypting clear password. We have to do this for every source database sqoop is connecting to.
+
+This is a must step before every ingestion starts and this is to be done in both GP and PROD.
+
+1)	Login to HDFS user
+dzdo su - hdfs
+
+2)	To list the created aliases
+hadoop credential list -provider jceks://hdfs/data/sqoop/keystore/hadoop-credentials-store
+
+3)	To create a new alias
+hadoop credential create <alias-name> -provider jceks://hdfs/data/sqoop/keystore/hadoop-credentials-store
+
+4)	To delete any created alias
+hadoop credential delete <alias-name> -provider jceks://hdfs/data/sqoop/keystore/hadoop-credentials-store
