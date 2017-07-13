@@ -42,3 +42,9 @@ if last_key == this_key:
 ********************** check locally************************
 
 [kumarsu@dhrslnl001 log]$ head Import_Data_20170125084421.log | ./map.py | sort | ./red.py
+
+
+======================= Hadoop streaming MR ==========================================
+
+
+hadoop jar /opt/cloudera/parcels/CDH/lib/oozie/oozie-sharelib-yarn/lib/mapreduce-streaming/hadoop-streaming.jar -input /data/tmp/temp -output /data/tmp/temp -mapper /bin/cat -reducer /usr/bin/wc
