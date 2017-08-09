@@ -12,3 +12,7 @@ https://blog.matthewrathbone.com/2013/05/31/hadoop-resources-books.html
 
 ============================ Hadoop Questions ==========================
 https://www.edureka.co/blog/interview-questions/top-50-hadoop-interview-questions-2016/?utm_source=blog&utm_medium=left-menu&utm_campaign=hbase-tutorial
+
+
+============================ HBase =====================================
+https://intellipaat.com/tutorial/hbase-tutorial/operations-using-java-api/
