@@ -3,3 +3,18 @@
 1. Before running the HBase application we need to export the HBase jar to Classpath
 
    export HADOOP_CLASSPATH="$HADOOP_CLASSPATH:/usr/lib/hbase/lib/*"
+   
+ 
+ 
+ 2. Running the HBase applications on Cloudera VM
+ 
+    hadoop jar HBaseSampleApp-0.0.1-SNAPSHOT.jar sunspark_hbase.HBaseSampleApp.RetriveData
+    
+    
+    hadoop jar HBaseSampleApp-0.0.1-SNAPSHOT.jar sunspark_hbase.HBaseSampleApp.CreateTable
+    
+    
+    hadoop jar HBaseSampleApp-0.0.1-SNAPSHOT.jar sunspark_hbase.HBaseSampleApp.InsertData
+    
+    
+    hadoop jar HBaseSampleApp-0.0.1-SNAPSHOT.jar sunspark_hbase.HBaseSampleApp.ListTables
