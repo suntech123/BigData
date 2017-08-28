@@ -1,0 +1,5 @@
+===================== Cloudera VM 5.10.0 =======================
+
+1. Before running the HBase application we need to export the HBase jar to Classpath
+
+   export HADOOP_CLASSPATH="$HADOOP_CLASSPATH:/usr/lib/hbase/lib/*"
