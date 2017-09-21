@@ -21,3 +21,23 @@ https://intellipaat.com/tutorial/hbase-tutorial/operations-using-java-api/
 
 ============================ Spark-with-HBase ==========================
 https://stackoverflow.com/questions/25040709/how-to-read-from-hbase-using-spark
+
+
+
+AGENT_NAME
+AGENT_ID
+EXTENSION
+AVERAGE_LOGGED_IN_TIME
+CALLS_HANDLED
+CALLS_PRESENTED
+HANDLE_RATIO
+AVG_HANDLE_TIME
+MAX_HANDLE_TIME
+AVG_TALK_TIME
+MAX_TALK_TIME
+AVG_HOLD_TIME
+MAX_HOLD_TIME
+AVG_WORK_TIME
+MAX_WORK_TIME
+AVG_IDLE_TIME
+MAX_IDLE_TIME
