@@ -1,0 +1,81 @@
+COLUMN_NAME                             |TYPE_NAME|DEC&|NUM&|COLUM&|COLUMN_DEF|CHAR_OCTE&|IS_NULL&
+--------------------------------------------------------------------------------------------------
+SCHEMA_ID                               |BIGINT   |0   |10  |19    |NULL      |NULL      |NO
+TABLE_ID                                |BIGINT   |0   |10  |19    |NULL      |NULL      |NO
+SCHEMANAME                              |VARCHAR  |NULL|NULL|200   |NULL      |400       |YES
+TABLENAME                               |VARCHAR  |NULL|NULL|200   |NULL      |400       |YES
+TABLE_OWNER                             |VARCHAR  |NULL|NULL|20    |NULL      |40        |YES
+SPLITCOLUMN                             |VARCHAR  |NULL|NULL|200   |NULL      |400       |YES
+MAPPER                                  |VARCHAR  |NULL|NULL|10    |NULL      |20        |YES
+LOADTYPE                                |CHAR     |NULL|NULL|1     |NULL      |2         |YES
+SOURCE_TYPE                             |CHAR     |NULL|NULL|1     |NULL      |2         |YES
+FREQUENCY                               |CHAR     |NULL|NULL|1     |NULL      |2         |YES
+DIRECTION                               |CHAR     |NULL|NULL|1     |NULL      |2         |YES
+TABLE_ACTIVE_FLAG                       |CHAR     |NULL|NULL|1     |NULL      |2         |YES
+SQOOPREQUIRED                           |CHAR     |NULL|NULL|1     |NULL      |2         |YES
+SPLICE_TABLENAME                        |VARCHAR  |NULL|NULL|200   |NULL      |400       |YES
+ORDER_BY                                |SMALLINT |0   |10  |5     |NULL      |NULL      |YES
+CREATED_DATE                            |TIMESTAMP|9   |10  |29    |current_t&|NULL      |NO
+CREATED_BY                              |VARCHAR  |NULL|NULL|200   |'SPLICE'  |400       |NO
+MODIFIED_DATE                           |TIMESTAMP|9   |10  |29    |current_t&|NULL      |NO
+MODIFIED_BY                             |VARCHAR  |NULL|NULL|200   |'SPLICE'  |400       |NO
+HIVE_DIFF                               |CHAR     |NULL|NULL|1     |'N'       |2         |YES
+HIVE_CDC                                |CHAR     |NULL|NULL|1     |'N'       |2         |YES
+
+===========================
+
+splice> describe SPLICEADMIN.LAST_RUN;
+COLUMN_NAME                             |TYPE_NAME|DEC&|NUM&|COLUM&|COLUMN_DEF|CHAR_OCTE&|IS_NULL&
+--------------------------------------------------------------------------------------------------
+SCHEMANAME                              |VARCHAR  |NULL|NULL|200   |NULL      |400       |YES
+SPLICE_TABLENAME                        |VARCHAR  |NULL|NULL|200   |NULL      |400       |YES
+START_RUN_DATE                          |TIMESTAMP|9   |10  |29    |NULL      |NULL      |YES
+SQOOP_ROW_COUNT                         |INTEGER  |0   |10  |10    |NULL      |NULL      |YES
+SPLICE_ROW_COUNT                        |INTEGER  |0   |10  |10    |NULL      |NULL      |YES
+FREQUENCY                               |CHAR     |NULL|NULL|1     |NULL      |2         |YES
+SCHEMA_ID                               |BIGINT   |0   |10  |19    |NULL      |NULL      |YES
+TABLE_ID                                |BIGINT   |0   |10  |19    |NULL      |NULL      |YES
+STATUS                                  |VARCHAR  |NULL|NULL|100   |NULL      |200       |YES
+END_RUN_DATE                            |TIMESTAMP|9   |10  |29    |NULL      |NULL      |YES
+REMARK                                  |VARCHAR  |NULL|NULL|200   |NULL      |400       |YES
+
+
+===========================
+
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+###############################################################################################################
+#
+#
+#
+#
+##############################################################################################################
+import os
+import sys
+import shutil
+import string
+import re
+import ftplib
+## Get file from Lock Box
+def getFile(session, filename,local_filename):
+    try:
+        session.retrbinary("RETR " + filename ,open(local_filename, 'wb').write)
+    except:
+        print "Error"
+
+## Entering into remote session
+session = ftplib.FTP('intlockbox-1.dev.one.cfg','lb71042','nNn$180g212')
+session.cwd('/')
+#session.cwd('/CALL_CENTER_DAILY')
+#session.retrlines("LIST")
+filenames = session.nlst()
+
+## Pick all the files one by one and put in landing directory
+for filename in filenames:
+    if filename.endswith('.csv'):
+       local_filename = os.path.join(r"/home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_LND", filename)
+       getFile(session,filename,local_filename)
+    else:
+       pass
+session.quit()
+
