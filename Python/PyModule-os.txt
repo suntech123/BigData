@@ -1,11 +1,12 @@
-=========================== os.walk ===========================
+========================================== os.walk =================================================
 
 Syntax : os.walk(top, topdown=True, onerror=None, followlinks=False)
 
----------------------------------------------------------------
-Explaination:
-
----------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+Explaination:The method walk() generates the file names in a directory tree by walking the tree
+             either top-down or bottom-up.
+             
+----------------------------------------------------------------------------------------------------
 Examples: 
 
 pskumarbehl@ubuntu:~/sun-mframe-parse$ pwd
@@ -28,3 +29,139 @@ drwxr-xr-x 2 pskumarbehl pskumarbehl    4096 Sep 23 14:55 sun2
 ('/home/pskumarbehl/sun-mframe-parse/sun1', [], [])
 ('/home/pskumarbehl/sun-mframe-parse/sun2', [], [])
 
+--------------------------------------------------------------------------------------------------------
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+for (root, dirs, files) in os.walk('/home/pskumarbehl/sun-mframe-parse',
+                                   topdown=True):
+    for name in files:
+        print os.path.join(root, name)
+    for name in dirs:
+        print os.path.join(root, name)
+        
+/usr/bin/python3.5 /home/pskumarbehl/PycharmProjects/sun1/test.py
+/home/pskumarbehl/sun-mframe-parse/mframe_to_csv_parser.py
+/home/pskumarbehl/sun-mframe-parse/mframe_to_csv_parser_new.py
+/home/pskumarbehl/sun-mframe-parse/parse-mainframe.py
+/home/pskumarbehl/sun-mframe-parse/.mframe_to_csv_parser_new.py.swp
+/home/pskumarbehl/sun-mframe-parse/IBD.txt
+/home/pskumarbehl/sun-mframe-parse/sun4.txt
+/home/pskumarbehl/sun-mframe-parse/sun1
+/home/pskumarbehl/sun-mframe-parse/sun2
+/home/pskumarbehl/sun-mframe-parse/sun1/hi.txt
+/home/pskumarbehl/sun-mframe-parse/sun2/sun3
+/home/pskumarbehl/sun-mframe-parse/sun2/sun3/bye.txt
+ 
+        
+--------------------------------------------------------------------------------------------------------
+ 
+ #!/usr/bin/python
+# -*- coding: utf-8 -*-
+for (root, dirs, files) in os.walk('/home/pskumarbehl/sun-mframe-parse',
+                                   topdown=False):
+    for name in files:
+        print os.path.join(root, name)
+    for name in dirs:
+        print os.path.join(root, name)
+        
+/usr/bin/python3.5 /home/pskumarbehl/PycharmProjects/sun1/test.py
+/home/pskumarbehl/sun-mframe-parse/sun1/hi.txt
+/home/pskumarbehl/sun-mframe-parse/sun2/sun3/bye.txt
+/home/pskumarbehl/sun-mframe-parse/sun2/sun3
+/home/pskumarbehl/sun-mframe-parse/mframe_to_csv_parser.py
+/home/pskumarbehl/sun-mframe-parse/mframe_to_csv_parser_new.py
+/home/pskumarbehl/sun-mframe-parse/parse-mainframe.py
+/home/pskumarbehl/sun-mframe-parse/.mframe_to_csv_parser_new.py.swp
+/home/pskumarbehl/sun-mframe-parse/IBD.txt
+/home/pskumarbehl/sun-mframe-parse/sun4.txt
+/home/pskumarbehl/sun-mframe-parse/sun1
+/home/pskumarbehl/sun-mframe-parse/sun2
+
+
+============================== OS defined exit codes======================================
+
+Syntax: 
+
+os.EX_OK   = Exit code that means no error occurred(Availability: Unix).
+os.EX_USAGE = Exit code that means the command was used incorrectly, such as when the wrong number of arguments are given(Unix).
+os.EX_DATAERR = Exit code that means the input data was incorrect(Unix).
+os.EX_NOINPUT = Exit code that means an input file did not exist or was not readable(Unix).
+os.EX_NOUSER = Exit code that means a specified user did not exist(Unix).
+os.EX_NOHOST = Exit code that means a specified host did not exist(Unix).
+os.EX_UNAVAILABLE = Exit code that means that a required service is unavailable(Unix).
+os.EX_SOFTWARE = Exit code that means an internal software error was detected(Unix).
+os.EX_OSERR = Exit code that means an operating system error was detected, such as the inability to fork or create a pipe(Unix).
+os.EX_OSFILE = Exit code that means some system file did not exist, could not be opened, or had some other kind of error(Unix).
+os.EX_CANTCREAT = Exit code that means a user specified output file could not be created(Unix).
+os.EX_IOERR = Exit code that means that an error occurred while doing I/O on some file(Unix).
+os.EX_TEMPFAIL = Exit code that means a temporary failure occurred. This indicates something 
+                 that may not really be an error, such as a network connection that couldn’t be made during a retryable operation(Unix).
+os.EX_PROTOCOL = Exit code that means that a protocol exchange was illegal, invalid, or not understood(Unix).
+os.EX_NOPERM = Exit code that means that there were insufficient permissions to perform 
+               the operation (but not intended for file system problems)(Unix).
+os.EX_CONFIG = Exit code that means that some kind of configuration error occurred(Unix).
+os.EX_NOTFOUND = Exit code that means something like “an entry was not found”.
+
+
+------------------------------------------------------------------------------------------
+
+Explaination: These exit codes are defined and can be used with _exit(), although 
+              they are not required. These are typically used for system programs written 
+              in Python, such as a mail server’s external command delivery program.
+              
+------------------------------------------------------------------------------------------
+
+Examples:
+
+sys.exit(os.EX_NOINPUT)
+sys.exit(os.EX_DATAERR)
+sys.exit(os.EX_USAGE)
+sys.exit(os.EX_NOINPUT)
+
+    if options.test_sequence == "system":
+        # Run the system tests
+        print "Run the System Test Sequence..."
+        run_test_sequence(SystemTestSequenceFunctions, options.verbosity)
+        sys.exit(os.EX_OK)
+
+
+========================================== os.fsencode =====================================
+
+Syntax: os.fsencode(filename)
+
+--------------------------------------------------------------------------------------------
+
+Explaination : Encode path-like filename to the filesystem encoding with 'surrogateescape' 
+               error handler, or 'strict' on Windows; return bytes unchanged.
+
+
+--------------------------------------------------------------------------------------------
+
+Examples: 
+
+>>> ld = ['\udc80']
+>>> [fn.encode(sys.getfilesystemencoding()) for fn in ld]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<stdin>", line 1, in <listcomp>
+UnicodeEncodeError: 'utf-8' codec can't encode character '\udc80' in position 0: surrogates not allowed
+
+
+>>> [fn.encode(sys.getfilesystemencoding(), 'surrogateescape') for fn in ld]
+[b'\x80']
+>>> [os.fsencode(fn) for fn in ld]
+[b'\x80']
+
+
+=================================== os.fsdecode =============================================
+
+Syntax: os.fsdecode(filename)
+
+---------------------------------------------------------------------------------------------
+
+Explaination : Decode the path-like filename from the filesystem encoding with 'surrogateescape' 
+               error handler, or 'strict' on Windows; return str unchanged.
+               
+---------------------------------------------------------------------------------------------
+
+Examples: 
