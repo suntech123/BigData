@@ -422,4 +422,79 @@ Syntax: os.chdir(path)
 
 
 
-==================================
+================================== os.popen ====================================================
+
+Syntax: os.popen(cmd, mode='r', buffering=-1)
+
+------------------------------------------------------------------------------------------------
+
+Explaination: Open a pipe to or from command cmd. The return value is an open file object connected 
+              to the pipe, which can be read or written depending on whether mode is 'r' (default) 
+              or 'w'. The buffering argument has the same meaning as the corresponding argument to 
+              the built-in open() function. The returned file object reads or writes text strings 
+              rather than bytes.
+              
+-------------------------------------------------------------------------------------------------
+
+Examples:
+
+>>> x=os.popen('ls -ltr').read().strip()
+>>> x
+'total 80\n-rw-r--r-- 1 pskumarbehl pskumarbehl 8980 May 12 02:21 examples.desktop\ndrwxr-xr-x 2 pskumarbehl pskumarbehl 4096 May 12 02:33 Videos\ndrwxr-xr-x 2 pskumarbehl pskumarbehl 4096 May 12 02:33 Templates\ndrwxr-xr-x 2 pskumarbehl pskumarbehl 4096 May 12 02:33 Public\ndrwxr-xr-x 2 pskumarbehl pskumarbehl 4096 May 12 02:33 Pictures\ndrwxr-xr-x 2 pskumarbehl pskumarbehl 4096 May 12 02:33 Music\ndrwxr-xr-x 2 pskumarbehl pskumarbehl 4096 May 12 02:33 Documents\ndrwxr-xr-x 3 pskumarbehl pskumarbehl 4096 May 15 04:08 PycharmProjects\ndrwxr-xr-x 5 pskumarbehl pskumarbehl 4096 May 20 02:00 mykafka\ndrwxr-xr-x 2 pskumarbehl pskumarbehl 4096 May 21 05:08 Downloads\ndrwxr-xr-x 3 pskumarbehl pskumarbehl 4096 May 21 05:24 mykafka-latest\ndrwxr-xr-x 2 pskumarbehl pskumarbehl 4096 May 23 05:55 python-scripts\n-rw-r--r-- 1 pskumarbehl pskumarbehl   92 May 26 01:52 my-session.py\ndrwxr-xr-x 3 pskumarbehl pskumarbehl 4096 Jun 21 03:52 DJANGO-STARTUP\ndrwxr-xr-x 3 pskumarbehl pskumarbehl 4096 Sep 23 14:37 Desktop\ndrwxr-xr-x 4 pskumarbehl pskumarbehl 4096 Sep 23 14:55 sun-mframe-parse\ndrwxr-xr-x 5 pskumarbehl pskumarbehl 4096 Sep 23 20:21 test\ndrwxr-xr-x 3 pskumarbehl pskumarbehl 4096 Sep 23 23:07 test11'
+
+
+===================================== os.open ===================================================
+
+Syntax: os.open(path, flags, mode=0o777, *, dir_fd=None)
+
+-------------------------------------------------------------------------------------------------
+
+Explaination: Open the file path and set various flags according to flags and possibly its mode 
+              according to mode. When computing mode, the current umask value is first masked out. 
+              Return the file descriptor for the newly opened file. The new file descriptor is 
+              non-inheritable.
+              
+              Note This function is intended for low-level I/O. For normal usage, use the built-in 
+              function open(), which returns a file object with read() and write() methods (and 
+              many more). To wrap a file descriptor in a file object, use fdopen().
+-------------------------------------------------------------------------------------------------
+
+Examples: 
+
+
+====================================== os.wait ===================================================
+
+Syntax: os.wait()
+
+--------------------------------------------------------------------------------------------------
+
+Explaination: Wait for completion of a child process, and return a tuple containing its pid and exit 
+              status indication: a 16-bit number, whose low byte is the signal number that killed 
+              the process, and whose high byte is the exit status (if the signal number is zero); 
+              the high bit of the low byte is set if a core file was produced.
+              
+--------------------------------------------------------------------------------------------------
+
+Examples:
+
+
+====================================== os.pardir =================================================
+
+Syntax: os.pardir
+
+--------------------------------------------------------------------------------------------------
+
+Explaination: The constant string used by the operating system to refer to the parent directory. 
+              This is '..' for Windows and POSIX. Also available via os.path.
+              
+--------------------------------------------------------------------------------------------------
+
+Examples:
+
+>>> import os
+>>> os.getcwd()
+'/home/pskumarbehl'
+>>> os.pardir
+'..'
+
+====================================== 
