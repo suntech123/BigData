@@ -1,0 +1,30 @@
+=========================== os.walk ===========================
+
+Syntax : os.walk(top, topdown=True, onerror=None, followlinks=False)
+
+---------------------------------------------------------------
+Explaination:
+
+---------------------------------------------------------------
+Examples: 
+
+pskumarbehl@ubuntu:~/sun-mframe-parse$ pwd
+/home/pskumarbehl/sun-mframe-parse
+
+pskumarbehl@ubuntu:~/sun-mframe-parse$ ls -ltr
+total 1932
+-rw-r--r-- 1 pskumarbehl pskumarbehl 1239927 May 13 02:32 IBD.txt
+-rwxr-xr-x 1 pskumarbehl pskumarbehl     551 May 13 02:43 parse-mainframe.py
+-rwxr-xr-x 1 pskumarbehl pskumarbehl    4901 Jun 16 00:30 mframe_to_csv_parser.py
+-rwxr-xr-x 1 pskumarbehl pskumarbehl    5477 Jun 17 02:04 mframe_to_csv_parser_new.py
+-rw-r--r-- 1 pskumarbehl pskumarbehl  704734 Jun 17 02:04 sun4.txt
+drwxr-xr-x 2 pskumarbehl pskumarbehl    4096 Sep 23 14:55 sun1
+drwxr-xr-x 2 pskumarbehl pskumarbehl    4096 Sep 23 14:55 sun2
+
+>>> for root in os.walk('/home/pskumarbehl/sun-mframe-parse'):
+...     print(root)
+... 
+('/home/pskumarbehl/sun-mframe-parse', ['sun1', 'sun2'], ['mframe_to_csv_parser.py', 'mframe_to_csv_parser_new.py', 'parse-mainframe.py', '.mframe_to_csv_parser_new.py.swp', 'IBD.txt', 'sun4.txt'])
+('/home/pskumarbehl/sun-mframe-parse/sun1', [], [])
+('/home/pskumarbehl/sun-mframe-parse/sun2', [], [])
+
