@@ -242,3 +242,126 @@ Explaination: reate a directory named path with numeric mode mode. If the direct
 
 Examples:
 
+pskumarbehl@ubuntu:~/test$ ls -ltr
+total 0
+
+>>> os.makedirs('/home/pskumarbehl/test/test1')
+
+pskumarbehl@ubuntu:~/test$ ls -ltr
+total 4
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Sep 23 19:36 test1
+
+>>> os.makedirs('/home/pskumarbehl/test/test2')
+
+pskumarbehl@ubuntu:~/test$ ls -ltr
+total 8
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Sep 23 19:36 test1
+drwxr-xr-x 2 pskumarbehl pskumarbehl 4096 Sep 23 19:36 test2
+
+
+===================================== os.truncate , os.ftruncate =====================================
+
+Syntax: 
+
+
+==================================== os.listdir ======================================================
+
+Syntax : os.listdir(path='.')
+
+------------------------------------------------------------------------------------------------------
+
+Explaination: 
+
+------------------------------------------------------------------------------------------------------
+
+Examples: 
+
+>>> os.listdir('/home/pskumarbehl')
+['.PyCharmCE2017.1', 'Pictures', 'examples.desktop', 'mykafka-latest', '.bashrc', '.ICEauthority', 'sun-mframe-parse', '.dmrc', '.xsession-errors', 'Desktop', 'DJANGO-STARTUP', 'Music', 'Templates', '.python_history', '.sqlite_history', '.compiz', 'Downloads', '.bash_history', '.ssh', '.local', '.sudo_as_admin_successful', '.virtualenvs', '.bash_logout', '.xsession-errors.old', '.mozilla', '.cache', '.viminfo', 'python-scripts', 'PycharmProjects', 'Videos', '.ipython', 'test', 'my-session.py', '.Xauthority', 'Public', 'mykafka', '.java', '.config', 'Documents', '.profile']
+
+>>> for dir in os.listdir('/home/pskumarbehl'):
+...     print(dir)
+... 
+.PyCharmCE2017.1
+Pictures
+examples.desktop
+mykafka-latest
+.bashrc
+.ICEauthority
+sun-mframe-parse
+.dmrc
+.xsession-errors
+Desktop
+DJANGO-STARTUP
+
+====================================os.mkdir ================================================
+
+Syntax: os.mkdir(path, mode=0o777, *, dir_fd=None)
+
+---------------------------------------------------------------------------------------------
+
+Explaination: 
+
+---------------------------------------------------------------------------------------------
+
+Examples: 
+
+pskumarbehl@ubuntu:~/test$ ls
+abc.txt  test1  test2
+
+>>> os.mkdir('/home/pskumarbehl/test/suntech')
+
+pskumarbehl@ubuntu:~/test$ ls
+abc.txt  suntech  test1  test2
+
+===================================== os.pathsep ===========================================
+
+Syntax: os.pathsep
+
+--------------------------------------------------------------------------------------------
+
+Explaination: The character conventionally used by the operating system to separate search path components (as in PATH), such as ':' for               POSIX or ';' for Windows. Also available via os.path.
+
+--------------------------------------------------------------------------------------------
+
+Examples: 
+
+>>> x=os.environ.get('PATH','').split(os.pathsep)
+>>> print(x)
+['/home/pskumarbehl/.local/share/umake/bin', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/snap/bin']
+
+====================================== Few More Seperators =================================
+
+os.linesep     - The character conventionally used by the operating system to separate search path components (as in PATH), such as ':'                  for POSIX or ';' for Windows. Also available via os.path.
+
+os.extsep      - The character which separates the base filename from the extension; for example, the '.' in os.py. Also available via                    os.path.
+
+os.sep         - The character used by the operating system to separate pathname components. This is '/' for POSIX and '\\' for Windows.                  Note that knowing this is not sufficient to be able to parse or concatenate pathnames — use os.path.split() and                          os.path.join() — but it is occasionally useful. Also available via os.path.
+
+Examples:
+
+>>> os.linesep
+'\n'
+>>> os.extsep
+'.'
+>>> os.sep
+'/'
+
+======================================== os.devnull =========================================
+
+Syntax: os.devnull
+
+---------------------------------------------------------------------------------------------
+
+Explaination: The file path of the null device. For example: '/dev/null' for POSIX, 'nul' for 
+              Windows. Also available via os.path.
+
+---------------------------------------------------------------------------------------------
+
+Examples:
+
+import os
+import sys
+f = open(os.devnull, 'w')
+sys.sterr = f
+
