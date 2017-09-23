@@ -204,3 +204,41 @@ total 0
 ...     os.rename(os.path.join(path, filename), os.path.join(path, filename.replace(' ', '-')))
 ...
 
+======================================= os.remove ================================================
+
+Syntax : os.remove(path, *, dir_fd=None)
+
+--------------------------------------------------------------------------------------------------
+
+Explaination: 
+
+--------------------------------------------------------------------------------------------------
+
+Examples: 
+
+pskumarbehl@ubuntu:~/test$ ls -ltr
+total 0
+-rw-r--r-- 1 pskumarbehl pskumarbehl 0 Sep 23 17:42 sunil_kumar_behl
+
+>>> if os.path.isfile('/home/pskumarbehl/test/sunil_kumar_behl') or os.path.islink('/home/pskumarbehl/test/sunil_kumar_behl'):
+...    os.remove('/home/pskumarbehl/test/sunil_kumar_behl')
+...
+>>>
+
+pskumarbehl@ubuntu:~/test$ ls -ltr
+total 0
+
+
+==================================== os.mkdir ===================================================
+
+Syntax: os.mkdir(path, mode=0o777, *, dir_fd=None)
+
+-------------------------------------------------------------------------------------------------
+
+Explaination: reate a directory named path with numeric mode mode. If the directory already exists, 
+              FileExistsError is raised.
+              
+-------------------------------------------------------------------------------------------------
+
+Examples:
+
