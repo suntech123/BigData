@@ -164,4 +164,43 @@ Explaination : Decode the path-like filename from the filesystem encoding with '
                
 ---------------------------------------------------------------------------------------------
 
+Examples:  coming soon.......
+
+
+
+================================= os.replace ================================================
+
+Syntax: os.replace(src, dst, *, src_dir_fd=None, dst_dir_fd=None)
+
+---------------------------------------------------------------------------------------------
+Explaination: Rename the file or directory src to dst. If dst is a directory, OSError will be 
+              raised. If dst exists and is a file, it will be replaced silently if the user 
+              has permission. The operation may fail if src and dst are on different filesystems. 
+              If successful, the renaming will be an atomic operation (this is a POSIX requirement).
+              
+---------------------------------------------------------------------------------------------
+
 Examples: 
+
+pskumarbehl@ubuntu:~/test$ pwd
+/home/pskumarbehl/test
+
+pskumarbehl@ubuntu:~/test$ ls -ltr
+total 0
+-rw-r--r-- 1 pskumarbehl pskumarbehl 0 Sep 23 17:42 sunil kumar behl
+
+>>> os.replace('/home/pskumarbehl/test/sunil kumar behl', '/home/pskumarbehl/test/sunil_kumar_behl')
+
+pskumarbehl@ubuntu:~/test$ ls -ltr
+total 0
+-rw-r--r-- 1 pskumarbehl pskumarbehl 0 Sep 23 17:42 sunil_kumar_behl
+
+------------------------------------------------------
+
+>>> import os
+>>> path  = os.getcwd()
+>>> filenames = os.listdir(path)
+>>> for filename in filenames:
+...     os.rename(os.path.join(path, filename), os.path.join(path, filename.replace(' ', '-')))
+...
+
