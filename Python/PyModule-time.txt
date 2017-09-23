@@ -1,0 +1,57 @@
+=================================== time.time() ===================================================
+
+Syntax: time.time()
+
+---------------------------------------------------------------------------------------------------
+
+Explaination: Return the time in seconds since the epoch as a floating point number. The specific 
+              date of the epoch and the handling of leap seconds is platform dependent. On Windows 
+              and most Unix systems, the epoch is January 1, 1970, 00:00:00 (UTC) and leap seconds 
+              are not counted towards the time in seconds since the epoch. This is commonly referred 
+              to as Unix time.
+
+--------------------------------------------------------------------------------------------------
+
+Examples:
+
+>>> import time
+>>> time.time
+<built-in function time>
+>>> time.time()
+1506193599.2647226
+>>> time.time()
+1506194247.9829676
+
+================================== time.strftime ===================================================
+
+Syntax: time.strftime(format[, t])
+
+----------------------------------------------------------------------------------------------------
+
+Explaination: Convert a tuple or struct_time representing a time as returned by gmtime() or localtime() 
+              to a string as specified by the format argument. If t is not provided, the current time as 
+              returned by localtime() is used. format must be a string. ValueError is raised if any field 
+              in t is outside of the allowed range.
+              
+-----------------------------------------------------------------------------------------------------
+
+Examples:
+
+>>> time.strftime('%d/%b/%Y:%H:%M:%S')
+'24/Sep/2017:02:10:23'
+
+
+====================================== time.asctime ==================================================
+
+Syntax: time.asctime([t])
+
+------------------------------------------------------------------------------------------------------
+
+Explaination: Convert a tuple or struct_time representing a time as returned by gmtime() or localtime() 
+              to a string of the following form: 'Sun Jun 20 23:21:05 1993'. If t is not provided, the 
+              current time as returned by localtime() is used. Locale information is not used by asctime().
+              
+------------------------------------------------------------------------------------------------------
+
+Examples:
+
