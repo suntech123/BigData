@@ -55,3 +55,144 @@ Explaination: Convert a tuple or struct_time representing a time as returned by 
 
 Examples:
 
+
+======================================== time.sleep ===================================================
+
+Syntax: time.sleep(secs)
+
+-------------------------------------------------------------------------------------------------------
+
+Explaination: Suspend execution of the calling thread for the given number of seconds. The argument may 
+              be a floating point number to indicate a more precise sleep time. The actual suspension time 
+              may be less than that requested because any caught signal will terminate the sleep() following 
+              execution of that signal’s catching routine. Also, the suspension time may be longer than 
+              requested by an arbitrary amount because of the scheduling of other activity in the system.
+              
+--------------------------------------------------------------------------------------------------------
+
+Examples:
+
+
+======================================= time.localtime =================================================
+
+Syntax: time.localtime([secs])
+
+--------------------------------------------------------------------------------------------------------
+
+Explaination: Like gmtime() but converts to local time. If secs is not provided or None, the current time 
+              as returned by time() is used. The dst flag is set to 1 when DST applies to the given time.
+              
+--------------------------------------------------------------------------------------------------------
+
+Examples: 
+
+>>> time.localtime()
+time.struct_time(tm_year=2017, tm_mon=9, tm_mday=24, tm_hour=14, tm_min=38, tm_sec=23, tm_wday=6, tm_yday=267, tm_isdst=0)
+>>> time.localtime(5)
+time.struct_time(tm_year=1970, tm_mon=1, tm_mday=1, tm_hour=5, tm_min=30, tm_sec=5, tm_wday=3, tm_yday=1, tm_isdst=0)
+
+
+======================================= time.ctime ======================================================
+
+Syntax: time.ctime([secs])
+
+---------------------------------------------------------------------------------------------------------
+
+Explaination: Convert a time expressed in seconds since the epoch to a string representing local time. 
+              If secs is not provided or None, the current time as returned by time() is used. ctime(secs)
+              is equivalent to asctime(localtime(secs)). Locale information is not used by ctime().
+              
+----------------------------------------------------------------------------------------------------------
+
+Examples:
+
+>>> time.ctime()
+'Sun Sep 24 18:31:37 2017'
+>>> time.ctime(5000)
+'Thu Jan  1 06:53:20 1970'
+
+======================================= time.gmtime ======================================================
+
+Syntax: time.gmtime([secs])
+
+----------------------------------------------------------------------------------------------------------
+
+Explaination: Convert a time expressed in seconds since the epoch to a struct_time in UTC in which the dst 
+              flag is always zero. If secs is not provided or None, the current time as returned by time() 
+              is used. Fractions of a second are ignored. See above for a description of the struct_time 
+              object. See calendar.timegm() for the inverse of this function.
+                          
+----------------------------------------------------------------------------------------------------------
+
+Examples:
+
+>>> time.gmtime()
+time.struct_time(tm_year=2017, tm_mon=9, tm_mday=24, tm_hour=13, tm_min=15, tm_sec=32, tm_wday=6, tm_yday=267, tm_isdst=0)
+>>> time.gmtime(5000)
+time.struct_time(tm_year=1970, tm_mon=1, tm_mday=1, tm_hour=1, tm_min=23, tm_sec=20, tm_wday=3, tm_yday=1, tm_isdst=0)
+
+========================================== time.struct_time ===============================================
+
+Syntax: time.struct_time
+
+-----------------------------------------------------------------------------------------------------------
+
+Explaination: The type of the time value sequence returned by gmtime(), localtime(), and strptime(). It is 
+              an object with a named tuple interface: values can be accessed by index and by attribute name. 
+              The following values are present:
+
+-----------------------------------------------------------------------------------------------------------
+
+Examples:
+
+>>> time.struct_time
+<class 'time.struct_time'>
+
+
+========================================== time.timezone ===================================================
+
+Syntax: time.timezone
+
+------------------------------------------------------------------------------------------------------------
+
+Explaination: The offset of the local (non-DST) timezone, in seconds west of UTC (negative in most of Western 
+              Europe, positive in the US, zero in the UK).
+              
+------------------------------------------------------------------------------------------------------------
+
+Examples: 
+
+>>> time.timezone
+-19800
+
+========================================= time.tzname =======================================================
+
+Syntax: time.tzname
+
+-------------------------------------------------------------------------------------------------------------
+
+Explaination: A tuple of two strings: the first is the name of the local non-DST timezone, the second is the 
+              name of the local DST timezone. If no DST timezone is defined, the second string should not be 
+              used.
+              
+-------------------------------------------------------------------------------------------------------------
+
+Examples:
+
+>>> time.tzname
+('IST', 'IST')
+
+========================================= time.monotonic ====================================================
+
+Syntax: time.monotonic()
+
+-------------------------------------------------------------------------------------------------------------
+Explaination: Return the value (in fractional seconds) of a monotonic clock, i.e. a clock that cannot go 
+              backwards. The clock is not affected by system clock updates. The reference point of the returned 
+              value is undefined, so that only the difference between the results of consecutive calls is valid.
+-------------------------------------------------------------------------------------------------------------
+Examples:
+
+>>> time.monotonic()
+105672.324789511
+
