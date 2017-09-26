@@ -42,84 +42,35 @@ REMARK                                  |VARCHAR  |NULL|NULL|200   |NULL      |4
 
 ===========================
 
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-###############################################################################################################
-#
-#
-#
-#
-##############################################################################################################
-import os
-import sys
-import csv
-import shutil
-import string
-import time
-import datetime
-import re
-import ftplib
-import logging
 ## Initiate logging
+class StreamToLogger(object):
+   def __init__(self, logger, log_level=logging.INFO):
+      self.logger = logger
+      self.log_level = log_level
+      self.linebuf = ''
+
+   def write(self, buf):
+      for line in buf.rstrip().splitlines():
+          self.logger.log(self.log_level, line.rstrip())
+
+   def flush(self):
+       pass
+
 ets = time.time()
 st = datetime.datetime.fromtimestamp(ets).strftime('%Y-%m-%d_%H_%M_%S')
-LOG_FILE='/home/splice/cetera/call-center-agent-detail/logs/call-center-agent-detail_%s'%st
+LOG_FILE='/home/pskumarbehl/Desktop/call-center-agent-detail_%s'%st
 
-logging.basicConfig(filename=LOG_FILE, filemode="w", level=logging.DEBUG)
-console = logging.StreamHandler(sys.stdout)
-console.setLevel(logging.DEBUG)
-logging.getLogger("").addHandler(console)
-print(LOG_FILE)
-## Get file from Lock Box
-def getFile(session, filename,local_filename):
-    try:
-        session.retrbinary("RETR " + filename ,open(local_filename, 'wb').write)
-    except:
-        print "Error"
-## Move Local to HDFS
-def moveLocalToHdfs(local_dir,hdfs_dir):
-    try:
-      os.system('sudo -su hdfs hadoop fs -copyFromLocal %s %s'%(local_dir,hdfs_dir))
-    except:
-      print "Error Copying files from local to HDFS"
-
-## Clean landing and stage directories
-os.system('rm -f /home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_LND/*')
-os.system('rm -f /home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_DTL_STG/*')
-os.system('rm -f /home/splice/cetera/call-center-agent-detail/CALL_CENTER_QUEUE_HST_STG/*')
-os.system('rm -f /home/splice/cetera/call-center-agent-detail/CALL_CENTER_QUEUE_SL_STG/*')
-
-## Entering into remote session
-session = ftplib.FTP('intlockbox-1.dev.one.cfg','lb71042','nNn$180g212')
-session.cwd('/')
-#session.cwd('/CALL_CENTER_DAILY')
-#session.retrlines("LIST")
-filenames = session.nlst()
-
-## Pick all the files one by one and put in landing directory
-for filename in filenames:
-    if filename.endswith('.csv'):
-       local_filename = os.path.join(r"/home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_LND", re.sub(' +','_',filename))
-       getFile(session,filename,local_filename)
-    else:
-       pass
-session.quit()
-
-## Process files to change the delimiter
-for filename in os.listdir('/home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_LND'):
-    if  filename.startswith('Agent_Performance_Daily_Report'):
-        shutil.move(os.path.join(r"/home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_LND", filename), '/home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_DTL_STG')
-    elif filename.startswith('Daily_Historical_All_Queues'):
-        shutil.move(os.path.join(r"/home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_LND", filename), '/home/splice/cetera/call-center-agent-detail/CALL_CENTER_QUEUE_HST_STG')
-    elif filename.startswith('SL_Daily_All_Queues'):
-        shutil.move(os.path.join(r"/home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_LND", filename), '/home/splice/cetera/call-center-agent-detail/CALL_CENTER_QUEUE_SL_STG')
-    else:
-        pass
-
-## Move the files from local to HDFS for each file set
-moveLocalToHdfs('/home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_DTL_STG/*','/data/call-center-agent-detail/CALL_CENTER_AGENT_DTL_STG/')
-moveLocalToHdfs('/home/splice/cetera/call-center-agent-detail/CALL_CENTER_QUEUE_HST_STG/*','/data/call-center-agent-detail/CALL_CENTER_QUEUE_HST_STG/')
-moveLocalToHdfs('/home/splice/cetera/call-center-agent-detail/CALL_CENTER_QUEUE_SL_STG/*','/data/call-center-agent-detail/CALL_CENTER_QUEUE_SL_STG/')
+logging.basicConfig(filename=LOG_FILE,
+                    filemode="w",
+                    level=logging.DEBUG,
+                    format='%(asctime)s:%(levelname)s:%(name)s:%(message)s'
+                    )
 
 
-sys.exit(os.EX_OK)
+stdout_logger = logging.getLogger('STDOUT')
+sl = StreamToLogger(stdout_logger, logging.INFO)
+sys.stdout = sl
+
+stderr_logger = logging.getLogger('STDERR')
+sl = StreamToLogger(stderr_logger, logging.ERROR)
+sys.stderr = sl
