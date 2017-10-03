@@ -1,0 +1,138 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+###############################################################################################################
+#
+#
+#
+#
+##############################################################################################################
+import os
+import sys
+import csv
+import shutil
+import string
+import time
+import datetime
+import re
+import ftplib
+import logging
+## Initiate logging
+class StreamToLogger(object):
+   def __init__(self, logger, log_level=logging.INFO):
+      self.logger = logger
+      self.log_level = log_level
+      self.linebuf = ''
+
+   def write(self, buf):
+      for line in buf.rstrip().splitlines():
+          self.logger.log(self.log_level, line.rstrip())
+
+   def flush(self):
+       pass
+
+ets = time.time()
+st = datetime.datetime.fromtimestamp(ets).strftime('%Y-%m-%d_%H_%M_%S')
+LOG_FILE='/home/splice/cetera/call-center-agent-detail/logs/call-center-agent-detail_lnd_%s.log'%st
+
+logging.basicConfig(filename=LOG_FILE,
+                    filemode="w",
+                    level=logging.DEBUG,
+                    format='%(asctime)s:%(levelname)s:%(name)s:%(message)s'
+                    )
+
+
+stdout_logger = logging.getLogger('STDOUT')
+sl = StreamToLogger(stdout_logger, logging.INFO)
+sys.stdout = sl
+
+stderr_logger = logging.getLogger('STDERR')
+sl = StreamToLogger(stderr_logger, logging.ERROR)
+sys.stderr = sl
+
+## Get file from Lock Box
+def getFile(session, filename,local_filename):
+    try:
+        session.retrbinary("RETR " + filename ,open(local_filename, 'wb').write)
+        session.rename(filename,'CALL_CENTER_ARCHIVE/' + filename)
+    except:
+        print "Error exiting the session...."
+        sys.exit(0)
+## Move Local to HDFS 
+def moveLocalToHdfs(local_dir,hdfs_dir):
+    res=os.system('sudo -su hdfs hadoop fs -copyFromLocal %s %s'%(local_dir,hdfs_dir))
+    if res != 0:
+       print "Error Copying files from local to HDFS.....................exiting"
+       sys.exit(1)
+
+## Clean landing and stage directorie
+print("Cleaning landing and stage directories....................................")
+os.system('rm -f /home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_LND/*')
+os.system('rm -f /home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_DTL_STG/*')
+os.system('rm -f /home/splice/cetera/call-center-agent-detail/CALL_CENTER_QUEUE_HST_STG/*')
+os.system('rm -f /home/splice/cetera/call-center-agent-detail/CALL_CENTER_QUEUE_SL_STG/*')
+os.system('rm -f /home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_LND_TEMP/*')
+
+print("Directories cleaned successfully..................................")
+
+## Entering into remote session
+print("Establishing Remote session to download files from lockbox....................")
+session = ftplib.FTP('intlockbox-1.dev.one.cfg','lb71042','nNn$180g212')
+session.cwd('/')
+#session.cwd('/CALL_CENTER_DAILY')
+#session.retrlines("LIST")
+filenames = session.nlst()
+files_only = [e for e in filenames if e.endswith('.csv')]
+
+## Download the files from server
+if len(files_only) != 0:
+   for filename in filenames:
+      if filename.endswith('.csv'):
+        local_filename = os.path.join(r"/home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_LND", re.sub(' +','_',filename))
+        getFile(session,filename,local_filename)
+      else:
+        pass
+else:
+   print("There are no file to read.....exiting process")
+   sys.exit(1)
+session.quit()
+print("Files downloaded successfully.......................................")
+
+## Exract date from the filename
+for h in os.listdir('/home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_LND'):
+    date_part=re.search(r'\d{1,2}[\.]\d{1,2}[\.]\d{2}',h)
+    (month,day,year)=date_part.group(0).split('.')
+    if len(month)==1:
+       month='0' + month
+    if len(day)==1:
+       day='0' + day
+    year= '20'+year
+    date_field=year+'-'+month+'-'+day
+    with open(os.path.join(r"/home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_LND", h)) as csvin:
+         readfile=csv.reader(csvin, delimiter=',')
+         with open(os.path.join(r"/home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_LND_TEMP", h),'w') as csvout:
+              writefile = csv.writer(csvout, delimiter=',', lineterminator='\n')
+              for row in readfile:
+                  row.extend([date_field])
+                  writefile.writerow(row)
+## Process files
+print("Removing spaces from filenames......................................")
+for filename in os.listdir('/home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_LND'):
+    fln=os.path.join(r"/home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_LND", filename)
+    os.system('sed -i "1d" %s'%fln)
+    if  filename.startswith('Agent_Performance_Daily_Report'):
+        shutil.move(os.path.join(r"/home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_LND", filename), '/home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_DTL_STG')
+    elif filename.startswith('Daily_Historical_All_Queues'):
+        shutil.move(os.path.join(r"/home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_LND", filename), '/home/splice/cetera/call-center-agent-detail/CALL_CENTER_QUEUE_HST_STG')
+    elif filename.startswith('SL_Daily_All_Queues'):
+        shutil.move(os.path.join(r"/home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_LND", filename), '/home/splice/cetera/call-center-agent-detail/CALL_CENTER_QUEUE_SL_STG')
+    else:
+        pass
+print("Filenames processed successfully......................................")
+## Move the files from local to HDFS for each file set
+
+#print("Moving files from local to HDFS directories...........................")
+#moveLocalToHdfs('/home/splice/cetera/call-center-agent-detail/CALL_CENTER_AGENT_DTL_STG/*','/data/call-center-agent-detail/CALL_CENTER_AGENT_DTL_STG/')
+#moveLocalToHdfs('/home/splice/cetera/call-center-agent-detail/CALL_CENTER_QUEUE_HST_STG/*','/data/call-center-agent-detail/CALL_CENTER_QUEUE_HST_STG/')
+#moveLocalToHdfs('/home/splice/cetera/call-center-agent-detail/CALL_CENTER_QUEUE_SL_STG/*','/data/call-center-agent-detail/CALL_CENTER_QUEUE_SL_STG/')
+
+sys.exit(os.EX_OK)
