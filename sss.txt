@@ -1,0 +1,45 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+###############################################################################################################
+#
+#
+#
+#
+##############################################################################################################
+import os
+import sys
+import csv
+import shutil
+import string
+import time
+from xml.etree.ElementTree import iterparse
+#import datetime
+#from datetime import timedelta
+import re
+#import logging
+doc = iterparse('/data6/splice/July_Files/DataWarehouse37/DataWarehouse37_FC_USA_M_20160803.xml', ('start', 'end'))
+path='CUSIP/CUSIP'
+path_parts = path.split('/')
+#next(doc)
+tag_stack = []
+elem_stack = []
+for event, elem in doc:
+#     nm=elem.find('PackageName')
+     nm=elem.find('InvestmentVehicle')
+     if nm is not None:
+        print(nm.text)
+#    if event == 'start':
+#       tag_stack.append(elem.tag)
+#       elem_stack.append(elem)
+#    elif event == 'end':
+#         if tag_stack == path_parts:
+#            print(elem.tag)
+#            elem_stack[-2].remove(elem)
+#         try:
+#            tag_stack.pop()
+#            elem_stack.pop()
+#         except IndexError:
+#            pass
+
+sys.exit(0)
+      
