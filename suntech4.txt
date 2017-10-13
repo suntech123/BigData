@@ -1,0 +1,21 @@
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:output method="text" encoding="iso-8859-1"/>
+<xsl:strip-space elements="*" />
+
+<xsl:template match="/">
+   <xsl:if test="/Package/PackageBody/InvestmentVehicle/Portfolio/HoldingBreakdown/Holding">
+    <xsl:for-each select="/Package/PackageBody/InvestmentVehicle/Portfolio/HoldingBreakdown/Holding">
+        <xsl:value-of select="ancestor::InvestmentVehicle/@_Id"/><xsl:text>|</xsl:text>
+		<xsl:value-of select="current()/CUSIP"/><xsl:text>|</xsl:text>
+		<xsl:value-of select="current()/ISIN"/><xsl:text>|</xsl:text>
+		<xsl:value-of select="current()/Ticker"/><xsl:text>|</xsl:text>
+		<xsl:value-of select="current()/HoldingDetailId"/><xsl:text>|</xsl:text>
+		<xsl:value-of select="current()/DetailHoldingTypeId"/><xsl:text>|</xsl:text>
+		<xsl:value-of select="current()/SecurityName"/><xsl:text>|</xsl:text>
+		<xsl:value-of select="current()/Weighting"/><xsl:text>|</xsl:text>
+		<xsl:value-of select="current()/NumberOfShare"/><xsl:text>|</xsl:text>
+		<xsl:value-of select="current()/MarketValue"/><xsl:text>&#x0A;</xsl:text>
+	</xsl:for-each>
+   </xsl:if>
+</xsl:template>
+</xsl:stylesheet>
