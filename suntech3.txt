@@ -1,0 +1,22 @@
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:output method="text" encoding="iso-8859-1"/>
+<xsl:strip-space elements="*" />
+
+<xsl:template match="/">
+   <xsl:if test="/Package/PackageBody/InvestmentVehicle/TrailingPerformance/MonthEndTrailingPerformance">
+    <xsl:for-each select="/Package/PackageBody/InvestmentVehicle/TrailingPerformance/MonthEndTrailingPerformance">
+        <xsl:value-of select="ancestor::InvestmentVehicle/@_Id"/><xsl:text>|</xsl:text>
+		<xsl:value-of select="current()/PerformanceAsOfDate"/><xsl:text>|</xsl:text>
+		<xsl:value-of select="current()/PerformanceId"/><xsl:text>|</xsl:text>
+		<xsl:value-of select="current()/ClosePrice"/><xsl:text>|</xsl:text>
+		<xsl:value-of select="current()/TrailingReturnYTD"/><xsl:text>|</xsl:text>
+		<xsl:value-of select="current()/TrailingReturnY1"/><xsl:text>|</xsl:text>
+		<xsl:value-of select="current()/TrailingReturnY2"/><xsl:text>|</xsl:text>
+		<xsl:value-of select="current()/TrailingReturnY3"/><xsl:text>|</xsl:text>
+		<xsl:value-of select="current()/TrailingReturnY4"/><xsl:text>|</xsl:text>
+		<xsl:value-of select="current()/TrailingReturnY5"/><xsl:text>|</xsl:text>
+		<xsl:value-of select="current()/TrailingReturnSinceInception"/><xsl:text>&#x0A;</xsl:text>
+	</xsl:for-each>
+   </xsl:if>
+</xsl:template>
+</xsl:stylesheet>
