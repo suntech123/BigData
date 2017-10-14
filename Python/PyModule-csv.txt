@@ -1,0 +1,48 @@
+=================== csv – Comma-separated value files ================================================
+
+Introduction: The csv module is useful for working with data exported from spreadsheets and databases 
+              into text files formatted with fields and records, commonly referred to as comma-separated 
+              value (CSV) format because commas are often used to separate the fields in a record.
+
+Note: The Python 2.5 version of csv does not support Unicode data. There are also “issues with ASCII NUL 
+      characters”. Using UTF-8 or printable ASCII is recommended.
+      
+========================== Module Functions ===========================================================
+
+csv.reader             - returns a reader object which iterates over lines of a CSV file
+csv.writer             - returns a writer object which writes data into CSV file
+csv.register_dialect   - registers a CSV dialect
+csv.unregister_dialect - unregisters a CSV dialect
+csv.get_dialect        - returns a dialect with the given name
+csv.list_dialects      - returns all registered dialects
+csv.field_size_limit   - returns the current maximum field size allowed by the parser
+
+
+-------------------------------------------------------------------------------------------------------
+
+=============================== csv.reader() ==========================================================
+
+Syntax: csv.reader(csvfile, dialect='excel', **fmtparams)
+
+Description: The first argument to reader() is the source of text lines. In this case, it is a file, but 
+             any iterable is accepted (StringIO instances, lists, etc.). Other optional arguments can be 
+             given to control how the input data is parsed.
+             
+             The parser handles line breaks embedded within strings in a row, which is why a “row” is not 
+             always the same as a “line” of input from the file.
+
+-------------------------------------------------------------------------------------------------------
+
+Examples: 
+
+with open('/home/cloudera/Desktop/agri-data.csv','rb') as f:
+    reader=csv.reader(f)
+    for row in reader:
+        print(row)
+
+The csv.reader() method allows to use a different delimiter with its delimiter attribute.
+
+with open('/home/cloudera/Desktop/agri-data.csv','rb') as f:
+    reader=csv.reader(f,delimiter='|')
+    for row in reader:
+        print(row)
