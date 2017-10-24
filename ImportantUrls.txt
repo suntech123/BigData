@@ -16,6 +16,7 @@ https://www.edureka.co/blog/interview-questions/top-50-hadoop-interview-question
 
 ============================ HBase =====================================
 https://intellipaat.com/tutorial/hbase-tutorial/operations-using-java-api/
+http://blog.manugarri.com/hdfs-vs-hbase-in-pyspark-2-0/
 
 
 
