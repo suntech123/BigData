@@ -18,6 +18,14 @@ https://www.edureka.co/blog/interview-questions/top-50-hadoop-interview-question
 https://intellipaat.com/tutorial/hbase-tutorial/operations-using-java-api/
 http://blog.manugarri.com/hdfs-vs-hbase-in-pyspark-2-0/
 
+============================= HBase Hive integration=========================
+https://www.rittmanmead.com/blog/2015/05/loading-updating-and-deleting-from-hbase-tables-using-hiveql-and-python/
+https://stackoverflow.com/questions/28238097/update-query-in-hive-hbase
+https://community.hortonworks.com/questions/71026/hive-and-hbase-table.html
+https://www.quora.com/How-can-I-transfer-data-from-Hive-external-table-to-Hbase
+https://www.phdata.io/4-strategies-for-updating-hive-tables/
+https://www.rittmanmead.com/blog/2015/05/using-hbase-impala-dw-offloading/
+
 
 
 ============================ Spark-with-HBase ==========================
