@@ -39,3 +39,8 @@ https://www.safaribooksonline.com/library/view/python-cookbook-3rd/9781449357337
 ============================ Morning star exact copied code from ========================
 
 https://gist.github.com/nicwolff/b4da6ec84ba9c23c8e59
+
+
+=======================Hive SCD2==========================================
+
+https://www.softserveinc.com/en-us/tech/blogs/process-slowly-changing-dimensions-hive/
