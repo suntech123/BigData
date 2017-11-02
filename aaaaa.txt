@@ -1,0 +1,30 @@
+#!/usr/bin/python
+#############################################################################
+#
+#
+#############################################################################
+import os
+import csv
+import time
+import datetime
+import random
+import math
+import shutil
+import re
+import fileinput
+
+## Check file existence
+
+
+##
+
+with open("/home/kumarsu/auto_scripts/test.sql") as f:
+     lines = list(line for line in (h.strip() for h in f) if line)
+#     for l in lines:
+#         print l
+ddl_str=' '.join(lines)
+print(ddl_str)
+rx=re.compile(r'TINYINT|SMALLINT|\bINT\b|\bINTEGER\b|BIGINT|FLOAT|DOUBLE|\bDECIMAL\((\d+)\)\b|NUMERIC|TIMESTAMP|DATE|INTERVAL|STRING|VARCHAR[\(\d+\)]|CHAR|BOOLEAN|BINARY', flags=re.I | re.X)
+dtype_lst=rx.findall(ddl_str)
+for i in dtype_lst:
+    print(i)
