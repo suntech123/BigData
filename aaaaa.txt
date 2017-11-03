@@ -17,14 +17,28 @@ import fileinput
 
 
 ##
-
-with open("/home/kumarsu/auto_scripts/test.sql") as f:
+lines=[]
+with open("/home/cloudera/test.sql") as f:
      lines = list(line for line in (h.strip() for h in f) if line)
 #     for l in lines:
 #         print l
 ddl_str=' '.join(lines)
 print(ddl_str)
-rx=re.compile(r'TINYINT|SMALLINT|\bINT\b|\bINTEGER\b|BIGINT|FLOAT|DOUBLE|\bDECIMAL\((\d+)\)\b|NUMERIC|TIMESTAMP|DATE|INTERVAL|STRING|VARCHAR[\(\d+\)]|CHAR|BOOLEAN|BINARY', flags=re.I | re.X)
-dtype_lst=rx.findall(ddl_str)
-for i in dtype_lst:
-    print(i)
+#rx=re.compile(r'\bTINYINT\b|\bSMALLINT\b|\bINT\b|\bINTEGER\b|\bBIGINT\b|\bFLOAT\b|\bDOUBLE\b|\bDECIMAL\b|\bNUMERIC\b|\bTIMESTAMP\b|\bDATE\b|\bINTERVAL\b|\bSTRING\b|\bVARCHAR\b|\bCHAR\b|\bBOOLEAN\b|\bBINARY\b', flags=re.I | re.X)
+#dtype_lst=rx.findall(ddl_str)
+TABLE_NAME=''
+for ln in re.split(r',\s*(?![^()]*\))', ddl_str):
+    if ln.strip().startswith('CREATE TABLE'):
+       fst_line_tokens=ln.strip().split('(')
+       tbl_str=fst_line_tokens[0]
+       TABLE_NAME=tbl_str.split()[-1].strip()
+       fst_col=''.join(fst_line_tokens[1:])
+       print(fst_col.strip())
+    elif ln.strip().endswith(';'):
+       lst_line_tokens=ln.strip().split(';')
+       lst_col=lst_line_tokens[0].rstrip(')')
+       print(lst_col.strip())
+    else:
+       print(ln.strip())
+
+#print(TABLE_NAME)
