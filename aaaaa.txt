@@ -18,7 +18,9 @@ import fileinput
 
 ## Check file existence
 
-
+ets = time.time()
+st = datetime.datetime.fromtimestamp(ets).strftime('%Y-%m-%d_%H_%M_%S')
+out_file='/home/kumarsu/auto_scripts/test_file_%s.csv'%st
 ## Generate Numeric filed value
 def EmitAnyInteger(minval,maxval):
     i=randint(minval,maxval)
@@ -34,10 +36,13 @@ def EmitAnyDecimal(length,prec):
     start_range=10**(length-1)
     end_range=(10**length)-1
     return float(decimal.Decimal(random.randrange(start_range,end_range))/prec) 
-
+def EmitAnyTimeStamp(sec_start,sec_end):
+    i=randint(sec_start,sec_end)
+    time_stamp=datetime.datetime.fromtimestamp(i).strftime('%Y-%m-%d %H:%M:%S')
+    return time_stamp
 ##
 lines=[]
-with open("/home/cloudera/test.sql") as f:
+with open("/home/kumarsu/auto_scripts/test.sql") as f:
      lines = list(line for line in (h.strip() for h in f) if line)
 #     for l in lines:
 #         print l
@@ -78,19 +83,30 @@ for ln in re.split(r',\s*(?![^()]*\))', ddl_str):
 for x in dtype:
     print(x)
 print("================record starts================= ")
-for i in dtype:
+with open(out_file,'w') as csvout:
+ for i in xrange(10000000):
+  writefile = csv.writer(csvout, delimiter='|', lineterminator='\n')
+  Row=[]
+  for i in dtype:
     if(i=='INTEGER'):
-       print(EmitAnyInteger(11111,2147483647))
+       Row.append(EmitAnyInteger(11111,2147483647))
     elif(i.startswith('VARCHAR')| i.startswith('CHAR')):
       str_max_len=i.split('(')[1].rstrip(')')
       any_num_less_or_equal_max_lnth=EmitAnyInteger(1,int(str_max_len))
-      print(EmitAnyString(any_num_less_or_equal_max_lnth))
+#      print(EmitAnyString(any_num_less_or_equal_max_lnth))
+      Row.append(EmitAnyString(any_num_less_or_equal_max_lnth))
     elif(i.startswith('DECIMAL')):
         len_pre1=i.split('(')[1]
         len_pre2=len_pre1.split(',')
         length=int(len_pre2[0])
         prec=int(len_pre2[1].strip(')'))
         prec_div=int('1'+'0'*prec)
-        print(EmitAnyDecimal(length,prec_div)) 
+#        print(EmitAnyDecimal(length,prec_div)) 
+        Row.append(EmitAnyDecimal(length,prec_div))
+    elif(i.startswith('TIMESTAMP')):
+        Row.append(EmitAnyTimeStamp(658496495,int(time.time())))
+#       print(i)
+#        Row.append(i)
     else:
-       print(i)
+       Row.append(i)
+  writefile.writerow(Row)
