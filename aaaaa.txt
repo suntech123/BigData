@@ -7,7 +7,10 @@ import os
 import csv
 import time
 import datetime
+import string
 import random
+import decimal
+from random import randint
 import math
 import shutil
 import re
@@ -16,29 +19,78 @@ import fileinput
 ## Check file existence
 
 
+## Generate Numeric filed value
+def EmitAnyInteger(minval,maxval):
+    i=randint(minval,maxval)
+    return i
+
+## Generate Character String
+def EmitAnyString(str_len):
+    rand_str=lambda n: ''.join([random.choice(string.lowercase) for i in xrange(n)])
+    s=rand_str(str_len)
+    return s
+## Generate random decimal number
+def EmitAnyDecimal(length,prec):
+    start_range=10**(length-1)
+    end_range=(10**length)-1
+    return float(decimal.Decimal(random.randrange(start_range,end_range))/prec) 
+
 ##
 lines=[]
 with open("/home/cloudera/test.sql") as f:
      lines = list(line for line in (h.strip() for h in f) if line)
 #     for l in lines:
 #         print l
-ddl_str=' '.join(lines)
-print(ddl_str)
+ddl_str1=' '.join(lines)
+ddl_str1=re.sub(' +',' ',ddl_str1)
+ddl_str2=re.sub(' \(|\( ','(',ddl_str1)
+ddl_str=re.sub(' \)|\) ',')',ddl_str2)
+#print(ddl_str)
 #rx=re.compile(r'\bTINYINT\b|\bSMALLINT\b|\bINT\b|\bINTEGER\b|\bBIGINT\b|\bFLOAT\b|\bDOUBLE\b|\bDECIMAL\b|\bNUMERIC\b|\bTIMESTAMP\b|\bDATE\b|\bINTERVAL\b|\bSTRING\b|\bVARCHAR\b|\bCHAR\b|\bBOOLEAN\b|\bBINARY\b', flags=re.I | re.X)
 #dtype_lst=rx.findall(ddl_str)
-TABLE_NAME=''
+tablename=''
+header=[]
+dtype=[]
 for ln in re.split(r',\s*(?![^()]*\))', ddl_str):
     if ln.strip().startswith('CREATE TABLE'):
        fst_line_tokens=ln.strip().split('(')
        tbl_str=fst_line_tokens[0]
-       TABLE_NAME=tbl_str.split()[-1].strip()
+       tablename=tbl_str.split()[-1].strip()
        fst_col=''.join(fst_line_tokens[1:])
-       print(fst_col.strip())
+       ht1=fst_col.strip().split()
+       header.append(ht1[0])
+       dtype.append(ht1[1])
+#       print(fst_col.strip())
     elif ln.strip().endswith(';'):
        lst_line_tokens=ln.strip().split(';')
        lst_col=lst_line_tokens[0].rstrip(')')
-       print(lst_col.strip())
+       ht2=fst_col.strip().split()
+       header.append(ht2[0])
+       dtype.append(ht2[1])
+#       print(lst_col.strip())
     else:
-       print(ln.strip())
+       ht3=ln.strip().split()
+       header.append(ht3[0])
+       dtype.append(ht3[1])    
+#       print(ln.strip())
 
 #print(TABLE_NAME)
+for x in dtype:
+    print(x)
+print("================record starts================= ")
+for i in dtype:
+    if(i=='INTEGER'):
+       print(EmitAnyInteger(11111,2147483647))
+    elif(i.startswith('VARCHAR')| i.startswith('CHAR')):
+      str_max_len=i.split('(')[1].rstrip(')')
+      any_num_less_or_equal_max_lnth=EmitAnyInteger(1,int(str_max_len))
+      print(EmitAnyString(any_num_less_or_equal_max_lnth))
+    elif(i.startswith('DECIMAL')):
+        len_pre1=i.split('(')[1]
+        len_pre2=len_pre1.split(',')
+        length=int(len_pre2[0])
+        prec=int(len_pre2[1].strip(')'))
+        prec_div=int('1'+'0'*prec)
+        print(EmitAnyDecimal(length,prec_div)) 
+    else:
+       print(i)
