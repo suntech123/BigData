@@ -1,0 +1,53 @@
+#!/usr/bin/python
+#############################################################################
+#
+#
+#############################################################################
+import os
+import csv
+import time
+import datetime
+import string
+import random
+import decimal
+from random import randint
+import math
+import shutil
+import re
+import fileinput
+
+## Check file existence
+
+ets = time.time()
+st = datetime.datetime.fromtimestamp(ets).strftime('%Y-%m-%d_%H_%M_%S')
+out_file='/home/kumarsu/auto_scripts/test_file_%s.csv'%st
+
+def GenerateNumericSample(dtype,sample):
+    num_list=random.sample(xrange(4611686018427387903,9223372036854775807),sample)
+    if(dtype=='SMALLINT'):
+       type_domain=[i % 32768 for i in num_list]
+       return type_domain
+    elif(dtype=='INTEGER'):
+       type_domain=[i % 2147483648 for i in num_list]
+       return type_domain
+    elif(dtype=='BIGINT'):
+       return num_list
+    elif(dtype=='FLOAT'):
+       int_lst=[i % 2147483648 for i in num_list]
+       type_domain=[format((i/10.0),'.1f') for i in int_lst]
+       return type_domain
+    elif(dtype=='DOUBLE'):
+       dbl_lst=[i % 922337203685477 for i in num_list]
+       type_domain=[format((i/10.00),'.2f') for i in dbl_lst]
+       return type_domain
+    elif(dtype=='DECIMAL'):
+       dec_lst=[i % 9223372036854775 for i in num_list]
+       type_domain=[format((i/10.000),'.3f') for i in dec_lst]
+       return type_domain
+    else:
+       pass
+##tinyint_lst=GenerateNumericSample('SMALLINT',10000)
+smallint_lst=GenerateNumericSample('FLOAT',10000)
+for i in smallint_lst:
+    print(i)
+       
