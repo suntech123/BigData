@@ -1,0 +1,136 @@
+#!/usr/bin/python
+#############################################################################
+#
+#
+#############################################################################
+import os
+import csv
+import time
+import datetime
+import string
+import random
+import decimal
+from random import randint
+import math
+import shutil
+import re
+import fileinput
+
+## Check file existence
+
+ets = time.time()
+st = datetime.datetime.fromtimestamp(ets).strftime('%Y-%m-%d_%H_%M_%S')
+out_file='/home/kumarsu/auto_scripts/test_file_%s.csv'%st
+
+def GenerateNumericSample(dtype,sample):
+    num_list=random.sample(xrange(4611686018427387903,9223372036854775807),sample)
+    if(dtype=='SMALLINT'):
+       type_domain=[i % 32768 for i in num_list]
+       return type_domain
+    elif(dtype=='INTEGER'):
+       type_domain=[i % 2147483648 for i in num_list]
+       return type_domain
+    elif(dtype=='BIGINT'):
+       return num_list
+    elif(dtype=='FLOAT'):
+       int_lst=[i % 2147483648 for i in num_list]
+       type_domain=[format((i/10.0),'.1f') for i in int_lst]
+       return type_domain
+    elif(dtype=='DOUBLE'):
+       dbl_lst=[i % 922337203685477 for i in num_list]
+       type_domain=[format((i/10.00),'.2f') for i in dbl_lst]
+       return type_domain
+    elif(dtype=='DECIMAL'):
+       dec_lst=[i % 9223372036854775 for i in num_list]
+       type_domain=[format((i/10.000),'.3f') for i in dec_lst]
+       return type_domain
+    else:
+       pass
+##tinyint_lst=GenerateNumericSample('SMALLINT',10000)
+#smallint_lst=GenerateNumericSample('FLOAT',10000)
+#for i in smallint_lst:
+#    print(i)
+lines=[]
+with open("/home/kumarsu/auto_scripts/test.sql") as f:
+     lines = list(line for line in (h.strip() for h in f) if line)
+#     for l in lines:
+#         print l
+ddl_str1=' '.join(lines)
+ddl_str1=re.sub(' +',' ',ddl_str1)
+ddl_str2=re.sub(' \(|\( ','(',ddl_str1)
+ddl_str=re.sub(' \)|\) ',')',ddl_str2)
+
+##
+
+tablename=''
+header=[]
+dtype=[]
+
+for ln in re.split(r',\s*(?![^()]*\))', ddl_str):
+    if ln.strip().startswith('CREATE TABLE'):
+       fst_line_tokens=ln.strip().split('(')
+       tbl_str=fst_line_tokens[0]
+       tablename=tbl_str.split()[-1].strip()
+       fst_col=''.join(fst_line_tokens[1:])
+       ht1=fst_col.strip().split()
+       header.append(ht1[0])
+       dtype.append(ht1[1])
+#       print(fst_col.strip())
+    elif ln.strip().endswith(';'):
+       lst_line_tokens=ln.strip().split(';')
+       lst_col=lst_line_tokens[0].rstrip(')')
+       ht2=fst_col.strip().split()
+       header.append(ht2[0])
+       dtype.append(ht2[1])
+#       print(lst_col.strip())
+    else:
+       ht3=ln.strip().split()
+       header.append(ht3[0])
+       dtype.append(ht3[1])
+#       print(ln.strip())
+bulk_dict={}
+k=0
+for i in dtype:
+    if(i=='SMALLINT'):
+      bulk_dict[k]=GenerateNumericSample('SMALLINT',100)
+    elif(i=='INTEGER'):
+      bulk_dict[k]=GenerateNumericSample('INTEGER',100)
+    elif(i=='BIGINT'):
+      bulk_dict[k]=GenerateNumericSample('BIGINT',100)
+    elif(i=='FLOAT'):
+      bulk_dict[k]=GenerateNumericSample('FLOAT',100)
+    elif(i=='DOUBLE'):
+      bulk_dict[k]=GenerateNumericSample('DOUBLE',100)
+    elif(i.startswith('DECIMAL')):
+      len_pre1=i.split('(')[1]
+      len_pre2=len_pre1.split(',')
+      length=int(len_pre2[0])
+      prec=int(len_pre2[1].strip(')'))
+      if(prec==1):
+        bulk_dict[k]=GenerateNumericSample('FLOAT',100)
+      elif(prec==2):
+        bulk_dict[k]=GenerateNumericSample('DOUBLE',100)
+      else:
+        bulk_dict[k]=GenerateNumericSample('DECIMAL',100)
+    elif(i.startswith('VARCHAR')| i.startswith('CHAR')):
+       pass
+    elif(i.startswith('TIMESTAMP')):
+       pass
+    else:
+       pass
+    k= k + 1 
+#print(bulk_dict[0])
+def(**kargs):
+   print(zip(**kargs))
+
+def(
+### Variable no of arguments *args and **kargs
+
+
+
+
+#print(zip(bulk_dict[0],bulk_dict[3],bulk_dict[5],bulk_dict[6],bulk_dict[12],bulk_dict[13],bulk_dict[14]))
+
+
+
+------https://www.digitalocean.com/community/tutorials/how-to-use-args-and-kwargs-in-python-3
