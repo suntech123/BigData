@@ -44,3 +44,7 @@ https://gist.github.com/nicwolff/b4da6ec84ba9c23c8e59
 =======================Hive SCD2==========================================
 
 https://www.softserveinc.com/en-us/tech/blogs/process-slowly-changing-dimensions-hive/
+
+======================== Convert XL to CSV - Python =======================================
+
+https://stackoverflow.com/questions/26029095/python-convert-excel-to-csv
