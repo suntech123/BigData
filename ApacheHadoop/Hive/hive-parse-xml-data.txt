@@ -37,6 +37,60 @@ STEP 3. Create the External table based on the above HDFS location.
   "xmlinput.end"="</InvestmentVehicle>"
   )
   
-  STEP 4. Query the above table
+  --------------------slight bigger ddl covering many but not all tags.
+  
+CREATE EXTERNAL TABLE XMLTEST102(
+InvestmentVehicleId STRING,
+InvestmentVehicleName STRING,
+ShareClassId string,
+LegalType STRING,
+OldestShareClassName STRING,
+OldestShareClassId STRING,
+OldestShareClassInceptionDate STRING,
+LegalName STRING,
+InceptionDate STRING,
+PerformanceStartDate STRING,
+DataReadiness STRING,
+CUSIP STRING,
+ISIN STRING,
+Currency_Id STRING,
+Currency_txt STRING,
+FundShareClassNetAssets_EndDate STRING,
+FundShareClassNetAssets_text STRING,
+FundNetAssets STRING,
+ClosedEndShareType_Id STRING,
+ClosedEndShareType_txt STRING
+)
+ROW FORMAT SERDE 'com.ibm.spss.hive.serde2.xml.XmlSerDe'
+WITH SERDEPROPERTIES (
+"column.xpath.InvestmentVehicleId"="/InvestmentVehicle/@_Id",
+"column.xpath.InvestmentVehicleName"="/InvestmentVehicle/Operation/InvestmentVehicleName/text()",
+"column.xpath.ShareClassId"="/InvestmentVehicle/Operation/ShareClassId/text()",
+"column.xpath.LegalType"="/InvestmentVehicle/Operation/LegalType/text()",
+"column.xpath.OldestShareClassName"="/InvestmentVehicle/Operation/OldestShareClass/Name/text()",
+"column.xpath.OldestShareClassId"="/InvestmentVehicle/Operation/OldestShareClass/Id/text()",
+"column.xpath.OldestShareClassInceptionDate"="/InvestmentVehicle/Operation/OldestShareClassInceptionDate/text()",
+"column.xpath.LegalName"="/InvestmentVehicle/Operation/LegalName/text()",
+"column.xpath.InceptionDate"="/InvestmentVehicle/Operation/InceptionDate/text()",
+"column.xpath.PerformanceStartDate"="/InvestmentVehicle/Operation/PerformanceStartDate/text()",
+"column.xpath.DataReadiness"="/InvestmentVehicle/Operation/DataReadiness/text()",
+"column.xpath.CUSIP"="/InvestmentVehicle/Operation/CUSIP/text()",
+"column.xpath.ISIN"="/InvestmentVehicle/Operation/ISIN/text()",
+"column.xpath.Currency_Id"="/InvestmentVehicle/Operation/Currency/@_Id",
+"column.xpath.Currency_txt"="/InvestmentVehicle/Operation/Currency/text()",
+"column.xpath.FundShareClassNetAssets_EndDate"="/InvestmentVehicle/Operation/FundShareClassNetAssets/@EndDate",
+"column.xpath.FundShareClassNetAssets_text"="/InvestmentVehicle/Operation/FundShareClassNetAssets/text()",
+"column.xpath.FundNetAssets"="/InvestmentVehicle/Operation/FundNetAssets/text()",
+"column.xpath.ClosedEndShareType_Id"="/InvestmentVehicle/Operation/ClosedEndShareType/@_Id",
+"column.xpath.ClosedEndShareType_txt"="/InvestmentVehicle/Operation/ClosedEndShareType/text()"
+)
+STORED AS
+INPUTFORMAT 'com.ibm.spss.hive.serde2.xml.XmlInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat'
+LOCATION '/data/tmp/xml'
+TBLPROPERTIES (
+"xmlinput.start"="<InvestmentVehicle",
+"xmlinput.end"="</InvestmentVehicle>"
+);
   
   
