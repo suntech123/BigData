@@ -1,0 +1,42 @@
+OPTION-1 : Loading and Parsing XML data with Hive
+
+    Important URLs : 1. https://github.com/dvasilen/Hive-XML-SerDe/wiki/XML-data-sources
+                     2. https://mvnrepository.com/artifact/com.ibm.spss.hive.serde2.xml/hivexmlserde/1.0.5.3
+
+================================= Use Case - 01 ========================================
+
+STEP 1. Copy the XML file to HDFS
+
+        eg. In current use case we copied /data/tmp/xml/DataWarehouse37_FO_USA_M_201608034.xml to /data/tmp/xml.
+        -rw-r--r--   2 hdfs supergroup  536954619 2017-11-20 09:04 /data/tmp/xml/DataWarehouse37_FO_USA_M_201608034.xml
+        
+STEP 2. Add the jar downloaded from https://mvnrepository.com/artifact/com.ibm.spss.hive.serde2.xml/hivexmlserde/1.0.5.3
+        to the hive classpath.
+        
+        hive> add jar /home/kumarsu/hivexmlserde-1.0.5.3.jar
+
+STEP 3. Create the External table based on the above HDFS location.
+
+  CREATE EXTERNAL TABLE XMLTEST(
+  InvestmentVehicleId STRING,
+  InvestmentVehicleName STRING,
+  ShareClassId string
+  )
+  ROW FORMAT SERDE 'com.ibm.spss.hive.serde2.xml.XmlSerDe'
+  WITH SERDEPROPERTIES (
+  "column.xpath.InvestmentVehicleId"="/InvestmentVehicle/@_Id",
+  "column.xpath.InvestmentVehicleName"="/InvestmentVehicle/Operation/InvestmentVehicleName/text()",
+  "column.xpath.ShareClassId"="/InvestmentVehicle/Operation/ShareClassId/text()"
+  )
+  STORED AS
+  INPUTFORMAT 'com.ibm.spss.hive.serde2.xml.XmlInputFormat'
+  OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat'
+  LOCATION '/data/tmp/xml'
+  TBLPROPERTIES (
+  "xmlinput.start"="<InvestmentVehicle",
+  "xmlinput.end"="</InvestmentVehicle>"
+  )
+  
+  STEP 4. Query the above table
+  
+  
