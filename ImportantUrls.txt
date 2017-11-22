@@ -18,6 +18,10 @@ https://www.edureka.co/blog/interview-questions/top-50-hadoop-interview-question
 https://intellipaat.com/tutorial/hbase-tutorial/operations-using-java-api/
 http://blog.manugarri.com/hdfs-vs-hbase-in-pyspark-2-0/
 
+==============================HBase Bulk Load=============================
+
+https://community.hortonworks.com/articles/4942/import-csv-data-into-hbase-using-importtsv.html
+
 ============================= HBase Hive integration=========================
 https://www.rittmanmead.com/blog/2015/05/loading-updating-and-deleting-from-hbase-tables-using-hiveql-and-python/
 https://stackoverflow.com/questions/28238097/update-query-in-hive-hbase
