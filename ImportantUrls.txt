@@ -4,8 +4,11 @@ https://www.edureka.co/blog/hadoop-streaming-mapreduce-program/
 
 
 ============================ YARN Fair Scheduler Queue Basics =======================
-
+http://blog.cloudera.com/blog/2015/09/untangling-apache-hadoop-yarn-part-1/
+http://blog.cloudera.com/blog/2015/10/untangling-apache-hadoop-yarn-part-2/
+http://blog.cloudera.com/blog/2016/01/untangling-apache-hadoop-yarn-part-3/
 https://blog.cloudera.com/blog/2016/06/untangling-apache-hadoop-yarn-part-4-fair-scheduler-queue-basics/
+
 https://hadoop.apache.org/docs/r2.7.1/hadoop-yarn/hadoop-yarn-site/FairScheduler.html
 
 ============================ Hadoop Books ==============================
