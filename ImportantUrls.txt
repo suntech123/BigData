@@ -3,6 +3,10 @@ https://blog.matthewrathbone.com/2016/02/09/python-tutorial.html
 https://www.edureka.co/blog/hadoop-streaming-mapreduce-program/
 
 
+============================ YARN Fair Scheduler Queue Basics =======================
+
+https://blog.cloudera.com/blog/2016/06/untangling-apache-hadoop-yarn-part-4-fair-scheduler-queue-basics/
+https://hadoop.apache.org/docs/r2.7.1/hadoop-yarn/hadoop-yarn-site/FairScheduler.html
 
 ============================ Hadoop Books ==============================
 https://blog.matthewrathbone.com/2013/05/31/hadoop-resources-books.html
