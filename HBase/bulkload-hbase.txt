@@ -1,0 +1,216 @@
+==================== importing data from csv to HBase table ============================
+
+Introduction: There are three Ways to Load Data From HDFS to HBase
+
+
+========================== Method 1 =============================== 
+
+###### Using ImportTsv to load csv to HBase ########
+
+STEP 1. Create an HBase table.
+        hbase(main):013:0> create 'sun105','cf'
+           
+STEP 2. Create a csv file from python utility and put it in HDFS
+        [cloudera@quickstart ~]$ pwd
+        /home/cloudera
+        [cloudera@quickstart ~]$ ./generate-csv-v-02.py
+         
+ Note : This utility takes Hive DDL as input and creates a pipe delimited file of 1M records in the same directory.
+           
+Sample File: 
+
+[cloudera@quickstart ~]$ head -10 test_file_2017-11-26_03_58_02.csv
+1493210111|hbka29vc|1688829951
+1818812415|0ov996cfnx83jbxqr|1920069631
+556268543|2ycgylv6sk74kvjnog3|1491760127
+883061759|evmsvqzyt0|723774463
+1446159359|ucul5jb0k7r5h8|1657146367
+2020085247|n25i3v|1674833919
+1162717695|j6s5l72adm3i|1860752383
+1932067839|thg3ejb5ly8ox|1979920383
+182569983|vqn3h7yqv3r8slz9|2023417855
+1400496127|onbfcqgm7 cxy 0|1146941951
+
+[cloudera@quickstart ~]$ hadoop fs -copyFromLocal test_file_2017-11-26_03_58_02.csv /data/sundata/
+[cloudera@quickstart ~]$ hadoop fs -chmod 777 /data/sundata/sun102.csv
+
+STEP 3. USING IMPORTTSV TO LOAD CSV TO HBASE
+
+[cloudera@quickstart ~]$ hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.separator="|" -Dimporttsv.columns=HBASE_ROW_KEY,cf:CUSTODIAN_NATURAL_KEY,cf:ACCOUNT_NATURAL_KEY sun105 /data/sundata/test_file_2017-11-26_03_58_02.csv
+
+   IMPORTANT NOTE: 1. -Dimporttsv.separator -- Input data separator default is TAB
+                   2. -Dimporttsv.columns -- Comma-separated column names are to be provided with each column name as either a column                                                family or a column family:column qualifier. Here HBASE_ROW_KEY will be loaded from first                                                  column data of CSV file and rest of the col values loaded in 
+                                             cf:CUSTODIAN_NATURAL_KEY,cf:ACCOUNT_NATURAL_KEY as specified in comma                                                                    delimited list.
+                                             
+
+STEP 4. Check data in HBase
+
+hbase(main):015:0> scan 'sun105',{LIMIT => 10}
+ROW                              COLUMN+CELL                                                                                 
+ 1000001535                      column=cf:ACCOUNT_NATURAL_KEY, timestamp=1511699907927, value=1468613119                    
+ 1000001535                      column=cf:CUSTODIAN_NATURAL_KEY, timestamp=1511699907927, value=as0zxbd4eb1lm               
+ 1000004607                      column=cf:ACCOUNT_NATURAL_KEY, timestamp=1511699907927, value=985068031                     
+ 1000004607                      column=cf:CUSTODIAN_NATURAL_KEY, timestamp=1511699907927, value=ayvvpdqqorqphlo84ro         
+ 1000008703                      column=cf:ACCOUNT_NATURAL_KEY, timestamp=1511699907927, value=1741409791                    
+ 1000008703                      column=cf:CUSTODIAN_NATURAL_KEY, timestamp=1511699907927, value=qw0b8iikle                  
+ 1000010751                      column=cf:ACCOUNT_NATURAL_KEY, timestamp=1511699907927, value=85395967                      
+ 1000010751                      column=cf:CUSTODIAN_NATURAL_KEY, timestamp=1511699907927, value=4s3dm8rhfm                  
+ 1000014335                      column=cf:ACCOUNT_NATURAL_KEY, timestamp=1511699907927, value=398445055                     
+ 1000014335                      column=cf:CUSTODIAN_NATURAL_KEY, timestamp=1511699907927, value=386e9g8j5w4z                
+ 1000017407                      column=cf:ACCOUNT_NATURAL_KEY, timestamp=1511699907927, value=1590032895                    
+ 1000017407                      column=cf:CUSTODIAN_NATURAL_KEY, timestamp=1511699907927, value=yl9veal6mbeoqcqx            
+ 1000019455                      column=cf:ACCOUNT_NATURAL_KEY, timestamp=1511699907927, value=955386367                     
+ 1000019455                      column=cf:CUSTODIAN_NATURAL_KEY, timestamp=1511699907927, value=d6rlasgcouw4cu              
+ 1000026623                      column=cf:ACCOUNT_NATURAL_KEY, timestamp=1511699907927, value=1641864191                    
+ 1000026623                      column=cf:CUSTODIAN_NATURAL_KEY, timestamp=1511699907927, value=wpvsltq9bi2b71              
+ 1000027135                      column=cf:ACCOUNT_NATURAL_KEY, timestamp=1511699907927, value=2059969023                    
+ 1000027135                      column=cf:CUSTODIAN_NATURAL_KEY, timestamp=1511699907927, value=brg2b45htr8f                
+ 1000033791                      column=cf:ACCOUNT_NATURAL_KEY, timestamp=1511699907927, value=2045510143                    
+ 1000033791                      column=cf:CUSTODIAN_NATURAL_KEY, timestamp=1511699907927, value=wj0x1h74                    
+10 row(s) in 0.0160 seconds
+--------------------------------------------------------------------------------------------------------------------
+hbase(main):014:0> count 'sun105',100000
+Current count: 100000, row: 121706495                                                                                        
+Current count: 200000, row: 143434751                                                                                        
+Current count: 300000, row: 1651447295                                                                                       
+Current count: 400000, row: 1868164607                                                                                       
+Current count: 500000, row: 2086737407                                                                                       
+Current count: 600000, row: 370691583                                                                                        
+Current count: 700000, row: 587981311                                                                                        
+Current count: 800000, row: 805935615                                                                                        
+889547 row(s) in 23.1280 seconds
+
+=> 889547
+
+
+============================= Method 2 ===================================
+
+##### 
+      
+STEP 1. Create HBase Table
+STEP 2. Generate the sample CSV file from python utility and upload to HDFS
+
+STEP 3. Run the ImportTsv utility not to load data directly to HBase table but to generate multiple HFiles from the CSV file
+
+[cloudera@quickstart ~]$ hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.separator="|" -Dimporttsv.columns=HBASE_ROW_KEY,cf:CUSTODIAN_NATURAL_KEY,cf:ACCOUNT_NATURAL_KEY -Dimporttsv.bulk.output=/data/sundata/sunfile1 sun105 /data/sundata/test_file_2017-11-26_03_58_02.csv
+
+   IMPORTANT NOTE: Notice the Option -Dimporttsv.bulk.output=/data/sundata/sunfile1 
+                   which is the output HDFS directory for HFILES and it should not be pre-existing.HFiles will be generated under
+                   under sub-folders for each column family.
+                   
+ STEP 4. Next, use the completebulkload utility to bulk upload the HFiles into an HBase table. The completebulkload may be run in one of          two modes -
+                    1. as an explicit class name or
+                    2. via the driver. 
+         Using the class name, the syntax is as follows:
+         
+         [cloudera@quickstart ~]$ hbase org.apache.hadoop.hbase.mapreduce.LoadIncrementalHFiles /data/sundata/sunfile1 sun105
+         
+         OR
+         
+         Using Driver
+         
+         
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.separator=","  -Dimporttsv.columns=HBASE_ROW_KEY,cf tab101 /data/tmp/hld1.csv
+
+
+====================== few notes =====================================
+
+HDFS to HBase
+by Callen Wu on September 9th, 2015 | 2 minute read
+
+Apache HBase™ is the Hadoop database: a distributed, scalable, big data store. If you are importing into a new table, you can bypass the HBase API and write your content directly to the filesystem, formatted into HBase data files (HFiles). Your import will run much faster.
+
+There are several ways to load data from HDFS to HBase. I practiced loading data from HDFS to HBase and listed my process step-by-step below.
+
+Environment:
+Pseudo-Distributed Local Install
+
+Hadoop 2.6.0
+
+HBase 0.98.13
+
+1.Using ImportTsv to load txt to HBase
+A) CREATE TABLE IN HBASE
+command：create ‘tab3′,’cf’
+
+3 Ways to Load Data From HDFS to HBase
+
+B) UPLOADING SIMPLE1.TXT TO HDFS
+command：bin/hadoop fs -copyFromLocal simple1.txt  /user/hadoop/simple1.txt
+
+The context in the txt is:
+1,tom
+2,sam
+3,jerry
+4,marry
+5,john
+
+C) USING IMPORTTSV TO LOAD TXT TO HBASE
+command：bin/hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.separator=”,” -Dimporttsv.columns=HBASE_ROW_KEY,cf tab4 /user/hadoop/simple1.txt
+ImportTsv execute result:
+
+3 Ways to Load Data From HDFS to HBase
+
+Data loaded into Hbase:
+
+3 Ways to Load Data From HDFS to HBase
+
+2.Using completebulkload to load txt to HBase
+
+A) CREATING TABLE IN HBASE
+command：create ‘hbase-tb1-003′,’cf’
+
+3 Ways to Load Data From HDFS to HBase
+
+B) USING IMPORTTSV TO GENERATE HFILE FOR TXT IN HDFS
+command：bin/hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.separator=”,” -Dimporttsv.bulk.output=hfile_tmp5 -Dimporttsv.columns=HBASE_ROW_KEY,cf hbase-tbl-003 /user/hadoop/simple1.txt
+
+This command will be executed by MapReduce job:
+
+3 Ways to Load Data From HDFS to HBase
+
+As a result, the Hfile hfile_tmp5 is generated.
+
+3 Ways to Load Data From HDFS to HBase
+
+But the data wasn’t loaded into the Hbase table: hbase-tb1-003.
+
+3 Ways to Load Data From HDFS to HBase
+
+3.Using completebulkload to load Hfile to HBase
+
+command: hadoop jar lib/hbase-server-0.98.13-hadoop2.jar completebulkload hfile_tmp5 hbase-tbl-003
+
+3 Ways to Load Data From HDFS to HBase
+
+Result:
+
+3 Ways to Load Data From HDFS to HBase
+
+Note: When we execute this command, Hadoop probably won’t be able to find the hbase dependency jar files through the exception of ClassNotFoundException. An easy way to resolve this is by adding HBase dependency jar files to the path ${HADOOP_HOME}/share/hadoop/common/lib. Do not forget htrace-core-*.**.jar.
+
+This command is really an action of hdfs mv, and will not execute hadoop MapReduce. You can see the log; it is LoadIncrementalHFiles.
+
+Reference：http://hbase.apache.org/book.html#arch.bulk.load
