@@ -1,0 +1,40 @@
+
+STEP 1. Make sure we have Python3 installed before running mrjob
+
+STEP 2. If we dont have python3 installed follow below steps(Cloudera VM 5.10)
+ 
+        2.1 - Prior to installing Python in CentOS 7, let’s make sure our system has all the necessary development dependencies:
+              
+              # yum -y groupinstall development
+              # yum -y install zlib-devel
+        
+        2.2 - To install Python 3.6, run the following commands:
+              
+              # wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz
+              # tar xJf Python-3.6.3.tar.xz
+              # cd Python-3.6.3
+              # ./configure
+              # make
+              # make install
+              
+        2.3 - This may take a while. When the installation is complete, use which to verify the location of the main binary:
+        
+              # which python3
+              # python3 -V
+              
+========================================= [ Running MRJob on Hadoop ] =======================================================
+
+[cloudera@quickstart ~]$ python3 RatingsBreakdown.py u.data
+No configs found; falling back on auto-configuration
+No configs specified for inline runner
+Running step 1 of 1...
+Creating temp directory /tmp/RatingsBreakdown.cloudera.20171130.201941.942701
+Streaming final output from /tmp/RatingsBreakdown.cloudera.20171130.201941.942701/output...
+"1"	6111
+"2"	11370
+"3"	27145
+"4"	34174
+"5"	21203
+Removing temp directory /tmp/RatingsBreakdown.cloudera.20171130.201941.942701...
+
+
