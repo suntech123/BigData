@@ -51,3 +51,17 @@ CaptureRatioUpY5	                            decimal	no	5	9	2	yes	Package/Packag
 CaptureRatioDownY5	                          decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/CaptureRatioDownY5
 BattingAverageY5	                            decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/BattingAverageY5
 
+
+==================  MS_DataWarehouse_VA_HoldingDetail  ============================
+
+Package/PackageBody/InvestmentVehicle_Id
+Package/PackageBody/InvestmentVehicle/Operation/CUSIP
+Package/PackageBody/InvestmentVehicle/Operation/ISIN
+Package/PackageBody/InvestmentVehicle/Portfolio/HoldingBreakdown/Holding/HoldingDetail/Ticker
+Package/PackageBody/InvestmentVehicle/Portfolio/HoldingBreakdown/Holding/HoldingDetail/HoldingDetailId
+Package/PackageBody/InvestmentVehicle/Portfolio/HoldingBreakdown/Holding/HoldingDetail/DetailHoldingTypeId
+Package/PackageBody/InvestmentVehicle/Portfolio/HoldingBreakdown/Holding/HoldingDetail/SecurityName
+Package/PackageBody/InvestmentVehicle/Portfolio/HoldingBreakdown/Holding/HoldingDetail/Weighting
+Package/PackageBody/InvestmentVehicle/Portfolio/HoldingBreakdown/Holding/HoldingDetail/NumberOfShare
+Package/PackageBody/InvestmentVehicle/Portfolio/HoldingBreakdown/Holding/HoldingDetail/MarketValue
+
