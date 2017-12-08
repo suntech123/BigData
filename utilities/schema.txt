@@ -1,109 +1,31 @@
-	====================================== [MS_DataWarehouse_NonVA_TrailingPerformance] =============================================================================================================
-	PerformanceAsOfDate	                        datetime	no	8	     	     	  yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/MonthEndTrailingPerformance/PerformanceAsOfDate			
-	PerformanceId	                              nvarchar	no	40	     	     	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/MonthEndTrailingPerformance/PerformanceId			
-	ClosePrice	                                nvarchar	no	40	     	     	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/MonthEndTrailingPerformance/ClosePrice			
-	TrailingReturnYTD	                          nvarchar	no	40	     	     	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/MonthEndTrailingPerformance/TrailingReturnYTD			
-	TrailingReturnY1	                          nvarchar	no	40	     	     	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/MonthEndTrailingPerformance/TrailingReturnY1			
-	TrailingReturnY2	                          nvarchar	no	40	     	     	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/MonthEndTrailingPerformance/TrailingReturnY2			
-	TrailingReturnY3	                          nvarchar	no	40	     	     	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/MonthEndTrailingPerformance/TrailingReturnY3			
-	TrailingReturnY4	                          nvarchar	no	40	     	     	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/MonthEndTrailingPerformance/TrailingReturnY4			
-	TrailingReturnY5	                          nvarchar	no	40	     	     	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/MonthEndTrailingPerformance/TrailingReturnY5			
-	TrailingReturnSinceInception	              nvarchar	no	40	     	     	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/MonthEndTrailingPerformance/TrailingReturnSinceInception			
-
-
-========================================= [MS_DataWarehouse_NonVA_RatingAndRiskMeasurements] ===================================================================================================
-
-InvestmentVehicle_Id	                        nvarchar	   no	40	     	     	no	 Package/PackageBody/InvestmentVehicle_Id
-RiskRatingOverall	                            decimal	     no	5	 9	2	        yes	 Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/RiskRatingOverall
-RiskScoreOverall	                            decimal	     no	5	 9	2	        yes	 Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/RiskScoreOverall
-Volatility	                                  int	         no	4	10	0	        yes	 Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/Volatility
-ArithmeticMeanY1	                            decimal	     no	5	 9	2	        yes	 Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/ArithmeticMeanY1
-StandardDeviationY1	                          decimal	     no	5	9	2	          yes	 Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/StandardDeviationY1
-SkewnessY1	                                  decimal	     no	5	9	2	          yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/SkewnessY1
-KurtosisY1	                                  decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/KurtosisY1
-SharpeRatioY1	                                decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/SharpeRatioY1
-SortinoRatioY1	                              decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/SortinoRatioY1
-TrackingErrorY1	                              decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/TrackingErrorY1
-InformationRatioY1	                          decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/InformationRatioY1
-CaptureRatioUpY1	                            decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/CaptureRatioUpY1
-CaptureRatioDownY1	                          decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/CaptureRatioDownY1
-BattingAverageY1	                            decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/BattingAverageY1
-ArithmeticMeanY3	                            decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/ArithmeticMeanY3
-StandardDeviationY3	                          decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/StandardDeviationY3
-SkewnessY3	                                  decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/SkewnessY3
-KurtosisY3	                                  decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/KurtosisY3
-SharpeRatioY3	                                decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/SharpeRatioY3
-SortinoRatioY3	                              decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/SortinoRatioY3
-TrackingErrorY3	                              decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/TrackingErrorY3
-InformationRatioY3	                          decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/InformationRatioY3
-CaptureRatioUpY3	                            decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/CaptureRatioUpY3
-CaptureRatioDownY3	                          decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/CaptureRatioDownY3
-BattingAverageY3	                            decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/BattingAverageY3
-ArithmeticMeanY5	                            decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/ArithmeticMeanY5
-StandardDeviationY5	                          decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/StandardDeviationY5
-SkewnessY5	                                  decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/SkewnessY5
-KurtosisY5	                                  decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/KurtosisY5
-SharpeRatioY5	                                decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/SharpeRatioY5
-SortinoRatioY5	                              decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/SortinoRatioY5
-TrackingErrorY5	                              decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/TrackingErrorY5
-InformationRatioY5	                          decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/InformationRatioY5
-CaptureRatioUpY5	                            decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/CaptureRatioUpY5
-CaptureRatioDownY5	                          decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/CaptureRatioDownY5
-BattingAverageY5	                            decimal	no	5	9	2	yes	Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/BattingAverageY5
-
-
-==================  MS_DataWarehouse_VA_HoldingDetail  ============================
+================================ MS_Datawarehouse_VA_Category ===============================
 
 Package/PackageBody/InvestmentVehicle_Id
+Package/PackageBody/InvestmentVehicle/Operation/MorningstarCategory/Name
+Package/PackageBody/InvestmentVehicle/Operation/MorningstarCategory/Id
+
+
+=============================== MS_Datawarehouse_VA =========================================
+
+Package/PackageBody/InvestmentVehicle_Id
+Package/PackageBody/InvestmentVehicle/Operation/InvestmentVehicleName
+Package/PackageBody/InvestmentVehicle/Operation/FundId
+Package/PackageBody/InvestmentVehicle/Operation/ShareClassId
+Package/PackageBody/InvestmentVehicle/Operation/LegalType
+Package/PackageBody/InvestmentVehicle/Operation/FundFamilyName/@_Id
+Package/PackageBody/InvestmentVehicle/Operation/FundFamilyName
+Package/PackageBody/InvestmentVehicle/Operation/ShareClassId
+Package/PackageBody/InvestmentVehicle/Operation/ShareClassType
+Package/PackageBody/InvestmentVehicle/Operation/GlobalCategoryName
+Package/PackageBody/InvestmentVehicle/Operation/GlobalCategoryId
+Package/PackageBody/InvestmentVehicle/Operation/LegalName
+Package/PackageBody/InvestmentVehicle/Operation/InceptionDate
 Package/PackageBody/InvestmentVehicle/Operation/CUSIP
 Package/PackageBody/InvestmentVehicle/Operation/ISIN
-Package/PackageBody/InvestmentVehicle/Portfolio/HoldingBreakdown/Holding/HoldingDetail/Ticker
-Package/PackageBody/InvestmentVehicle/Portfolio/HoldingBreakdown/Holding/HoldingDetail/HoldingDetailId
-Package/PackageBody/InvestmentVehicle/Portfolio/HoldingBreakdown/Holding/HoldingDetail/DetailHoldingTypeId
-Package/PackageBody/InvestmentVehicle/Portfolio/HoldingBreakdown/Holding/HoldingDetail/SecurityName
-Package/PackageBody/InvestmentVehicle/Portfolio/HoldingBreakdown/Holding/HoldingDetail/Weighting
-Package/PackageBody/InvestmentVehicle/Portfolio/HoldingBreakdown/Holding/HoldingDetail/NumberOfShare
-Package/PackageBody/InvestmentVehicle/Portfolio/HoldingBreakdown/Holding/HoldingDetail/MarketValue
-
-
-============================ MS_DataWarehouse_VA_RatingAndRiskMeasurements ==============================
-
-"Package/PackageBody/InvestmentVehicle_Id
-"
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/RiskRatingOverall
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/RiskScoreOverall
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/Volatility
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/ArithmeticMeanY1
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/StandardDeviationY1
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/SkewnessY1
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/KurtosisY1
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/SharpeRatioY1
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/SortinoRatioY1
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/TrackingErrorY1
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/InformationRatioY1
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/CaptureRatioUpY1
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/CaptureRatioDownY1
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/BattingAverageY1
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/ArithmeticMeanY3
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/StandardDeviationY3
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/SkewnessY3
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/KurtosisY3
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/SharpeRatioY3
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/SortinoRatioY3
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/TrackingErrorY3
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/InformationRatioY3
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/CaptureRatioUpY3
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/CaptureRatioDownY3
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/BattingAverageY3
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/ArithmeticMeanY5
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/StandardDeviationY5
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/SkewnessY5
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/KurtosisY5
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/SharpeRatioY5
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/SortinoRatioY5
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/TrackingErrorY5
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/InformationRatioY5
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/CaptureRatioUpY5
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/CaptureRatioDownY5
-Package/PackageBody/InvestmentVehicle/TrailingPerformance/RatingAndRiskMeasurements/BattingAverageY5
+Package/PackageBody/InvestmentVehicle/Operation/CoveredCall
+Package/PackageBody/InvestmentVehicle/Operation/InverseFund
+Package/PackageBody/InvestmentVehicle/Operation/LeveragedFund
+Package/PackageBody/InvestmentVehicle/Operation/BrandingName
+Package/PackageBody/InvestmentVehicle/Operation/BrandingName[@Id]
+Package/PackageBody/InvestmentVehicle/Operation/PreviousName
 
