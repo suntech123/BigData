@@ -1,0 +1,7 @@
+========================= Creating Table DDL ==================
+
+CREATE EXTERNAL TABLE json_data(
+jsonlob string
+)
+ROW FORMAT DELIMITED
+LOCATION '/data/FLZ/nviso'
