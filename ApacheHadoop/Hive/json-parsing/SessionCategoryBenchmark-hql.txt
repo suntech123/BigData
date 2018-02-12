@@ -1,0 +1,25 @@
+INSERT overwrite directory '/data/DLZ/NVISO/SESSIONCATEGORYBENCHMARK/CSV' row format delimited fields terminated BY '\u0001' NULL DEFINED AS ''
+SELECT get_json_object(jsonlob, '$.sessionId') sessionId
+,v5.categoryId AS categoryId
+,get_json_object(v6.codes, '$.surprise.high') AS surprise_high
+,get_json_object(v6.codes, '$.surprise.low') AS surprise_low
+,get_json_object(v6.codes, '$.surprise.benchmark') AS surprise_benchmark
+,get_json_object(v6.codes, '$.happiness.high') AS happiness_high
+,get_json_object(v6.codes, '$.happiness.low') AS happiness_low
+,get_json_object(v6.codes, '$.happiness.benchmark') AS happiness_benchmark
+,get_json_object(v6.codes, '$.neutral.high') AS neutral_high
+,get_json_object(v6.codes, '$.neutral.low') AS neutral_low
+,get_json_object(v6.codes, '$.neutral.benchmark') AS neutral_benchmark
+,get_json_object(v6.codes, '$.sadness.high') AS sadness_high
+,get_json_object(v6.codes, '$.sadness.low') AS sadness_low
+,get_json_object(v6.codes, '$.sadness.benchmark') AS sadness_benchmark
+,get_json_object(v6.codes, '$.disgust.high') AS disgust_high
+,get_json_object(v6.codes, '$.disgust.low') AS disgust_low
+,get_json_object(v6.codes, '$.disgust.benchmark') AS disgust_benchmark
+,get_json_object(v6.codes, '$.anger.high') AS anger_high
+,get_json_object(v6.codes, '$.anger.low') AS anger_low
+,get_json_object(v6.codes, '$.anger.benchmark') AS anger_benchmark
+,get_json_object(v6.codes, '$.fear.high') AS fear_high
+,get_json_object(v6.codes, '$.fear.low') AS fear_low
+,get_json_object(v6.codes, '$.fear.benchmark') AS fear_benchmark
+FROM nviso.json_data lateral VIEW json_tuple(jsonlob, 'result') v1 AS result lateral VIEW json_tuple(v1.result, 'reactionData') v2 AS reactionData lateral VIEW json_tuple(v2.reactionData, 'categories') v3 AS categories lateral VIEW explode(split(regexp_replace(substr(v3.categories, 2, length(v3.categories) - 2), '}},', '}},,,,'), ',,,,')) v4 AS categories_array lateral VIEW json_tuple(v4.categories_array, 'categoryId', 'benchmark') v5 AS categoryId,benchmark lateral VIEW json_tuple(v5.benchmark, 'codes') v6 AS codes;
