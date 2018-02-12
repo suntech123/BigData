@@ -1,0 +1,5 @@
+INSERT overwrite directory '/data/DLZ/NVISO/SESSIONCLNT/CSV' row format delimited fields terminated BY '\u0001' NULL DEFINED AS ''
+SELECT get_json_object(jsonlob, '$.sessionId')
+,get_json_object(jsonlob, '$.clientid')
+,v2.*
+FROM nviso.json_data lateral VIEW json_tuple(jsonlob, 'client') v1 AS client lateral VIEW json_tuple(v1.client, 'firstName', 'lastName', 'email', 'gender', 'lifestage', 'lifestageIndex', 'age') v2;
