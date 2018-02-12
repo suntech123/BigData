@@ -1,0 +1,7 @@
+--INSERT overwrite directory '/data/DLZ/NVISO/SESSIONREACTIONDATA/CSV' row format delimited fields terminated BY '\u0001' NULL DEFINED AS ''
+SELECT get_json_object(jsonlob, '$.sessionId') sessionId
+,v7.x_element AS secondsCNTR
+,v7.y_element AS duration
+,v5.seriesId AS emotionSeriesID
+,v5.className AS emotionName
+FROM nviso.json_data lateral VIEW json_tuple(jsonlob, 'result') v1 AS result lateral VIEW json_tuple(v1.result, 'reactionData') v2 AS reactionData lateral VIEW json_tuple(v2.reactionData, 'series') v3 AS series lateral VIEW explode(split(regexp_replace(substr(v3.series, 2, length(v3.series) - 2), ']},', ']},,,,'), ',,,,')) v4 AS series_array lateral VIEW json_tuple(v4.series_array, 'data', 'seriesId', 'className') v5 AS data1 ,seriesId,className lateral VIEW explode(split(regexp_replace(substr(v5.data1, 2, length(v5.data1) - 2), '},', '},,,,'), ',,,,')) v6 AS data_array lateral VIEW json_tuple(v6.data_array, 'y', 'x') v7 AS y_element,x_element;
