@@ -1,0 +1,10 @@
+INSERT overwrite directory '/data/DLZ/NVISO/SESSIONSMRY/CSV' row format delimited fields terminated BY '\u0001' NULL DEFINED AS ''
+SELECT v1.version
+,v1.sessionid
+,v1.userid
+,v1.clientid
+,v1.inviteesessionid
+,from_unixtime(unix_timestamp(regexp_replace(v1.reportDate, 'T', ' ')), 'yyyy-MM-dd HH:mm:ss')
+,get_json_object(jsonlob, '$.advisor.advisor_key') AS advisor_key
+FROM nviso.json_data lateral VIEW json_tuple(jsonlob, 'version', 'sessionId', 'userid', 'clientid', 'inviteesessionid', 'reportDate') v1 AS version,sessionid
+,userid ,clientid ,inviteesessionid ,reportDate;
