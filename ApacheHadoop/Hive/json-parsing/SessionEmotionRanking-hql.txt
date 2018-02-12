@@ -1,0 +1,21 @@
+WITH q1
+AS (
+SELECT get_json_object(jsonlob, '$.sessionId') sessionId
+,v5.label_id AS labelID
+,v6.rnk AS seriesRNK
+,v6.data2 AS categoryID
+FROM nviso.json_data lateral VIEW json_tuple(jsonlob, 'result') v1 AS result lateral VIEW json_tuple(v1.result, 'reactionEmotionRanking') v2 AS reactionEmotionRanking lateral VIEW json_tuple(v2.reactionEmotionRanking, 'series') v3 AS series lateral VIEW explode(split(regexp_replace(substr(v3.series, 2, length(v3.series) - 2), '"},', '"},,,,'), ',,,,')) v4 AS series_array lateral VIEW json_tuple(v4.series_array, 'label_id', 'data') v5 AS label_id,data1 lateral VIEW posexplode(split(substr(v5.data1, 2, length(v5.data1) - 2), ',')) v6 AS rnk,data2
+)
+,q2
+AS (
+SELECT v10.section_id section_id
+,v10.categoryID categoryID
+,v10.name category_name
+FROM nviso.json_data lateral VIEW json_tuple(jsonlob, 'result') v6 AS result lateral VIEW json_tuple(v6.result, 'reactionEmotionRanking') v7 AS reactionEmotionRanking lateral VIEW json_tuple(v7.reactionEmotionRanking, 'labels') v8 AS labels lateral VIEW explode(split(regexp_replace(substr(v8.labels, 2, length(v8.labels) - 2), '"},', '"},,,,'), ',,,,')) v9 AS labels_array lateral VIEW json_tuple(v9.labels_array, 'section_id', 'categoryId', 'name') v10 AS section_id,categoryID,name
+)
+--INSERT overwrite directory '/data/DLZ/NVISO/SESSIONEMOTIONRANKING/CSV' row format delimited fields terminated BY '\u0001' NULL DEFINED AS ''
+SELECT q1.sessionId
+,q1.labelID AS labelID
+,q1.seriesRNK AS seriesRNK
+,q2.category_name AS category_name
+FROM q1 LEFT JOIN q2 ON q1.categoryID = q2.categoryID;
