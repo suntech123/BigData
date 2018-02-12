@@ -1,0 +1,36 @@
+WITH q1
+AS (
+SELECT get_json_object(jsonlob, '$.sessionId') AS sessionid
+,v2.advisor_key
+,v2.advisor_name
+,v2.advisor_phone
+,v2.advisor_email
+,v2.advisor_address
+,regexp_replace(v2.client_specific, '[//]', '') AS client_specific
+FROM nviso.json_data lateral VIEW json_tuple(jsonlob, 'advisor') v1 AS advisor lateral VIEW json_tuple(v1.advisor, 'advisor_key', 'advisor_name', 'advisor_phone', 'advisor_email', 'advisor_address', 'client_specific') v2 AS advisor_key
+,advisor_name
+,advisor_phone
+,advisor_email
+,advisor_address
+,client_specific
+)
+--insert into table nviso.SESSIONSADVSR
+--INSERT overwrite directory '/data/DLZ/NVISO/SESSIONSADVSR/CSV' row format delimited fields terminated BY '\u0001' NULL DEFINED AS ''
+SELECT sessionid
+,q1.advisor_key
+,q1.advisor_name
+,q1.advisor_phone
+,q1.advisor_email
+,q1.advisor_address
+,v3.ROLE
+,v3.Twitter
+,v3.Facebook
+,v3.LinkedIn
+,v3.IsActive
+,v3.BusinessUnitID
+FROM q1 lateral VIEW json_tuple(q1.client_specific, 'Role', 'Twitter', 'Facebook', 'LinkedIn', 'IsActive', 'BusinessUnitID') v3 AS ROLE
+,Twitter
+,Facebook
+,LinkedIn
+,IsActive
+,BusinessUnitID;
