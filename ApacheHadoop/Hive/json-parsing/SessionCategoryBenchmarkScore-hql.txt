@@ -1,0 +1,8 @@
+INSERT overwrite directory '/data/DLZ/NVISO/SESSIONCATEGORYBENCHMARKSCORE/CSV' row format delimited fields terminated BY '\u0001' NULL DEFINED AS ''
+SELECT get_json_object(jsonlob, '$.sessionId')
+,v5.categoryId AS categoryId
+,get_json_object(v6.codes, '$.score.low_threshold') AS lowThresholdScore
+,get_json_object(v6.codes, '$.score.medium_threshold') AS mediumThresholdScore
+,get_json_object(v6.codes, '$.score.high_threshold') AS highThresholdScore
+,get_json_object(v6.codes, '$.score.benchmark') AS benchmarkScore
+FROM nviso.json_data lateral VIEW json_tuple(jsonlob, 'result') v1 AS result lateral VIEW json_tuple(v1.result, 'reactionData') v2 AS reactionData lateral VIEW json_tuple(v2.reactionData, 'categories') v3 AS categories lateral VIEW explode(split(regexp_replace(substr(v3.categories, 2, length(v3.categories) - 2), '}},', '}},,,,'), ',,,,')) v4 AS categories_array lateral VIEW json_tuple(v4.categories_array, 'categoryId', 'benchmark') v5 AS categoryId,benchmark lateral VIEW json_tuple(v5.benchmark, 'codes') v6 AS codes;
