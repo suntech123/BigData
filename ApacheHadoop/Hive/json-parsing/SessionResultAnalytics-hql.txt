@@ -1,0 +1,10 @@
+INSERT overwrite directory '/data/DLZ/NVISO/SESSIONRESULTANALYTICS/CSV' row format delimited fields terminated BY '\u0001' NULL DEFINED AS ''
+SELECT get_json_object(jsonlob, '$.sessionId')
+,get_json_object(jsonlob, '$.clientid') clientid
+,get_json_object(v3.analytics, '$.Emotion.Value.String') AS Emotion_value
+,get_json_object(v3.analytics, '$.RiskTolerance.Value.Max') AS RiskTolerance_max_value
+,get_json_object(v3.analytics, '$.RiskTolerance.Value.Min') AS RiskTolerance_min_value
+,get_json_object(v3.analytics, '$.Confidence.Value.String') AS Confidence_value
+,get_json_object(v3.analytics, '$.Conservation.Value.String') AS Conservation_value
+,get_json_object(v3.analytics, '$.Attention.Value.String') AS Attention_value
+FROM nviso.json_data lateral VIEW json_tuple(jsonlob, 'result') v1 AS result lateral VIEW json_tuple(v1.result, 'reactionData') v2 AS reactionData lateral VIEW json_tuple(v2.reactionData, 'analytics') v3 AS analytics;
