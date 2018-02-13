@@ -59,3 +59,7 @@ https://www.softserveinc.com/en-us/tech/blogs/process-slowly-changing-dimensions
 ======================== Convert XL to CSV - Python =======================================
 
 https://stackoverflow.com/questions/26029095/python-convert-excel-to-csv
+
+======================== storage formats in Hive ==========================================
+
+https://stackoverflow.com/questions/42416236/what-is-the-difference-between-inputformat-outputformat-stored-as-in-hive
