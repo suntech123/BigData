@@ -1,3 +1,8 @@
+======================= spark 2 ============================
+
+https://www.cloudera.com/documentation/spark2/latest/topics/spark_running_apps.html#spark2_commands
+
+
 ============================ MapReduce =================================
 https://blog.matthewrathbone.com/2016/02/09/python-tutorial.html
 https://www.edureka.co/blog/hadoop-streaming-mapreduce-program/
