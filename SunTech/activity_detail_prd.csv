@@ -1,0 +1,325 @@
+100|Build Advisory Igo|Build IGO|Advisory
+100|Build Advisory Nigo|Build NIGO|Advisory
+100|Build Advisory Reject|Build Reject|Advisory
+100|Build Retail Igo|Build IGO|Retail
+100|Build Retail Nigo|Build NIGO|Retail
+100|Build Retail Reject|Build Reject|Retail
+100|New Processor|New Processor|New Processor
+100|Nigo Advisory Igo|NIGO IGO|Advisory
+100|Nigo Advisory On Hold|NIGO On Hold|Advisory
+100|Nigo Advisory Reject|NIGO Rejected|Advisory
+100|Nigo Retail Igo|NIGO IGO|Retail
+100|Nigo Retail On Hold|NIGO On Hold|Retail
+100|Nigo Retail Reject|NIGO Rejected|Retail
+100|Prescreen Advisory Complete|Prescreen Complete|Advisory
+100|Prescreen Advisory Igo|Prescreen IGO|Advisory
+100|Prescreen Advisory Nigo|Prescreen NIGO|Advisory
+100|Prescreen Advisory Reject|Prescreen Rejected|Advisory
+100|Prescreen Retail Complete|Prescreen Complete|Retail
+100|Prescreen Retail Igo|Prescreen IGO|Retail
+100|Prescreen Retail Nigo|Prescreen NIGO|Retail
+100|Prescreen Retail Reject|Prescreen Rejected|Retail
+100|Qc Nigo Complete|QC NIGO Complete|QC NIGO Complete
+101|Address Change Followup Rej|Address Changes|Followup Rejected
+101|Address Changes On Hold|Address Changes|On Hold
+101|Address Changes Processed|Address Changes|Processed
+101|Address Changes Rejected|Address Changes|Rejected
+101|Address Chng Followup Proc|Address Changes|Followup Processed
+101|Beneficiary Changes On Hold|Beneficiary Changes|On Hold
+101|Beneficiary Changes Processed|Beneficiary Changes|Processed
+101|Beneficiary Changes Rejected|Beneficiary Changes|Rejected
+101|Benefit Chng Followup Proc|Beneficiary Changes|Followup Processed
+101|Benefit Chng Followup Rej|Beneficiary Changes|Followup Rejected
+101|Cost Basis Advisory Complete|Cost Basis Advisory|Complete
+101|Cost Basis Advisory Return|Cost Basis Advisory|Return
+101|Cost Basis Changes On Hold|Cost Basis|On Hold
+101|Cost Basis Changes Processed|Cost Basis|Processed
+101|Cost Basis Changes Rejected|Cost Basis|Rejected
+101|Cost Basis Followup Proc|Cost Basis|Followup Processed
+101|Cost Basis Followup Rej|Cost Basis|Followup Rejected
+101|Cost Basis Pending Complete|Cost Basis Pending|Complete
+101|Fee Updates Advisory Complete|Fee Updates Advisory Complete|Fee Updates Advisory Complete
+101|Fee Updates Changes On Hold|Fee Updates|On Hold
+101|Fee Updates Changes Processed|Fee Updates|Processed
+101|Fee Updates Changes Rejected|Fee Updates|Rejected
+101|Fee Updates Followup Proc|Fee Updates|Followup Processed
+101|Fee Updates Followup Rej|Fee Updates|Followup Rejected
+101|Journal Followup Proc|Journal|Followup Processed
+101|Journal Followup Rej|Journal|Followup Rejected
+101|Journals On Hold|Journal|On Hold
+101|Journals Processed|Journal|Processed
+101|Journals Rejected|Journal|Rejected
+101|Na Other Followup Proc|NA Other|Followup Processed
+101|Na Other Followup Rej|NA Other|Followup Rejected
+101|Na Other On Hold|NA Other|On Hold
+101|Na Other Processed|NA Other|Processed
+101|Na Other Rejected|NA Other|Rejected
+101|Pending Papers On Hold|Pending Papers|On Hold
+101|Pending Papers Processed|Pending Papers|Processed
+101|Pending Papers Rejected|Pending Papers|Rejected
+101|Pro Cash Followup Proc|Pro Cash |Followup Processed
+101|Pro Cash Followup Rej|Pro Cash |Followup Rejected
+101|Pro Cash On Hold|Pro Cash |On Hold
+101|Pro Cash Processed|Pro Cash |Processed
+101|Pro Cash Rejected|Pro Cash |Rejected
+101|Rep Change Advisory Complete|Rep Change Complete|Advisory
+101|Rep Change Followup Proc|Rep Changes|Followup Processed
+101|Rep Change Followup Rej|Rep Changes|Followup Rejected
+101|Rep Changes On Hold|Rep Changes|On Hold
+101|Rep Changes Processed|Rep Changes|Processed
+101|Rep Changes Rejected|Rep Changes|Rejected
+101|Select Link Rejected|Select Link|Rejected
+101|Selectlink Followup Proc|Select Link|Followup Processed
+101|Selectlink Followup Rej|Select Link|Followup Rejected
+101|Selectlink On Hold|Select Link|On Hold
+101|Selectlink Processed|Select Link|Processed
+101|Tod Followup Proc|TOD|Followup Processed
+101|Tod Followup Rej|TOD|Followup Rejected
+101|Tod On Hold|TOD|On Hold
+101|Tod Processed|TOD|Processed
+101|Tod Rejected|TOD|Rejected
+101|Vod On Hold|VOD|On Hold
+101|Vod Processed|VOD|Processed
+101|Vod Rejected|VOD|Rejected
+101|W9 Followup Proc|W9|Followup Processed
+101|W9 Followup Rej|W9|Followup Rejected
+101|W9 On Hold|W9|On Hold
+101|W9 Processed|W9|Processed
+101|W9 Rejected|W9|Rejected
+102|Acat Followup Proc|Acat |Followup Processed
+102|Acat Followup Rej|Acat |Followup Rejected
+102|Acat On Hold|Acat |On Hold
+102|Acat Processed|Acat |Processed
+102|Acat Rejected|Acat |Rejected
+102|Dtc-Gifting Followup Proc|DTC-Gifting|Followup Processed
+102|Dtc-Gifting Followup Rej|DTC-Gifting|Followup Rejected
+102|Dtc-Gifting On Hold|DTC-Gifting|On Hold
+102|Dtc-Gifting Processed|DTC-Gifting|Processed
+102|Dtc-Gifting Rejected|DTC-Gifting|Rejected
+102|Mutual Fund Followup Proc|Mutual Fund|Followup Processed
+102|Mutual Fund Followup Rej|Mutual Fund|Followup Rejected
+102|Mutual Fund On Hold|Mutual Fund|On Hold
+102|Mutual Fund Processed|Mutual Fund|Processed
+102|Mutual Fund Rejected|Mutual Fund|Rejected
+102|Non-Acat Followup Proc|NON-ACATS|Followup Processed
+102|Non-Acat Followup Rej|NON-ACATS|Followup Rejected
+102|Non-Acat On Hold|NON-ACATS|On Hold
+102|Non-Acat Processed|NON-ACATS|Processed
+102|Non-Acat Rejected|NON-ACATS|Rejected
+102|Transfers Out Followup Proc|Transfers Out|Followup Processed
+102|Transfers Out Followup Rej|Transfers Out|Followup Rejected
+102|Transfers Out On Hold|Transfers Out|On Hold
+102|Transfers Out Processed|Transfers Out|Processed
+102|Transfers Out Rejected|Transfers Out|Rejected
+103|Ach Followup Processed|Ach |Followup Processed
+103|Ach Followup Rejected|Ach |Followup Rejected
+103|Ach On Hold|Ach |On Hold
+103|Ach Processed|Ach |Processed
+103|Ach Rejected|Ach |Rejected
+103|Check Followup Processed|Checks |Followup Processed
+103|Check Followup Rejected|Checks|Followup Rejected
+103|Checks On Hold|Checks|On Hold
+103|Checks Processed|Checks|Processed
+103|Checks Rejected|Checks|Rejected
+103|Fact Followup Processed|Fact|Followup Processed
+103|Fact Followup Rejected|Fact|Followup Rejected
+103|Fact On Hold|Fact|On Hold
+103|Fact Processed|Fact|Processed
+103|Fact Rejected|Fact|Rejected
+103|Fed Fund Wires On Hold|Fed Fund Wires|On Hold
+103|Fed Fund Wires Processed|Fed Fund Wires|Processed
+103|Fed Fund Wires Rejected|Fed Fund Wires|Rejected
+103|Fedfundwire Followup Proc|Fed Fund Wires|Followup Processed
+103|Fedfundwire Followup Rej|Fed Fund Wires|Followup Rejected
+103|Ira Dist Followup Processed|IRA Distributions|Followup Processed
+103|Ira Dist Followup Rejected|IRA Distributions|Followup Rejected
+103|Ira Dist On Hold|IRA Distributions|On Hold
+103|Ira Dist Processed|IRA Distributions|Processed
+103|Ira Dist Rejected|IRA Distributions|Rejected
+103|Ira Followup Processed|IRA Contributions|Followup Processed
+103|Ira Followup Rejected|IRA Contributions|Followup Rejected
+103|Ira On Hold|IRA Contributions|On Hold
+103|Ira Processed|IRA Contributions|Processed
+103|Ira Rejected|IRA Contributions|Rejected
+103|Limited Partnership On Hold|Limited Partnership|On Hold
+103|Limited Partnership Processed|Limited Partnership|Processed
+103|Limited Partnership Rejected|Limited Partnership|Rejected
+103|Ltd Part Followup Processed|Limited Partnership|Followup Processed
+103|Ltd Part Followup Rejected|Limited Partnership|Followup Rejected
+103|Margin Followup Processed|Margins|Followup Processed
+103|Margin Followup Rejected|Margins|Followup Rejected
+103|Margins On Hold|Margins|On Hold
+103|Margins Processed|Margins|Processed
+103|Margins Rejected|Margins|Rejected
+103|Md Other Followup Processed|Money Desk Other|Followup Processed
+103|Md Other Followup Rejected|Money Desk Other|Followup Rejected
+103|Md Other On Hold|Money Desk Other|On Hold
+103|Md Other Processed|Money Desk Other|Processed
+103|Md Other Rejected|Money Desk Other|Rejected
+103|Reorg Followup Processed|Reorgs|Followup Processed
+103|Reorg Followup Rejected|Reorgs|Followup Rejected
+103|Reorgs On Hold|Reorgs|On Hold
+103|Reorgs Processed|Reorgs|Processed
+103|Reorgs Rejected|Reorgs|Rejected
+104|Conv Prescreen Processed|Prescreen|Processed
+104|Conv Prescreen Reject|Prescreen|Rejected
+104|Conv Prescreen On Hold|Prescreen|On Hold
+104|Conv New Accounts Processed|New Accounts|Processed
+104|Conv New Accounts Rejected|New Accounts|Rejected
+104|Conv New Accounts On Hold|New Accounts|On Hold
+104|Conv Maintenance Processed|Maintenance|Processed
+104|Conv Maintenance Rejected|Maintenance|Rejected
+104|Conv Maintenance On Hold|Maintenance|On Hold
+104|Conv Transfers Processed|Transfers |Processed
+104|Conv Transfers Rejected|Transfers |Rejected
+104|Conv Transfers On Hold|Transfers |On Hold
+104|Conv Moneydesk Processed|Moneydesk|Processed
+104|Conv Moneydesk Rejected|Moneydesk|Rejected
+104|Conv Moneydesk On Hold|Moneydesk|On Hold
+104|Fnic Followup Processed|Followup|Processed
+104|Fnic Followup Rejected|Followup|Rejected
+104|Fnic Maintenance On Hold|Maintenance|On Hold
+104|Fnic Maintenance Processed|Maintenance|Processed
+104|Fnic Maintenance Rejected|Maintenance|Rejected
+104|Fnic Moneydesk On Hold|Moneydesk|On Hold
+104|Fnic Moneydesk Processed|Moneydesk|Processed
+104|Fnic Moneydesk Rejected|Moneydesk|Rejected
+104|Fnic New Accounts On Hold|New Accounts|On Hold
+104|Fnic New Accounts Processed|New Accounts|Processed
+104|Fnic New Accounts Rejected|New Accounts|Rejected
+104|Fnic Prescreen On Hold|Prescreen|On Hold
+104|Fnic Prescreen Processed|Prescreen|Processed
+104|Fnic Prescreen Reject|Prescreen|Rejected
+104|Fnic Transfers On Hold|Transfers|On Hold
+104|Fnic Transfers Processed|Transfers|Processed
+104|Fnic Transfers Rejected|Transfers|Rejected
+104|Mfs Followup Processed|Followup|Processed
+104|Mfs Followup Rejected|Followup|Rejected
+104|Mfs Maintenance On Hold|Maintenance|On Hold
+104|Mfs Maintenance Processed|Maintenance|Processed
+104|Mfs Maintenance Rejected|Maintenance|Rejected
+104|Mfs Moneydesk On Hold|Moneydesk|On Hold
+104|Mfs Moneydesk Processed|Moneydesk|Processed
+104|Mfs Moneydesk Rejected|Moneydesk|Rejected
+104|Mfs New Accounts On Hold|New Accounts|On Hold
+104|Mfs New Accounts Processed|New Accounts|Processed
+104|Mfs New Accounts Rejected|New Accounts|Rejected
+104|Mfs Prescreen On Hold|Prescreen|On Hold
+104|Mfs Prescreen Processed|Prescreen|Processed
+104|Mfs Prescreen Reject|Prescreen|Rejected
+104|Mfs Transfers On Hold|Transfers|On Hold
+104|Mfs Transfers Processed|Transfers|Processed
+104|Mfs Transfers Rejected|Transfers|Rejected
+104|Mvp Followup Processed|Followup|Processed
+104|Mvp Followup Rejected|Followup|Rejected
+104|Mvp Maintenance On Hold|Maintenance|On Hold
+104|Mvp Maintenance Processed|Maintenance|Processed
+104|Mvp Maintenance Rejected|Maintenance|Rejected
+104|Mvp Moneydesk On Hold|Moneydesk|On Hold
+104|Mvp Moneydesk Processed|Moneydesk|Processed
+104|Mvp Moneydesk Rejected|Moneydesk|Rejected
+104|Mvp New Accounts On Hold|New Accounts|On Hold
+104|Mvp New Accounts Processed|New Accounts|Processed
+104|Mvp New Accounts Rejected|New Accounts|Rejected
+104|Mvp Prescreen On Hold|Prescreen|On Hold
+104|Mvp Prescreen Processed|Prescreen|Processed
+104|Mvp Prescreen Reject|Prescreen|Rejected
+104|Mvp Transfers On Hold|Transfers|On Hold
+104|Mvp Transfers Processed|Transfers|Processed
+104|Mvp Transfers Rejected|Transfers|Rejected
+105|Conv Maintenance|Maintenance|Maintenance
+105|Conv Maintenance On Hold|Maintenance|On Hold
+105|Conv Maintenance Processed|Maintenance|Processed
+105|Conv Maintenance Rejected|Maintenance|Rejected
+105|Conv Moneydesk|Moneydesk|Moneydesk
+105|Conv Moneydesk On Hold|Moneydesk|On Hold
+105|Conv Moneydesk Processed|Moneydesk|Processed
+105|Conv Moneydesk Rejected|Moneydesk|Rejected
+105|Conv New Accounts|New Accounts|New Accounts
+105|Conv New Accounts On Hold|New Accounts|On Hold
+105|Conv New Accounts Processed|New Accounts|Processed
+105|Conv New Accounts Rejected|New Accounts|Rejected
+105|Conv Prescreen|Prescreen|Prescreen
+105|Conv Prescreen On Hold|Prescreen|On Hold
+105|Conv Prescreen Processed|Prescreen|Processed
+105|Conv Prescreen Reject|Prescreen|Rejected
+105|Conv Transfers|Transfers|Transfers
+105|Conv Transfers On Hold|Transfers|On Hold
+105|Conv Transfers Processed|Transfers|Processed
+105|Conv Transfers Rejected|Transfers|Rejected
+106|Prescreen Processed|Prescreen|Prescreen
+106|Client Maint Followup Proc|Client Maintenance|Followup Processed
+106|Client Maint Followup Rej|Client Maintenance|Followup Rejected
+106|Client Maintenance Follow-Up|Client Maintenance|Followup
+106|Client Maintenance Processed|Client Maintenance|Processed
+106|Client Maintenance Rejected|Client Maintenance|Rejected
+106|Client Pswd Reset Follow-Up|Client Pswd Reset|Followup
+106|Client Pswd Reset Processed|Client Pswd Reset|Processed
+106|Client Pswd Reset Rejected|Client Pswd Reset|Rejected
+106|Client Setup Follow-Up|Client Setup|Followup
+106|Client Setup Followup Proc|Client Setup|Followup Processed
+106|Client Setup Followup Rej|Client Setup|Followup Rejected
+106|Client Setup Processed|Client Setup|Processed
+106|Client Setup Rejected|Client Setup|Rejected
+106|Client Term Follow-Up|Client Term|Followup
+106|Client Term Followup Proc|Client Term|Followup Processed
+106|Client Term Followup Rej|Client Term|Followup Rejected
+106|Client Term Processed|Client Term|Processed
+106|Client Term Rejected|Client Term|Rejected
+106|Clnt Pswd Reset Followup Proc|Client Pswd Reset|Followup Processed
+106|Clnt Pswd Reset Followup Rej|Client Pswd Reset|Followup Rejected
+106|Edocs Followup Proc|Edocuments|Followup Processed
+106|Edocs Followup Rej|Edocuments|Followup Rejected
+106|Edocuments Follow-Up|Edocuments|Followup
+106|Edocuments Processed|Edocuments|Processed
+106|Edocuments Rejected|Edocuments|Rejected
+106|Emp Maint Followup Proc|Employee Maintenance|Followup Processed
+106|Emp Maint Followup Rej|Employee Maintenance|Followup Rejected
+106|Emp Setup Followup Proc|Employee Setup|Followup Processed
+106|Emp Setup Followup Rej|Employee Setup|Followup Rejected
+106|Emp Term Followup Proc|Employee Term|Followup Processed
+106|Emp Term Followup Rej|Employee Term|Followup Rejected
+106|Employee Maintenance Follow-Up|Employee Maintenance|Followup
+106|Employee Maintenance Processed|Employee Maintenance|Processed
+106|Employee Maintenance Rejected|Employee Maintenance|Rejected
+106|Employee Setup Follow-Up|Employee Setup|Followup
+106|Employee Setup Processed|Employee Setup|Processed
+106|Employee Setup Rejected|Employee Setup|Rejected
+106|Employee Term Follow-Up|Employee Term|Followup
+106|Employee Term Processed|Employee Term|Processed
+106|Employee Term Rejected|Employee Term|Rejected
+106|Info Direct Follow-Up|Info Direct|Followup
+106|Info Direct Followup Proc|Info Direct|Followup Processed
+106|Info Direct Followup Rej|Info Direct|Followup Rejected
+106|Info Direct Processed|Info Direct|Processed
+106|Info Direct Rejected|Info Direct|Rejected
+106|Other Follow-Up|Other|Followup
+106|Other Followup Proc|Other|Followup Processed
+106|Other Followup Rej|Other|Followup Rejected
+106|Other Processed|Other|Processed
+106|Other Rejected|Other|Rejected
+106|Projects Follow-Up|Projects|Followup
+106|Projects Followup Proc|Projects|Followup Processed
+106|Projects Followup Rej|Projects|Followup Rejected
+106|Projects Processed|Projects|Processed
+106|Projects Rejected|Projects|Rejected
+106|Rep Maint Followup Proc|Rep Maintenance|Followup Processed
+106|Rep Maint Followup Rej|Rep Maintenance|Followup Rejected
+106|Rep Maintenance Follow-Up|Rep Maintenance|Followup
+106|Rep Maintenance Processed|Rep Maintenance|Processed
+106|Rep Maintenance Rejected|Rep Maintenance|Rejected
+106|Rep Pswd Reset Followup Proc|Rep Pswd Reset|Followup Processed
+106|Rep Pswd Reset Followup Rej|Rep Pswd Reset|Followup Rejected
+106|Rep Pswd Reset Processed|Rep Pswd Reset|Processed
+106|Rep Pswd Reset Rejected|Rep Pswd Reset|Rejected
+106|Rep Pwsd Reset Follow-Up|Rep Pswd Reset|Followup
+106|Rep Setup Follow-Up|Rep Setup |Followup
+106|Rep Setup Followup Proc|Rep Setup |Followup Processed
+106|Rep Setup Followup Rej|Rep Setup |Followup Rejected
+106|Rep Setup Processed|Rep Setup |Processed
+106|Rep Setup Rejected|Rep Setup |Rejected
+106|Rep Term Follow-Up|Rep Term|Followup
+106|Rep Term Followup Proc|Rep Term|Followup Processed
+106|Rep Term Followup Rej|Rep Term|Followup Rejected
+106|Rep Term Processed|Rep Term|Processed
+106|Rep Term Rejected|Rep Term|Rejected
