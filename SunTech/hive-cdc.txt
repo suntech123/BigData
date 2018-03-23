@@ -1,0 +1,43 @@
+INSERT OVERWRITE DIRECTORY '/data/diff/PBD_SMARTWORKS/DAILY_PRICE'
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '|'
+STORED AS TEXTFILE
+SELECT a.symbol,
+a.cusip,
+a.trade_date,
+a.description,
+a.price,
+a.mgt_code,
+a.mgt_name,
+a.security_type,
+a.asset_objective,
+a.fund_type,
+a.share_class,
+a.load_ts,
+current_timestamp AS INSERT_LOAD_TS,
+'' AS LOAD_USR,
+'null' AS LST_UPDATE_TS,
+'' AS LST_UPDATE_USR
+FROM PBD_SMARTWORKS.DAILY_PRICE_EXT A LEFT JOIN PBD_SMARTWORKS.DAILY_PRICE B
+ON A.CUSIP = B.CUSIP
+WHERE B.CUSIP IS NULL
+UNION ALL
+SELECT a.symbol,
+a.cusip,
+a.trade_date,
+a.description,
+a.price,
+a.mgt_code,
+a.mgt_name,
+a.security_type,
+a.asset_objective,
+a.fund_type,
+a.share_class,
+a.load_ts,
+'null' INSERT_LOAD_TS,
+'' AS LOAD_USR,
+current_timestamp AS LST_UPDATE_TS,
+'' AS LST_UPDATE_USR
+FROM PBD_SMARTWORKS.DAILY_PRICE_EXT A JOIN PBD_SMARTWORKS.DAILY_PRICE B
+ON A.CUSIP = B.CUSIP
+WHERE HASH( a.symbol,a.trade_date,a.description, a.price, a.mgt_code, a.mgt_name, a.security_type, a.asset_objective, a.fund_type, a.share_class, a.load_ts) <> HASH(b.symbol,b.trade_date,b.description, b.price, b.mgt_code, b.mgt_name, b.security_type, b.asset_objective, b.fund_type, b.share_class, b.load_ts);
