@@ -74,3 +74,9 @@ Sort Columns:           []
 Storage Desc Params:
         serialization.format    1
 Time taken: 0.252 seconds, Fetched: 99 row(s)
+
+======================================= Important URLs related to Sqoop avro import =============================
+
+http://www.geoinsyssoft.com/avro-file-format/
+https://stackoverflow.com/questions/43573421/handling-dates-in-hadoop
+
