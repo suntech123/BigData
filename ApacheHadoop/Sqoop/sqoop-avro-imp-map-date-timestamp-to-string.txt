@@ -1,0 +1,11 @@
+
+============ Sqoop Import Map Date and Timestamp columns to String ==============
+
+sqoop import --connect jdbc:oracle:thin:@//pdbolsl04-scan.one.ad:3004/svc_ADVBOP_etl --username bonusselect --password bonusselect_ctprod01 --table BONUS.TRADES --as-avrodatafile --map-column-java TRADE_DATE=String,RECEIVE_DATE=String -m 8 --target-dir /data/FLZ/import/sqoop/LREG/xyz10
+
+
+NOTE: 1. By default DATE and TIMESTAMP columns are converted as BIGINT in AVRO schema HIVE table.
+      2. We can change this default behaviour by below parameter
+            --map-column-java TRADE_DATE=String,RECEIVE_DATE=String      ## comma seperated key-value pairs for mapping DATE/TIMESTAMP to any java type
+      3. In case we are creating direct hive table in place of import, then below command.
+            --map-column-hive TRADE_DATE=String,RECEIVE_DATE=String
