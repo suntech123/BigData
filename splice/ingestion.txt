@@ -1,0 +1,69 @@
+/home/splice/cetera/sqoop/BONUS
+-rwxrwxr-x 1 splice splice     1654 Jan  4 05:37 BONUS-config.txt
+drwxrwxr-x 3 splice splice     4096 Apr  9 06:13 hive-query
+drwxrwxr-x 2 splice splice     4096 Apr  9 13:21 query
+drwxrwxr-x 2 splice splice     4096 Apr 11 05:56 import
+drwxrwxr-x 2 splice splice     4096 Apr 11 11:35 upsert
+drwxrwxr-x 2 splice splice    32768 Apr 12 04:55 logs
+-rwxrwxrwx 1 splice splice     3340 Apr 13 08:50 bonus_avro_hive_data_pipeline.sh
+-rwxrwxrwx 1 splice splice      895 Apr 13 09:24 bonus_avro_hive.hql
+
+-----------------------------------------------------------------------------
+[splice@dhrslnl001 BONUS]$ hadoop fs -ls /
+Found 13 items
+drwxrwxrwx   - hdfs  supergroup          0 2018-04-10 03:23 /backup
+drwxrwxrwx   - hdfs  supergroup          0 2018-04-13 06:14 /bad
+drwxr-xr-x   - hdfs  supergroup          0 2017-12-19 00:08 /blaze
+drwxr-xr-x   - hdfs  supergroup          0 2018-04-05 19:33 /data
+drwxr-xr-x   - hbase hbase               0 2018-04-11 20:49 /hbase
+drwxr-xr-x   - hdfs  supergroup          0 2018-02-23 07:34 /home
+drwxrwxrwx   - hdfs  supergroup          0 2017-08-17 12:11 /jars
+drwxr-xr-x   - hdfs  supergroup          0 2017-12-18 23:26 /opt
+drwxrwxr-x   - solr  solr                0 2018-01-03 17:32 /solr
+drwxr-xr-x   - hdfs  supergroup          0 2018-02-15 07:51 /spark
+drwxr-xr-x   - hdfs  supergroup          0 2018-03-20 13:11 /system
+drwxrwxrwx   - hdfs  supergroup          0 2018-04-12 14:25 /tmp
+drwxrwxrwt   - hdfs  supergroup          0 2018-04-12 14:26 /user
+
+---------------------------------------------------------------------
+
+drwxrwxrwx   - hdfs supergroup          0 2018-01-17 04:30 /data/BRANCH_HIERARCHY
+drwxr-xr-x   - hdfs supergroup          0 2018-03-20 16:12 /data/DLZ
+drwxr-xr-x   - hdfs supergroup          0 2018-03-20 16:07 /data/FLZ
+drwxrwxrwx   - hdfs supergroup          0 2018-02-12 13:10 /data/bdm_dev
+drwxr-xr-x   - hdfs supergroup          0 2018-04-05 19:33 /data/export
+drwxr-xr-x   - hdfs supergroup          0 2018-03-22 12:20 /data/hive
+drwxr-xr-x   - hdfs supergroup          0 2018-03-07 09:40 /data/sqoop
+drwxr-xr-x   - hdfs supergroup          0 2018-04-12 04:25 /data/tmp
+
+----------------------------------------------------------------------
+
+drwxr-xr-x   - hdfs   supergroup          0 2017-05-05 12:39 /data/FLZ/import/sqoop/SSDB_IANALYZE
+drwxr-xr-x   - hdfs   supergroup          0 2016-12-13 05:10 /data/FLZ/import/sqoop/SUMMITAPP
+drwxrwxrwx   - hdfs   supergroup          0 2016-12-12 11:37 /data/FLZ/import/sqoop/SUMMITCOMMISSION
+drwxr-xr-x   - hdfs   supergroup          0 2016-12-13 07:41 /data/FLZ/import/sqoop/SUMMITDATA
+
+----------------------------------------------------------------------
+
+[splice@dhrslnl001 sqoop]$ cat extract-fasi-daily.sh
+#!/bin/bash
+
+RUNDATE=$(date +"%m-%d-%Y_%T")
+CONFIG=/home/splice/cetera/sqoop/fasi/fasi-config.txt
+TABLES=/home/splice/cetera/sqoop/fasi/fasi-tables-daily.txt
+SCHEMA=FASI
+IMPORTDIR=/home/splice/cetera/sqoop/fasi/import
+QUERYDIR=/home/splice/cetera/sqoop/fasi/query
+LOGFILE=/home/splice/cetera/sqoop/fasi/logs/extract-fasi-$RUNDATE.log
+
+/home/splice/cetera/sqoop/run-sqoop-full.sh $CONFIG $TABLES $SCHEMA $IMPORTDIR $QUERYDIR $LOGFILE > $LOGFILE 2>&1
+
+if [ $? -gt 0 ]; then
+        echo run-sqoop-full.sh failed
+        exit 1
+else
+        echo run-sqoop-full.sh successful
+        exit 0
+fi
+
+----------------------------------------------------------------------------------
