@@ -1,0 +1,4 @@
+CREATE EXTERNAL TABLE BONUS.EXT_TRADES
+STORED AS AVRO
+LOCATION '/data/FLZ/import/sqoop/LREG/xyz6/'
+TBLPROPERTIES ('avro.schema.url'='/user/kumarsu/part-m-00000.avsc')
