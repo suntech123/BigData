@@ -1,0 +1,5 @@
+
+========================== Column names and data types in UNION ALL clause ================================================
+http://www.ericlin.me/2015/08/hive-union-all-requires-both-side-to-be-having-exact-same-number-of-columns-and-column-names/
+
+========================== 
