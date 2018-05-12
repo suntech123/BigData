@@ -1,0 +1,67 @@
+===========================================================================================================================================
+====================================== Cloudera VM - Environment Setting for running kafka_wordcount.py ===================================
+===========================================================================================================================================
+
+STEP 01. Install Kafka on Cloudera VM by running below command.
+
+         [root@quickstart spark-streaming-project]# yum install kafka
+         Dependencies Resolved
+
+         =============================================================================================================================
+          Package            Arch                Version                                            Repository                   Size
+         =============================================================================================================================
+         Installing:
+           kafka              noarch              0.10.2+kafka2.2.0-1.2.2.0.p0.92.el6                cloudera-kafka               68 M
+
+         Transaction Summary
+         =============================================================================================================================
+         Install       1 Package(s)
+
+         Total download size: 68 M
+         Installed size: 76 M
+         Is this ok [y/N]: y
+         Downloading Packages:
+         kafka-0.10.2+kafka2.2.0-1.2.2.0.p0.92.el6.noarch.rpm                                                  |  68 MB     02:13     
+         ............
+         ....................
+         Installed:
+          kafka.noarch 0:0.10.2+kafka2.2.0-1.2.2.0.p0.92.el6                                                                         
+
+         Complete!
+         
+STEP 02. Start the kafka server.
+         
+         NOTE: Kafka uses ZooKeeper so you need to first start a ZooKeeper server if you don't already have one.
+               You can use the convenience script packaged with kafka to get a quick-and-dirty single-node ZooKeeper instance.
+               
+         [cloudera@quickstart spark-streaming-project]$ /usr/lib/kafka/bin/zookeeper-server-start.sh /usr/lib/whirr/recipes/zookeeper.properties
+
+         [cloudera@quickstart spark-streaming-project]$ /usr/lib/kafka/bin/kafka-server-start.sh /usr/lib/kafka/config/server.properties
+         
+
+STEP 03. Create a Topic and verify listing topics.
+
+         --- Create a topic named "test" with a single partition and only one replica:
+         
+         [cloudera@quickstart ~]$ /usr/lib/kafka/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 0 --partitions 1 --topic test
+         
+         [cloudera@quickstart ~]$ /usr/lib/kafka/bin/kafka-topics.sh --list --zookeeper localhost:2181
+         
+         
+STEP 04. Send some messages using Kafka command-line client
+
+         --- Run the producer and then type a few messages into the console to send to the server.
+
+         [cloudera@quickstart ~]$ /usr/lib/kafka/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test
+         
+         NOTE: Above cmd line take input from a file or from standard input and send it out as messages to the Kafka cluster.
+               By default, each line will be sent as a separate message.
+               
+         --- Kafka also has a command line consumer that will dump out messages to standard output.
+         
+         [cloudera@quickstart ~]$ /usr/lib/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning
+         
+
+STEP 05. Run the Kafka word count example
+
+         [cloudera@quickstart spark-streaming-project]$ spark-submit kafka_wordcount.py localhost:2181 test
