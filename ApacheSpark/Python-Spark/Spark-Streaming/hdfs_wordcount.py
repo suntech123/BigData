@@ -18,7 +18,7 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: hdfs_wordcount.py <directory>", file=sys.stderr)
         sys.exit(-1)
-    ## ----- master="yarn-client" or master="yarn" for spark 1.x and 2.x respectively in pseudo distributed and distributed mode
+    ## ----- master="yarn-client" and master="yarn" for spark 1.x and 2.x respectively in pseudo distributed and distributed mode
     sc = SparkContext(master="local[2]",appName="PythonStreamingHDFSWordCount")
     ## ----- second argument is batchDuration in seconds
     ssc = StreamingContext(sc, 15)
