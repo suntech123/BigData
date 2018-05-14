@@ -18,3 +18,49 @@ STEP 02. Then install 'kafka-python' Kafka client
              100% |████████████████████████████████| 237kB 640kB/s 
          Installing collected packages: kafka-python
          Successfully installed kafka-python-1.4.2
+         
+         
+STEP 03. After Doing this it was observed that there is an error while using kafka-python client with python-2.6.x
+
+         >>> from kafka import KafkaConsumer
+         Traceback (most recent call last):
+           File "/usr/lib/python2.6/site-packages/kafka/record/default_records.py", line 378, in DefaultRecordBatchBuilder
+           byte_like=(bytes, bytearray, memoryview),
+         NameError: name 'memoryview' is not defined
+
+========================================================================================================================================
+================================== Installing concurrent instance of python 3.x.x with 2.x.x ===========================================
+========================================================================================================================================
+
+Description: In case we don't want to overwrite the python executable (safer, at least on some distros yum needs python to be 2.x, such              as for RHEL6) - you can install python3.* as a concurrent instance to the system default with an altinstall:
+
+Reference URL : https://stackoverflow.com/questions/8087184/problems-installing-python3-on-rhel
+----------------------------------------------------------------------------------------------------------------------------------------
+
+STEP 04. Manually downloading and installing Python latest version.
+
+     [ 1 ] Download latest version of python from python official site.
+
+            wget https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tar.xz
+            
+     [ 2 ] Untar the compressed folder
+
+            tar xf Python-3.6.5.tar.xz
+            cd Python-3.6.5
+            
+     [ 3 ] Prepare compilation
+     
+            ./configure
+            
+     [ 4 ] Build
+     
+            make
+            
+     [ 5 ] Install or alternate install
+           NOTE: Here we have option to either overwrite previous installation or create a side by side install parallel to 2.x
+           
+           --- Alternate install 
+                 make altinstall
+                 
+           --- Install and overwrite 2.x
+                 make install
