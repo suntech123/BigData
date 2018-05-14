@@ -1,0 +1,20 @@
+===========================================================================================================================================
+========================================== Installing kafka-python client =================================================================
+===========================================================================================================================================
+
+STEP 01. First install python-pip on Cloudera-VM
+         
+         [cloudera@quickstart spark-streaming-project]$ sudo yum install python-pip
+         
+STEP 02. Then install 'kafka-python' Kafka client
+
+         [cloudera@quickstart spark-streaming-project]$ sudo pip install kafka-python
+         
+         /usr/lib/python2.6/site-packages/pip/_vendor/requests/packages/urllib3/util/ssl_.py:90: InsecurePlatformWarning: A true SSLContext object is not available. This prevents urllib3 from configuring SSL appropriately and may cause certain SSL connections to fail. For more information, see https://urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning.
+         InsecurePlatformWarning
+         .................................
+         .....................................
+         .......................................
+             100% |████████████████████████████████| 237kB 640kB/s 
+         Installing collected packages: kafka-python
+         Successfully installed kafka-python-1.4.2
