@@ -75,7 +75,8 @@ STEP 05. Environment and path setting
      
            PATH=$PATH:$HOME/bin:/usr/bin/python-latest/bin
            
-     [ 2 ] In .bashrc create an alias for python 3.x
+     [ 2 ] In .bashrc create an alias for python 3.x and pip3.x
      
            alias python3='python3.6'
+           alias pip3='pip3.6'           
                  
