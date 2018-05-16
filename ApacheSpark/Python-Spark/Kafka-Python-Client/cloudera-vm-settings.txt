@@ -78,5 +78,18 @@ STEP 05. Environment and path setting
      [ 2 ] In .bashrc create an alias for python 3.x and pip3.x
      
            alias python3='python3.6'
-           alias pip3='pip3.6'           
+           alias pip3='pip3.6'
+           
+========================================================================================================================================
+================================= Installing kafka-python for python 3.6.5 on CDH VM ===================================================
+========================================================================================================================================
+
+[cloudera@quickstart ~]$ sudo python3.6 -m pip install kafka-python
+Collecting kafka-python
+  Using cached https://files.pythonhosted.org/packages/67/c8/ed9ab8e2172593f90b146a4989deed1e3845f8eca669f90a51e17661928a/kafka_python-1.4.2-py2.py3-none-any.whl
+Installing collected packages: kafka-python
+Successfully installed kafka-python-1.4.2
+You are using pip version 9.0.3, however version 10.0.1 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+
                  
