@@ -4,6 +4,8 @@
 
 Ref URL: https://stackoverflow.com/questions/45585502/infer-schema-vs-explicitly-passing-schema-while-loading-csv-file-data-in-spark-d?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
 
+https://stackoverflow.com/questions/34077353/how-to-change-dataframe-column-names-in-pyspark?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+
 ------------------------------------------------------------------------------------------------------------------------------
 
 OPTION 1. Schema Inference
