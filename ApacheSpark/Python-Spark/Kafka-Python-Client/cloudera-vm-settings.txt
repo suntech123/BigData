@@ -52,6 +52,10 @@ STEP 04. Manually downloading and installing Python latest version.
      
             ./configure
             
+            Note : If we want to install python in a specific folder and also install pip3
+            
+                   ./configure --prefix=/usr/bin/python-latest --with-ensurepip=install
+            
      [ 4 ] Build
      
             make
@@ -64,3 +68,14 @@ STEP 04. Manually downloading and installing Python latest version.
                  
            --- Install and overwrite 2.x
                  make install
+                 
+STEP 05. Environment and path setting
+
+     [ 1 ] in .bash_profile update PATH variable extended to ':/usr/bin/python-latest/bin' as below
+     
+           PATH=$PATH:$HOME/bin:/usr/bin/python-latest/bin
+           
+     [ 2 ] In .bashrc create an alias for python 3.x
+     
+           alias python3='python3.6'
+                 
