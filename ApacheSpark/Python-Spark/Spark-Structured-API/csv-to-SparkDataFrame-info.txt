@@ -1,6 +1,182 @@
-===========================================================================================================================================
-=================== Infer Schema vs Explicitly Passing Schema While loading CSV file data in spark dataframe ==============================
-===========================================================================================================================================
+=============================================================================================================================
+=================== Infer Schema vs Explicitly Passing Schema While loading CSV file data in spark dataframe ================
+=============================================================================================================================
+
+Ref URL: https://stackoverflow.com/questions/45585502/infer-schema-vs-explicitly-passing-schema-while-loading-csv-file-data-in-spark-d?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+
+------------------------------------------------------------------------------------------------------------------------------
 
 OPTION 1. Schema Inference
 
+>>> ext_trades_df = spark.read.csv('/data/FLZ/import/sqoop/BONUS/TRADES',sep='|',inferSchema=True)
+>>> ext_trades_df.printSchema
+
+## Just to check correct schema
+>>> ext_trades_df.printSchema()
+
+>>> ext_trades_df1=ext_trades_df.selectExpr("_c0 as TRADE_ID","_c1 as BD","_c2 as BATCH_ID","_c3 as SUPER_BATCH_ID","_c4 as CLIENT_ID","_c5 as ACCT_ID","_c6 as SPON_CODE","_c7 as SPONSOR_ACCT_NUMBER","_c8 as PROD_SPON_CODE","_c9 as PRODUCT_NUMBER","_c10 as ACTUAL_CUSIP","_c11 as PRODUCT_NAME","_c12 as PRODUCT_SHORT_NAME","_c13 as CONFIRM_NUMBER","_c14 as TRADE_DATE","_c15 as CANCEL_DATE","_c16 as RECEIVE_DATE","_c17 as SETTLEMENT_DATE","_c18 as STATE_CODE","_c19 as INVESTMENT_AMT","_c20 as GDC_AMT","_c21 as NET_CONCESSION_AMT","_c22 as FEE_ID","_c23 as FEE_AMT","_c24 as FEE_EXEMPT_IND","_c25 as INCOMING_FEE_AMT","_c26 as UNITS","_c27 as UNITS_PRICE","_c28 as TRADE_SOURCE_IND","_c29 as ELECTRONIC_TRADE_IND","_c30 as NAV_IND","_c31 as A12B1_IND","_c32 as GDC_CREDIT_ONLY_IND","_c33 as PRINCIPAL_IND","_c34 as BUY_SELL_IND","_c35 as HELD_IND","_c36 as HELD_REASON","_c37 as RDS_OVERRIDE_IND","_c38 as SPLIT_IND","_c39 as POST_DATE","_c40 as POST_IND","_c41 as RELATED_TRADE_ID","_c42 as NOTES","_c43 as CREATE_ID","_c44 as CREATE_DATE","_c45 as LAST_MOD_ID","_c46 as LAST_MOD_DATE","_c47 as SEC_TYPE","_c48 as SEC_MOD","_c49 as BLOTTER_CODE","_c50 as MARKET_CODE","_c51 as SS_CODE","_c52 as FEE_CODE","_c53 as FEE_OVERRIDE_IND","_c54 as TOTAL_ORDER_UNITS","_c55 as MANUAL_HELD_IND","_c56 as TYPE_OF_ORDER","_c57 as PROD_TYPE_CODE","_c58 as TRAIL_FREQ_IND","_c59 as HELD_REASON_CODE","_c60 as MARKET_PRIMARY_IND","_c61 as PRIMARY_EXCHANGE","_c62 as PD_DATE","_c63 as RNR","_c64 as COMMISSIONBASISREASON","_c65 as COMMISSIONBASISAMOUNT","_c66 as COMMISSIONRATE")
+
+>>> ext_trades_df1.printSchema()
+root
+ |-- TRADE_ID: string (nullable = true)
+ |-- BD: string (nullable = true)
+ |-- BATCH_ID: string (nullable = true)
+ |-- SUPER_BATCH_ID: string (nullable = true)
+ |-- CLIENT_ID: string (nullable = true)
+ |-- ACCT_ID: string (nullable = true)
+ |-- SPON_CODE: string (nullable = true)
+ |-- SPONSOR_ACCT_NUMBER: string (nullable = true)
+ |-- PROD_SPON_CODE: string (nullable = true)
+ |-- PRODUCT_NUMBER: string (nullable = true)
+ |-- ACTUAL_CUSIP: string (nullable = true)
+ |-- PRODUCT_NAME: string (nullable = true)
+ |-- PRODUCT_SHORT_NAME: string (nullable = true)
+ |-- CONFIRM_NUMBER: string (nullable = true)
+ |-- TRADE_DATE: string (nullable = true)
+ |-- CANCEL_DATE: string (nullable = true)
+ |-- RECEIVE_DATE: string (nullable = true)
+ |-- SETTLEMENT_DATE: string (nullable = true)
+ |-- STATE_CODE: string (nullable = true)
+ |-- INVESTMENT_AMT: string (nullable = true)
+ |-- GDC_AMT: string (nullable = true)
+ |-- NET_CONCESSION_AMT: string (nullable = true)
+ |-- FEE_ID: string (nullable = true)
+ |-- FEE_AMT: string (nullable = true)
+ |-- FEE_EXEMPT_IND: string (nullable = true)
+ |-- INCOMING_FEE_AMT: string (nullable = true)
+ |-- UNITS: string (nullable = true)
+ |-- UNITS_PRICE: string (nullable = true)
+ |-- TRADE_SOURCE_IND: string (nullable = true)
+ |-- ELECTRONIC_TRADE_IND: string (nullable = true)
+ |-- NAV_IND: string (nullable = true)
+ |-- A12B1_IND: string (nullable = true)
+ |-- GDC_CREDIT_ONLY_IND: string (nullable = true)
+ |-- PRINCIPAL_IND: string (nullable = true)
+ |-- BUY_SELL_IND: string (nullable = true)
+ |-- HELD_IND: string (nullable = true)
+ |-- HELD_REASON: string (nullable = true)
+ |-- RDS_OVERRIDE_IND: string (nullable = true)
+ |-- SPLIT_IND: string (nullable = true)
+ |-- POST_DATE: timestamp (nullable = true)
+ |-- POST_IND: string (nullable = true)
+ |-- RELATED_TRADE_ID: integer (nullable = true)
+ |-- NOTES: string (nullable = true)
+ |-- CREATE_ID: string (nullable = true)
+ |-- CREATE_DATE: timestamp (nullable = true)
+ |-- LAST_MOD_ID: string (nullable = true)
+ |-- LAST_MOD_DATE: string (nullable = true)
+ |-- SEC_TYPE: integer (nullable = true)
+ |-- SEC_MOD: string (nullable = true)
+ |-- BLOTTER_CODE: integer (nullable = true)
+ |-- MARKET_CODE: string (nullable = true)
+ |-- SS_CODE: string (nullable = true)
+ |-- FEE_CODE: string (nullable = true)
+ |-- FEE_OVERRIDE_IND: string (nullable = true)
+ |-- TOTAL_ORDER_UNITS: double (nullable = true)
+ |-- MANUAL_HELD_IND: string (nullable = true)
+ |-- TYPE_OF_ORDER: string (nullable = true)
+ |-- PROD_TYPE_CODE: string (nullable = true)
+ |-- TRAIL_FREQ_IND: string (nullable = true)
+ |-- HELD_REASON_CODE: integer (nullable = true)
+ |-- MARKET_PRIMARY_IND: string (nullable = true)
+ |-- PRIMARY_EXCHANGE: string (nullable = true)
+ |-- PD_DATE: timestamp (nullable = true)
+ |-- RNR: string (nullable = true)
+ |-- COMMISSIONBASISREASON: string (nullable = true)
+ |-- COMMISSIONBASISAMOUNT: double (nullable = true)
+ |-- COMMISSIONRATE: double (nullable = true)
+ 
+ ================================================================================================================================
+ ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+ ================================================================================================================================
+ 
+ OPTIONS 2. Explicitly providing schema
+ 
+ >>>trades_schema=StructType([StructField("TRADE_ID",StringType(),True),StructField("BD",StringType(),True),StructField("BATCH_ID",StringType(),True),StructField("SUPER_BATCH_ID",StringType(),True),StructField("CLIENT_ID",StringType(),True),StructField("ACCT_ID",StringType(),True),StructField("SPON_CODE",StringType(),True),StructField("SPONSOR_ACCT_NUMBER",StringType(),True),StructField("PROD_SPON_CODE",StringType(),True),StructField("PRODUCT_NUMBER",StringType(),True),StructField("ACTUAL_CUSIP",StringType(),True),StructField("PRODUCT_NAME",StringType(),True),StructField("PRODUCT_SHORT_NAME",StringType(),True),StructField("CONFIRM_NUMBER",StringType(),True),StructField("TRADE_DATE",StringType(),True),StructField("CANCEL_DATE",StringType(),True),StructField("RECEIVE_DATE",StringType(),True),StructField("SETTLEMENT_DATE",StringType(),True),StructField("STATE_CODE",StringType(),True),StructField("INVESTMENT_AMT",StringType(),True),StructField("GDC_AMT",StringType(),True),StructField("NET_CONCESSION_AMT",StringType(),True),StructField("FEE_ID",StringType(),True),StructField("FEE_AMT",StringType(),True),StructField("FEE_EXEMPT_IND",StringType(),True),StructField("INCOMING_FEE_AMT",StringType(),True),StructField("UNITS",StringType(),True),StructField("UNITS_PRICE",StringType(),True),StructField("TRADE_SOURCE_IND",StringType(),True),StructField("ELECTRONIC_TRADE_IND",StringType(),True),StructField("NAV_IND",StringType(),True),StructField("A12B1_IND",StringType(),True),StructField("GDC_CREDIT_ONLY_IND",StringType(),True),StructField("PRINCIPAL_IND",StringType(),True),StructField("BUY_SELL_IND",StringType(),True),StructField("HELD_IND",StringType(),True),StructField("HELD_REASON",StringType(),True),StructField("RDS_OVERRIDE_IND",StringType(),True),StructField("SPLIT_IND",StringType(),True),StructField("POST_DATE",TimestampType(),True),StructField("POST_IND",StringType(),True),StructField("RELATED_TRADE_ID",IntegerType(),True),StructField("NOTES",StringType(),True),StructField("CREATE_ID",StringType(),True),StructField("CREATE_DATE",TimestampType(),True),StructField("LAST_MOD_ID",StringType(),True),StructField("LAST_MOD_DATE",StringType(),True),StructField("SEC_Type()",IntegerType(),True),StructField("SEC_MOD",StringType(),True),StructField("BLOTTER_CODE",IntegerType(),True),StructField("MARKET_CODE",StringType(),True),StructField("SS_CODE",StringType(),True),StructField("FEE_CODE",StringType(),True),StructField("FEE_OVERRIDE_IND",StringType(),True),StructField("TOTAL_ORDER_UNITS",DoubleType(),True),StructField("MANUAL_HELD_IND",StringType(),True),StructField("Type()_OF_ORDER",StringType(),True),StructField("PROD_Type()_CODE",StringType(),True),StructField("TRAIL_FREQ_IND",StringType(),True),StructField("HELD_REASON_CODE",IntegerType(),True),StructField("MARKET_PRIMARY_IND",StringType(),True),StructField("PRIMARY_EXCHANGE",StringType(),True),StructField("PD_DATE",TimestampType(),True),StructField("RNR",StringType(),True),StructField("COMMISSIONBASISREASON",StringType(),True),StructField("COMMISSIONBASISAMOUNT",DoubleType(),True),StructField("COMMISSIONRATE",DoubleType(),True)])
+ 
+ >>> ext_trades_df2 = spark.read.csv('/data/FLZ/import/sqoop/BONUS/TRADES',schema=trades_schema,sep='|')
+ 
+ >>> ext_trades_df2.printSchema()
+root
+ |-- TRADE_ID: string (nullable = true)
+ |-- BD: string (nullable = true)
+ |-- BATCH_ID: string (nullable = true)
+ |-- SUPER_BATCH_ID: string (nullable = true)
+ |-- CLIENT_ID: string (nullable = true)
+ |-- ACCT_ID: string (nullable = true)
+ |-- SPON_CODE: string (nullable = true)
+ |-- SPONSOR_ACCT_NUMBER: string (nullable = true)
+ |-- PROD_SPON_CODE: string (nullable = true)
+ |-- PRODUCT_NUMBER: string (nullable = true)
+ |-- ACTUAL_CUSIP: string (nullable = true)
+ |-- PRODUCT_NAME: string (nullable = true)
+ |-- PRODUCT_SHORT_NAME: string (nullable = true)
+ |-- CONFIRM_NUMBER: string (nullable = true)
+ |-- TRADE_DATE: string (nullable = true)
+ |-- CANCEL_DATE: string (nullable = true)
+ |-- RECEIVE_DATE: string (nullable = true)
+ |-- SETTLEMENT_DATE: string (nullable = true)
+ |-- STATE_CODE: string (nullable = true)
+ |-- INVESTMENT_AMT: string (nullable = true)
+ |-- GDC_AMT: string (nullable = true)
+ |-- NET_CONCESSION_AMT: string (nullable = true)
+ |-- FEE_ID: string (nullable = true)
+ |-- FEE_AMT: string (nullable = true)
+ |-- FEE_EXEMPT_IND: string (nullable = true)
+ |-- INCOMING_FEE_AMT: string (nullable = true)
+ |-- UNITS: string (nullable = true)
+ |-- UNITS_PRICE: string (nullable = true)
+ |-- TRADE_SOURCE_IND: string (nullable = true)
+ |-- ELECTRONIC_TRADE_IND: string (nullable = true)
+ |-- NAV_IND: string (nullable = true)
+ |-- A12B1_IND: string (nullable = true)
+ |-- GDC_CREDIT_ONLY_IND: string (nullable = true)
+ |-- PRINCIPAL_IND: string (nullable = true)
+ |-- BUY_SELL_IND: string (nullable = true)
+ |-- HELD_IND: string (nullable = true)
+ |-- HELD_REASON: string (nullable = true)
+ |-- RDS_OVERRIDE_IND: string (nullable = true)
+ |-- SPLIT_IND: string (nullable = true)
+ |-- POST_DATE: timestamp (nullable = true)
+ |-- POST_IND: string (nullable = true)
+ |-- RELATED_TRADE_ID: integer (nullable = true)
+ |-- NOTES: string (nullable = true)
+ |-- CREATE_ID: string (nullable = true)
+ |-- CREATE_DATE: timestamp (nullable = true)
+ |-- LAST_MOD_ID: string (nullable = true)
+ |-- LAST_MOD_DATE: string (nullable = true)
+ |-- SEC_Type(): integer (nullable = true)
+ |-- SEC_MOD: string (nullable = true)
+ |-- BLOTTER_CODE: integer (nullable = true)
+ |-- MARKET_CODE: string (nullable = true)
+ |-- SS_CODE: string (nullable = true)
+ |-- FEE_CODE: string (nullable = true)
+ |-- FEE_OVERRIDE_IND: string (nullable = true)
+ |-- TOTAL_ORDER_UNITS: double (nullable = true)
+ |-- MANUAL_HELD_IND: string (nullable = true)
+ |-- Type()_OF_ORDER: string (nullable = true)
+ |-- PROD_Type()_CODE: string (nullable = true)
+ |-- TRAIL_FREQ_IND: string (nullable = true)
+ |-- HELD_REASON_CODE: integer (nullable = true)
+ |-- MARKET_PRIMARY_IND: string (nullable = true)
+ |-- PRIMARY_EXCHANGE: string (nullable = true)
+ |-- PD_DATE: timestamp (nullable = true)
+ |-- RNR: string (nullable = true)
+ |-- COMMISSIONBASISREASON: string (nullable = true)
+ |-- COMMISSIONBASISAMOUNT: double (nullable = true)
+ |-- COMMISSIONRATE: double (nullable = true)
+
+
+>>> ext_trades_df2.createTempView("my_trades")
+>>> spark.sql("select count(*) from my_trades").show()
+18/05/16 12:10:07 WARN util.Utils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.debug.maxToStringFields' in SparkEnv.conf.
++--------+
+|count(1)|
++--------+
+|69894367|
++--------+
+
+
+
+ 
+ 
