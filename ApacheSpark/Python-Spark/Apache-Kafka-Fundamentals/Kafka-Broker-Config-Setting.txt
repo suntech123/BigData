@@ -1,0 +1,28 @@
+======================= zookeper config =========================
+
+tickTime=2000
+initLimit=10
+syncLimit=5
+dataDir=/var/lib/zookeeper
+dataLogDir=/var/lib/zookeeper
+clientPort=2181
+maxClientCnxns=0
+minSessionTimeout=4000
+maxSessionTimeout=120000
+autopurge.purgeInterval=24
+autopurge.snapRetainCount=5
+quorum.auth.enableSasl=false
+quorum.cnxn.threads.size=20
+server.1=dhnnlnl001.one.ad:3181:4181
+server.2=dhzklnl001.one.ad:3181:4181
+server.3=dhmnlnl001.one.ad:3181:4181
+leaderServes=yes
+
+
+============================ server1.properties ======================
+
+broker.id=1
+..........
+..............
+.....................
+zookeeper.connect=dhzklnl001.one.ad:2181
