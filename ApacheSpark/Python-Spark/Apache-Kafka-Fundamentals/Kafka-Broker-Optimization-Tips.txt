@@ -1,0 +1,42 @@
+=====================================================================================================================
+=
+= Kafka Broker Optimization Techniques
+=
+=====================================================================================================================
+
+Usually, you don't need to modify these settings, however, if you want to extract every last bit of performance from your machines, 
+then changing some of them can help. You may have to tweak some of the values, but these worked 80% of the cases for me:
+
+message.max.bytes=1000000
+num.network.threads=3
+num.io.threads=8
+background.threads=10
+queued.max.requests=500
+socket.send.buffer.bytes=102400
+socket.receive.buffer.bytes=102400
+socket.request.max.bytes=104857600
+num.partitions=1
+Quick explanations of the numbers:
+
+message.max.bytes: This sets the maximum size of the message that the server can receive. This should be set to prevent any producer from inadvertently sending extra large messages and swamping the consumers. The default size is 1000000.
+
+num.network.threads: This sets the number of threads running to handle the network's request. If you are going to have too many requests coming in, then you need to change this value. Else, you are good to go. Its default value is 3.
+
+num.io.threads: This sets the number of threads spawned for IO operations. This is should be set to the number of disks present at the least. Its default value is 8.
+
+background.threads: This sets the number of threads that will be running and doing various background jobs. These include deleting old log files. Its default value is 10 and you might not need to change it.
+
+queued.max.requests: This sets the queue size that holds the pending messages while others are being processed by the IO threads. If the queue is full, the network threads will stop accepting any more messages. If you have erratic loads in your application, you need to set queued.max.requests to a value at which it will not throttle.
+
+socket.send.buffer.bytes: This sets the SO_SNDBUFF buffer size, which is used for socket connections.
+
+socket.receive.buffer.bytes: This sets the SO_RCVBUFF buffer size, which is used for socket connections.
+
+socket.request.max.bytes: This sets the maximum size of the request that the server can receive. This should be smaller than the Java heap size you have set.
+
+num.partitions: This sets the number of default partitions of a topic you create without explicitly giving any partition size.
+Number of partitions may have to be higher than 1 for reliability, but for performance (even not realistic :)), 1 is better.
+
+These are no silver bullet :), however, you could test these changes with a test topic and 1,000/10,000/100,000 messages per second to see the difference between default values and adjusted values. Vary some of them to see the difference.
+
+You may need to configure your Java installation for maximum performance. This includes the settings for heap, socket size, and so on.
