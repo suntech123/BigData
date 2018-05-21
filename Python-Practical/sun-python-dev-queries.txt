@@ -3,3 +3,4 @@
 2. How to remove a substring from a string ?
 3. How to insert element at a given index in a list ?
 5. How to remove indentation from a multiline string ?
+6. How to define a function which takes a sequence as parameter ?
