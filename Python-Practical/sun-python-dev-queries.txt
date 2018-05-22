@@ -7,3 +7,4 @@
 7. How to remove multiple spaces to monospace in a string?
 8. How to add elements of one list to other ?
 9. What is the difference between append and extend list methods ?
+10. How to replace special characters in a Python string ?
