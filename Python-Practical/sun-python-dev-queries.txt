@@ -12,3 +12,5 @@
 12. How to create file path from variables ?
 13. How to empty a list in python ?
 14. How to use range function in python ?
+15. How to delete a specific element from python list based on index ?
+16. 
