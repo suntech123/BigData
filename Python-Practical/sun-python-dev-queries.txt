@@ -4,3 +4,6 @@
 3. How to insert element at a given index in a list ?
 5. How to remove indentation from a multiline string ?
 6. How to define a function which takes a sequence as parameter ?
+7. How to remove multiple spaces to monospace in a string?
+8. How to add elements of one list to other ?
+9. What is the difference between append and extend list methods ?
