@@ -17,35 +17,63 @@ import logging
 import textwrap
 
 ddl_dir='hive_ddl'
+shutil.rmtree(ddl_dir)
 ## create directories
 if not os.path.exists(ddl_dir):
        os.makedirs(ddl_dir)
 ## External Table generator
 def hive_ddl_generator(tbl_type,ddl_tokens):
+    ddl_tokens = ddl_tokens[:]
+    schema,table=ddl_tokens[3].split('.')
+    create_str = ' '.join(ddl_tokens[0:3])
+    last_col_str = ddl_tokens[-1]
+    opt_hive_properties_str = '''\n)\nROW FORMAT DELIMITED\nFIELDS TERMINATED BY '|'\nSTORED AS PARQUET\nTBLPROPERTIES ("auto.purge"="true");\n\n'''
+    hst_stg_hive_properties_str = '''\n)\nROW FORMAT DELIMITED\nFIELDS TERMINATED BY '|'\nSTORED AS PARQUET;\n\n'''    
     if tbl_type == 'OPT':
-       schema,table=ddl_tokens[3].split('.')
-       ddl_file = table + '.hql'
+       opt_ddl_file = 'hive_opt_tables_ddl.hql'
        opt_table = 'OPT_' + table
-       create_str = ' '.join(ddl_tokens[0:2])
-       create_clause = create_str + ' ' + schema + '.' + opt_table + ddl_tokens[4] + '\n'
-       last_col_str = ddl_tokens[-1]
-       hive_properties_str = '''\n)\nROW FORMAT DELIMITED\nFIELDS TERMINATED BY '|'\nSTORED AS PARQUET\nTBLPROPERTIES ("auto.purge"="true");'''
+       opt_create_clause = create_str + ' ' + schema + '.' + opt_table + ddl_tokens[4] + '\n'
        del ddl_tokens[0:5]
        del ddl_tokens[-1]
-       with open(os.path.join('/home/splice/cetera/sqoop/BONUS1/hive_ddl',ddl_file),'w') as h:
-            h.write(create_clause)
+       with open(os.path.join('/home/splice/cetera/sqoop/BONUS1/hive_ddl',opt_ddl_file),'a') as h:
+            h.write(opt_create_clause)
             for i in ddl_tokens:
                 h.write(i + ',' + '\n')
             h.write(last_col_str)
-            h.write(hive_properties_str)    
-
+            h.write(opt_hive_properties_str)
+    elif tbl_type == 'HST':
+       hst_ddl_file = 'hive_hst_tables_ddl.hql'
+       hst_table = 'HST_' + table
+       hst_create_clause = create_str + ' ' + schema + '.' + hst_table + ddl_tokens[4] + '\n'
+       del ddl_tokens[0:5]
+       del ddl_tokens[-1]
+       with open(os.path.join('/home/splice/cetera/sqoop/BONUS1/hive_ddl',hst_ddl_file),'a') as k:
+            k.write(hst_create_clause)
+            for i in ddl_tokens:
+                k.write(i + ',' + '\n')
+            k.write(last_col_str)
+            k.write(hst_stg_hive_properties_str)
+    elif tbl_type == 'STG':
+       stg_ddl_file = 'hive_stg_tables_ddl.hql'
+       stg_table = 'STG_' + table
+       stg_create_clause = create_str + ' ' + schema + '.' + stg_table + ddl_tokens[4] + '\n'
+       del ddl_tokens[0:5]
+       del ddl_tokens[-1]
+       with open(os.path.join('/home/splice/cetera/sqoop/BONUS1/hive_ddl',stg_ddl_file),'a') as l:
+            l.write(stg_create_clause)
+            for i in ddl_tokens:
+                l.write(i + ',' + '\n')
+            l.write(last_col_str)
+            l.write(hst_stg_hive_properties_str)
+    else:
+       pass
 ## Internal Table Generator
 ##def hive_cdc_query_generator(ddl_tokens):
     ## some code
 
 
 ## Splice-Hive data type mappings
-SPLICE_TO_HIVE_DTYPE_MAP = {'CHAR':'CHAR','VARCHAR':'VARCHAR','DATE':'TIMESTAMP','TIMESTAMP':'TIMESTAMP','BLOB':'BINARY','CLOB':'STRING','TEXT':'STRING','BIGINT':'BIGINT','DECIMAL':'DECIMAL','DOUBLE':'DOUBLE','FLOAT':'FLOAT','INTEGER':'INTEGER','NUMERIC':'DECIMAL','SMALLINT':'SMALLINT','BOOLEAN':'BOOLEAN'}
+SPLICE_TO_HIVE_DTYPE_MAP = {'DATE':'TIMESTAMP','BLOB':'BINARY','CLOB':'STRING','TEXT':'STRING','NUMERIC':'DECIMAL','INTEGER':'INT'}
 
 
 
@@ -67,10 +95,10 @@ with open('/home/splice/cetera/sqoop/BONUS1/bonus_splice_ddl.txt','r') as f:
 #            print(ddl_token_lst)
          elif line.startswith(') ;') or line.startswith(');') or line.startswith(';') or line.endswith(');'):
 #            hive_ddl_generator('EXT',ddl_token_lst)
-#            hive_ddl_generator('HST',ddl_token_lst)
+            hive_ddl_generator('HST',ddl_token_lst)
             hive_ddl_generator('OPT',ddl_token_lst)
+            hive_ddl_generator('STG',ddl_token_lst)
             del ddl_token_lst[:]
-#            hive_ddl_generator('STG',ddl_token_lst)
 #            ext_str=")\nROW FORMAT DELIMITED\nFIELDS TERMINATED BY '|'\nSTORED AS TEXTFILE\nLOCATION '/data/FLZ/import/sqoop/" + SCHEMA + "/" + TABLE + "';\n"
 #            print(ext_str)
          else:
@@ -80,4 +108,13 @@ with open('/home/splice/cetera/sqoop/BONUS1/bonus_splice_ddl.txt','r') as f:
             monospaced_col_dtype_lst3 = monospaced_col_dtype_lst2.replace('),',')')
             col_dtype_tokens = ' '.join(monospaced_col_dtype_lst3.split()[0:2])
             col_dtype_tokens = col_dtype_tokens.rstrip(',')
+            col,dtype = col_dtype_tokens.split()
+            dtype = dtype.upper().replace('DATE',SPLICE_TO_HIVE_DTYPE_MAP['DATE'])
+            dtype = dtype.upper().replace('BLOB',SPLICE_TO_HIVE_DTYPE_MAP['BLOB'])
+            dtype = dtype.upper().replace('CLOB',SPLICE_TO_HIVE_DTYPE_MAP['CLOB'])
+            dtype = dtype.upper().replace('TEXT',SPLICE_TO_HIVE_DTYPE_MAP['TEXT'])
+            dtype = dtype.upper().replace('NUMERIC',SPLICE_TO_HIVE_DTYPE_MAP['NUMERIC'])
+            dtype = dtype.upper().replace('INTEGER',SPLICE_TO_HIVE_DTYPE_MAP['INTEGER'])
+            col = col.strip('"')
+            col_dtype_tokens = col + ' ' + dtype
             ddl_token_lst.append(col_dtype_tokens)
