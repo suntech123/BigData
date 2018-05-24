@@ -20,5 +20,7 @@
 20. How to get value of of dictionary item from key ?
 21. How to change a string variable value to uppercase in python ?
 22. How to strip double quotes around string literals in python ?
-23. 
+23. How to create an empty set in python ?
+24. How to remove in most pythonic way all the elements that occur in one list from another ? --hint list comprehensions
+25. 
 
