@@ -28,7 +28,8 @@ def hive_ddl_generator(tbl_type,ddl_tokens):
     create_str = ' '.join(ddl_tokens[0:3])
     last_col_str = ddl_tokens[-1]
     opt_hive_properties_str = '''\n)\nROW FORMAT DELIMITED\nFIELDS TERMINATED BY '|'\nSTORED AS PARQUET\nTBLPROPERTIES ("auto.purge"="true");\n\n'''
-    hst_stg_hive_properties_str = '''\n)\nROW FORMAT DELIMITED\nFIELDS TERMINATED BY '|'\nSTORED AS PARQUET;\n\n'''    
+    hst_stg_hive_properties_str = '''\n)\nROW FORMAT DELIMITED\nFIELDS TERMINATED BY '|'\nSTORED AS PARQUET;\n\n'''
+    ext_hive_properties_str = "\n)\nROW FORMAT DELIMITED\nFIELDS TERMINATED BY '|'\nSTORED AS TEXTFILE\nLOCATION '/data/FLZ/import/sqoop/" + schema + "/" + table + "'" + ";" +"\n\n" 
     if tbl_type == 'OPT':
        opt_ddl_file = 'hive_opt_tables_ddl.hql'
        opt_table = 'OPT_' + table
@@ -39,7 +40,8 @@ def hive_ddl_generator(tbl_type,ddl_tokens):
             h.write(opt_create_clause)
             for i in ddl_tokens:
                 h.write(i + ',' + '\n')
-            h.write(last_col_str)
+            h.write(last_col_str + ',' + '\n')
+            h.write('REC_NPK_HASH_VALUE' + ' ' + 'BIGINT')
             h.write(opt_hive_properties_str)
     elif tbl_type == 'HST':
        hst_ddl_file = 'hive_hst_tables_ddl.hql'
@@ -51,7 +53,8 @@ def hive_ddl_generator(tbl_type,ddl_tokens):
             k.write(hst_create_clause)
             for i in ddl_tokens:
                 k.write(i + ',' + '\n')
-            k.write(last_col_str)
+            k.write(last_col_str + ',' + '\n')
+            k.write('REC_NPK_HASH_VALUE' + ' ' + 'BIGINT')
             k.write(hst_stg_hive_properties_str)
     elif tbl_type == 'STG':
        stg_ddl_file = 'hive_stg_tables_ddl.hql'
@@ -63,12 +66,36 @@ def hive_ddl_generator(tbl_type,ddl_tokens):
             l.write(stg_create_clause)
             for i in ddl_tokens:
                 l.write(i + ',' + '\n')
-            l.write(last_col_str)
+            l.write(last_col_str + ',' + '\n')
+            l.write('REC_NPK_HASH_VALUE' + ' ' + 'BIGINT')
             l.write(hst_stg_hive_properties_str)
+    elif tbl_type == 'EXT':
+       ext_ddl_file = 'hive_ext_tables_ddl.hql'
+       ext_table = 'EXT_' + table
+       ext_create_clause = create_str + ' ' + schema + '.' + ext_table + ddl_tokens[4] + '\n'
+       del ddl_tokens[0:5]
+       del ddl_tokens[-1]
+       hdfs_dir_stmt_file = 'hive_ext_table_loc_dir_cmds.txt'
+       hdfs_loc_dir_stmt = 'hadoop fs -mkdir -p ' + '/data/FLZ/import/sqoop/' +  schema + '/' + table + ';'
+       with open(os.path.join('/home/splice/cetera/sqoop/BONUS1/hive_ddl',hdfs_dir_stmt_file),'a') as q:
+            q.write(hdfs_loc_dir_stmt + '\n')
+       with open(os.path.join('/home/splice/cetera/sqoop/BONUS1/hive_ddl',ext_ddl_file),'a') as m:
+            m.write(ext_create_clause)
+            for i in ddl_tokens:
+                m.write(i.split()[0] + ' ' + 'STRING' + ',' + '\n')
+            m.write(last_col_str.split()[0] + ' ' + 'STRING')
+            m.write(ext_hive_properties_str)
     else:
        pass
 ## Internal Table Generator
-##def hive_cdc_query_generator(ddl_tokens):
+def hive_cdc_query_generator(keys,ddl_tokens):
+    local_ddl_tokens = ddl_tokens[:]
+    local_keys = keys[:]
+    hash_lst = [ x for x in local_ddl_tokens if x not in local_keys ]
+    hash_col_alias = 'HASH' + '(' + ','.join(hash_lst) + ')' + ' ' + 'AS' + ' ' + 'REC_NPK_HASH_VALUE' 
+    print(hash_lst)
+    print(hash_col_alias)
+    print('\n')
     ## some code
 
 
@@ -81,11 +108,18 @@ if len(sys.argv) != 2:
    print("Please pass right number of arguments- Usage : <script> splice-ddl-file")
 
 ## Parse the splice ddl file
-ddl_token_lst=[]
+ddl_token_lst = []
+key_cols = []
+all_cols = []
 with open('/home/splice/cetera/sqoop/BONUS1/bonus_splice_ddl.txt','r') as f:
      for line in f:
-      if line.startswith('--') or line in ['\n', '\r\n'] or line.strip().startswith('CONSTRAINT'):
+      if line.startswith('--') or line in ['\n', '\r\n']:
          pass
+      elif line.strip().startswith('CONSTRAINT'):
+         key_string = line.strip().rsplit(' ',1)[1]
+         key_string = key_string.lstrip('(').rstrip(')').strip()
+         key_col_lst = key_string.split(',')
+         key_cols.extend(key_col_lst)
       else:
          if line.startswith('CREATE TABLE'):
             monospaced_create_lst = re.sub(' +',' ',line)       
@@ -94,11 +128,14 @@ with open('/home/splice/cetera/sqoop/BONUS1/bonus_splice_ddl.txt','r') as f:
             ddl_token_lst.extend(create_clause_tokens)
 #            print(ddl_token_lst)
          elif line.startswith(') ;') or line.startswith(');') or line.startswith(';') or line.endswith(');'):
-#            hive_ddl_generator('EXT',ddl_token_lst)
             hive_ddl_generator('HST',ddl_token_lst)
             hive_ddl_generator('OPT',ddl_token_lst)
             hive_ddl_generator('STG',ddl_token_lst)
+            hive_ddl_generator('EXT',ddl_token_lst)
             del ddl_token_lst[:]
+            hive_cdc_query_generator(key_cols,all_cols)
+            del key_cols[:]
+            del all_cols[:]
 #            ext_str=")\nROW FORMAT DELIMITED\nFIELDS TERMINATED BY '|'\nSTORED AS TEXTFILE\nLOCATION '/data/FLZ/import/sqoop/" + SCHEMA + "/" + TABLE + "';\n"
 #            print(ext_str)
          else:
@@ -116,5 +153,6 @@ with open('/home/splice/cetera/sqoop/BONUS1/bonus_splice_ddl.txt','r') as f:
             dtype = dtype.upper().replace('NUMERIC',SPLICE_TO_HIVE_DTYPE_MAP['NUMERIC'])
             dtype = dtype.upper().replace('INTEGER',SPLICE_TO_HIVE_DTYPE_MAP['INTEGER'])
             col = col.strip('"')
+            all_cols.append(col)
             col_dtype_tokens = col + ' ' + dtype
             ddl_token_lst.append(col_dtype_tokens)
