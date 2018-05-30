@@ -17,16 +17,27 @@ import logging
 import textwrap
 
 ddl_dir='hive_ddl'
+cdc_query_dir='hive-query'
+stg_ins_query_dir='ins-stg-hive-query'
 shutil.rmtree(ddl_dir)
+shutil.rmtree(cdc_query_dir)
+shutil.rmtree(stg_ins_query_dir)
 ## create directories
 if not os.path.exists(ddl_dir):
        os.makedirs(ddl_dir)
+
+if not os.path.exists(cdc_query_dir):
+       os.makedirs(cdc_query_dir)
+
+if not os.path.exists(stg_ins_query_dir):
+       os.makedirs(stg_ins_query_dir)
 ## External Table generator
 def hive_ddl_generator(tbl_type,ddl_tokens):
     ddl_tokens = ddl_tokens[:]
     schema,table=ddl_tokens[3].split('.')
     create_str = ' '.join(ddl_tokens[0:3])
     last_col_str = ddl_tokens[-1]
+    hive_audit_cols = '''\nINSERT_LOAD_TS TIMESTAMP,\nLOAD_USR VARCHAR(20),\nLST_UPDATE_TS TIMESTAMP,\nLST_UPDATE_USR VARCHAR(20)'''
     opt_hive_properties_str = '''\n)\nROW FORMAT DELIMITED\nFIELDS TERMINATED BY '|'\nSTORED AS PARQUET\nTBLPROPERTIES ("auto.purge"="true");\n\n'''
     hst_stg_hive_properties_str = '''\n)\nROW FORMAT DELIMITED\nFIELDS TERMINATED BY '|'\nSTORED AS PARQUET;\n\n'''
     ext_hive_properties_str = "\n)\nROW FORMAT DELIMITED\nFIELDS TERMINATED BY '|'\nSTORED AS TEXTFILE\nLOCATION '/data/FLZ/import/sqoop/" + schema + "/" + table + "'" + ";" +"\n\n" 
@@ -41,7 +52,8 @@ def hive_ddl_generator(tbl_type,ddl_tokens):
             for i in ddl_tokens:
                 h.write(i + ',' + '\n')
             h.write(last_col_str + ',' + '\n')
-            h.write('REC_NPK_HASH_VALUE' + ' ' + 'BIGINT')
+            h.write('REC_NPK_HASH_VALUE' + ' ' + 'BIGINT' + ',')
+            h.write(hive_audit_cols)
             h.write(opt_hive_properties_str)
     elif tbl_type == 'HST':
        hst_ddl_file = 'hive_hst_tables_ddl.hql'
@@ -54,7 +66,8 @@ def hive_ddl_generator(tbl_type,ddl_tokens):
             for i in ddl_tokens:
                 k.write(i + ',' + '\n')
             k.write(last_col_str + ',' + '\n')
-            k.write('REC_NPK_HASH_VALUE' + ' ' + 'BIGINT')
+            k.write('REC_NPK_HASH_VALUE' + ' ' + 'BIGINT' + ',')
+            k.write(hive_audit_cols)
             k.write(hst_stg_hive_properties_str)
     elif tbl_type == 'STG':
        stg_ddl_file = 'hive_stg_tables_ddl.hql'
@@ -88,21 +101,50 @@ def hive_ddl_generator(tbl_type,ddl_tokens):
     else:
        pass
 ## Internal Table Generator
-def hive_cdc_query_generator(keys,ddl_tokens):
+def hive_cdc_query_generator(keys,ddl_tokens,in_ddl_token_lst):
+    all_ddl_token = in_ddl_token_lst[:]
+    schema,table=all_ddl_token[3].split('.')
+    qry_file_name = 'hive-query-' + schema + '-' + table + '.' + 'hql'
+    ins_qry_file_name = 'insert-stg-' + schema + '-' + table + '.' + 'hql'
+    stg_table = schema + '.' + 'STG_' + table + ' ' + 'A'
+    opt_table = schema + '.' + 'OPT_' + table + ' ' + 'B'
+    ext_table = schema + '.' + 'EXT_' + table + ' ' + 'A'
+    join_clause = 'LEFT JOIN'
+    from_clause = 'FROM '
+    where_clause = 'WHERE '
     local_ddl_tokens = ddl_tokens[:]
     local_keys = keys[:]
+    join_keys_on_clause = ['A.' + x + ' = ' + 'B.' + x for x in local_keys]
+    join_keys_on_clause_str = ' AND '.join(join_keys_on_clause)
     hash_lst = [ x for x in local_ddl_tokens if x not in local_keys ]
-    hash_col_alias = 'HASH' + '(' + ','.join(hash_lst) + ')' + ' ' + 'AS' + ' ' + 'REC_NPK_HASH_VALUE' 
-    print(hash_lst)
-    print(hash_col_alias)
-    print('\n')
-    ## some code
-
+    stg_hash_lst = ['A.' + x for x in hash_lst]
+    hash_col_alias = 'HASH' + '(' + ','.join(stg_hash_lst) + ')' + ' ' + 'AS' + ' ' + 'REC_NPK_HASH_VALUE' 
+    hash_col_join = hash_col_alias.rstrip(' AS REC_NPK_HASH_VALUE')
+    ins_hive_side_audit_cols = '''\n,CURRENT_TIMESTAMP AS INSERT_LOAD_TS\n,'' AS LOAD_USR\n,NULL AS LST_UPDATE_TS\n,'' AS LST_UPDATE_USR\n,NULL AS LST_DELETE_TS\n,'' AS LST_DELETE_USR'''
+    upd_hive_side_audit_cols = '''\n,NULL AS INSERT_LOAD_TS\n,'' AS LOAD_USR\n,CURRENT_TIMESTAMP AS LST_UPDATE_TS\n,'' AS LST_UPDATE_USR\n,NULL AS LST_DELETE_TS\n,'' AS LST_DELETE_USR'''
+    ins_sel_col_lst = ['A.' + x for x in local_ddl_tokens]
+    ins_sel_col_lst_str = '\n,'.join(ins_sel_col_lst)
+    if len(local_keys) > 0:
+       with open(os.path.join('/home/splice/cetera/sqoop/BONUS1/hive-query',qry_file_name),'w') as d:
+          d.write('SELECT ' + ins_sel_col_lst_str)
+          d.write('\n,A.REC_NPK_HASH_VALUE')
+          d.write(ins_hive_side_audit_cols)
+          d.write('\n' + from_clause + stg_table + ' ' + join_clause + ' ' + opt_table + ' ' + 'ON' + ' ' + join_keys_on_clause_str + '\n' + where_clause + 'A.' + local_keys[0] + ' IS NULL' + '\n' + 'UNION ALL')
+          d.write('\nSELECT ' + ins_sel_col_lst_str)
+          d.write('\n,A.REC_NPK_HASH_VALUE')
+          d.write(upd_hive_side_audit_cols)
+          d.write('\n' + from_clause + stg_table + ' ' + join_clause + ' ' + opt_table + ' ' + 'ON' + ' ' + join_keys_on_clause_str + '\n' + where_clause + 'A.REC_NPK_HASH_VALUE' + '<>' + 'B.REC_NPK_HASH_VALUE')
+       with open(os.path.join('/home/splice/cetera/sqoop/BONUS1/ins-stg-hive-query',ins_qry_file_name),'w') as j:
+          j.write('INSERT INTO ' + schema + '.' + 'STG_' + table + '\n')
+          j.write('SELECT ' + ins_sel_col_lst_str)
+          j.write('\n,' + hash_col_alias)
+          j.write('\n' + from_clause + ext_table)
+    else:
+       pass
+         
 
 ## Splice-Hive data type mappings
 SPLICE_TO_HIVE_DTYPE_MAP = {'DATE':'TIMESTAMP','BLOB':'BINARY','CLOB':'STRING','TEXT':'STRING','NUMERIC':'DECIMAL','INTEGER':'INT'}
-
-
 
 if len(sys.argv) != 2:
    print("Please pass right number of arguments- Usage : <script> splice-ddl-file")
@@ -132,8 +174,8 @@ with open('/home/splice/cetera/sqoop/BONUS1/bonus_splice_ddl.txt','r') as f:
             hive_ddl_generator('OPT',ddl_token_lst)
             hive_ddl_generator('STG',ddl_token_lst)
             hive_ddl_generator('EXT',ddl_token_lst)
+            hive_cdc_query_generator(key_cols,all_cols,ddl_token_lst)
             del ddl_token_lst[:]
-            hive_cdc_query_generator(key_cols,all_cols)
             del key_cols[:]
             del all_cols[:]
 #            ext_str=")\nROW FORMAT DELIMITED\nFIELDS TERMINATED BY '|'\nSTORED AS TEXTFILE\nLOCATION '/data/FLZ/import/sqoop/" + SCHEMA + "/" + TABLE + "';\n"
