@@ -27,5 +27,5 @@
 27. How to generate a random Decimal number between two numbers and a given prec and scale ?
 28. How to generate a randon string of given length in python ?
 29. How to replace all occurences of a character in a string with other character ?
-30. 
+30. How to 
 
