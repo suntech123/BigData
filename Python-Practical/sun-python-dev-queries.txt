@@ -22,5 +22,10 @@
 22. How to strip double quotes around string literals in python ?
 23. How to create an empty set in python ?
 24. How to remove in most pythonic way all the elements that occur in one list from another ? --hint list comprehensions
-25. 
+25. How to reverse a string/list in python ?
+26. How to generate a random integer in python between given two integers ?
+27. How to generate a random Decimal number between two numbers and a given prec and scale ?
+28. How to generate a randon string of given length in python ?
+29. How to replace all occurences of a character in a string with other character ?
+30. 
 
