@@ -27,5 +27,18 @@
 27. How to generate a random Decimal number between two numbers and a given prec and scale ?
 28. How to generate a randon string of given length in python ?
 29. How to replace all occurences of a character in a string with other character ?
-30. How to 
+30. How to make a function accept default value for an argument ?
+31. How to make an argument to accept variable number of arguments in python functions ?
+32. How to pass a list to a function and reverse it without reversing the actual list ?
+33. How to declare a global variable inside function body in python ?
+34. What are required arguments in python function ? 
+35. What are keyword arguments in python function and what are benefits of using them ?
+36. What are default function arguments ?
+37. What are different approaches to design a function with optional parameters ?
+38. If we use variable argument functions. What will be rules for declaring other function parameters ?
+39. What is the meaning of * character in variable length arguments ?
+40. How to write explicit types on functional parameters ?
+41. What is partial function concept in python ?
+42. How to write recursive functions in python ? What is tail recursion ? What are implication of using recursive functions ?
+43. How to handle exceptions in Python code block ?
 
