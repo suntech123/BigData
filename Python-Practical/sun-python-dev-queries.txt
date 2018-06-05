@@ -41,4 +41,23 @@
 41. What is partial function concept in python ?
 42. How to write recursive functions in python ? What is tail recursion ? What are implication of using recursive functions ?
 43. How to handle exceptions in Python code block ?
+44. What is syntax of creating a dictionary in python ?
+45. How to create an empty dictionary ?
+46. Is it possible to change dictionary key ?
+47. How to create dictionary with keys data type as int, float, string and other python objects ?
+48. How to create dictionary having keys or values as lists, tuples or sets or some other dictionaries ?
+49. What will happen if we try to access keys that are not existing in dictionary ?
+50. What is syntax of accessing a value in a dictionary ?
+51. How to delete an item from a dictionary ?
+52. How to delete an entire dictionary ?
+53. How to add an item in a dictionary ?
+54. How to get total number of items present in a dictionary ?
+55. How to convert a dictionary object to string in python ?
+56. How to remove all the items from a dictionary in python ?
+57. How to use dictionary function 'get()' and how it is different from accessing item with square brackets ?
+58. What does items() method return on a dictionary what is return object type ?
+59. How to get all the keys from a dictionary ? --hint d.keys()
+60. How to get all the values from a dictionary ? -- hint d.values()
+61. What does max(dict) and min(dict) functions return on dictionary ?
+62. How to convert a list or tuple to dictionary in python ?
 
