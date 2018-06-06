@@ -60,4 +60,17 @@
 60. How to get all the values from a dictionary ? -- hint d.values()
 61. What does max(dict) and min(dict) functions return on dictionary ?
 62. How to convert a list or tuple to dictionary in python ?
+63. How to copy a dictionary to another ? What is difference between d2 = d1 vs d2 = d1.copy() ?
+64. What is the exact signature of d.get() dictionary method ? --hint : it takes two parameters
+65. What is dictionary method "setdefault" used for ? What is exact syntax ? --hint : it takes two parameters
+66. What is dictionary method "has_key" used for ?
+67. How to add items of one dictionary to another ? What should be precautions ?  --hint : d1.update(d2)
+68. What is "pop" method on a dictionary used for ?
+69. What is best way using for loop to process dictionary items ?
+70. What is "iteritems" method used for a dictionary ? When should we use "items" vs "iteritems" ?
+71. What is "iterkeys" and "itervalues" methods used for in Python ?
+72. How to create a dictionary from two lists -- 1) Using for loop  2) Using zip, list comprehension and dict()  ?
+73. What are two common methods to force an ordering on the keys of a dictionary ?
+      1. creating OrderedDict             2. Use sorted methods on keys 
+74. What is the performance impact of item retrieval as the size of Python dictionary increases to very very large ?
 
