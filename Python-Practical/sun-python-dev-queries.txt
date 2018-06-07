@@ -1,7 +1,7 @@
 
 1. How to check if a line is blank while reading file ?
-2. How to remove a substring from a string ?
-3. How to insert element at a given index in a list ?
+2. How to remove a substring from a string ? --- hint : use string method 'replace' . Write exact syntax for replace
+3. How to insert element at a given index in a list ?  --- hint:insert method. Add element as last item with 'insert' method ?
 5. How to remove indentation from a multiline string ?
 6. How to define a function which takes a sequence as parameter ?
 7. How to remove multiple spaces to monospace in a string?
@@ -72,4 +72,8 @@
 72. How to create a dictionary from two lists -- 1) Using for loop  2) Using zip, list comprehension and dict()  ?
 73. What are two common methods to force an ordering on the keys of a dictionary - 1) OrderedDict  2) Use sorted methods on keys 
 74. What is the performance impact of item retrieval as the size of Python dictionary increases to very very large ?
+75. What is the difference between print function in Python 2.x and Python 3.x ?
+         --- The arguments of the print function are the following ones:
+             print(value1, ..., sep=' ', end='\n', file=sys.stdout, flush=False)
+76.  
 
