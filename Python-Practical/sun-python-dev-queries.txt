@@ -4,9 +4,9 @@
 3. How to insert element at a given index in a list ?  --- hint:insert method. Add element as last item with 'insert' method ?
 5. How to remove indentation from a multiline string ?
 6. How to define a function which takes a sequence as parameter ?
-7. How to remove multiple spaces to monospace in a string?
+7. How to remove multiple spaces to monospace in a string? --- hint: re.sub(' +',' ',line)
 8. How to add elements of one list to other ?
-9. What is the difference between append and extend list methods ?
+9. What is the difference between append and extend methods? --hint: a.extend(78) => TypeError: 'int' object is not iterable
 10. How to replace special characters in a Python string ?
 11. How to create a directory in python ?
 12. How to create file path from variables ?
