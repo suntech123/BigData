@@ -75,5 +75,5 @@
 75. What is the difference between print function in Python 2.x and Python 3.x ?
          --- The arguments of the print function are the following ones:
              print(value1, ..., sep=' ', end='\n', file=sys.stdout, flush=False)
-76.  
+76. What we mean by context managers in Python ? 
 
