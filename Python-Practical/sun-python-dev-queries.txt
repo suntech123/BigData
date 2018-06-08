@@ -13,7 +13,7 @@
 13. How to empty a list in python ?
 14. How to use range function in python ?
 15. How to delete a specific element from python list based on index ?
-16. How can I open multiple files using "with open" in Python ?  --- only supported python 2.7.x onward
+16. How can I open multiple files using "with open" in Python ?  -- python 2.7.x onward --hint use comma(,) between open clauses
 17. How to delete a file or folder in Python ?
 18. How to concatenate string literals and string variables or only string literals in Python ?
 19. How to pass collection data type to a function in python so that it is passed by value and not by refernece ?
