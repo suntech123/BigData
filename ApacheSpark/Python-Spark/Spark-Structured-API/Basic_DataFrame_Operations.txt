@@ -1,0 +1,85 @@
+## Reading a pipe delimited csv file into a spark data frame
+
+>>> med1 = spark.read.csv("/data/spark_data/med_test.csv",header=True,sep='|',inferSchema=True)
+   
+## Printing the columns from spark data frame
+
+>>> med1.columns                                                                
+['HCPCS Code', 'HCPCS Description', 'HCPCS Drug Indicator', 'Place of Service', 'Number of Providers', 'Number of Services', 'Number of Unique Beneficiary/Provider Interactions', 'Number of Distinct Medicare Beneficiary/Per Day Services', 'Average Submitted Charge Amount', 'Average Medicare Allowed Amount', 'Average Medicare Payment Amount', 'Average Medicare Standardized Payment Amount']
+   
+## Printing DataFrame schema
+
+>>> med1.printSchema()
+root
+ |-- HCPCS Code: string (nullable = true)
+ |-- HCPCS Description: string (nullable = true)
+ |-- HCPCS Drug Indicator: string (nullable = true)
+ |-- Place of Service: string (nullable = true)
+ |-- Number of Providers: string (nullable = true)
+ |-- Number of Services: string (nullable = true)
+ |-- Number of Unique Beneficiary/Provider Interactions: string (nullable = true)
+ |-- Number of Distinct Medicare Beneficiary/Per Day Services: string (nullable = true)
+ |-- Average Submitted Charge Amount: string (nullable = true)
+ |-- Average Medicare Allowed Amount: string (nullable = true)
+ |-- Average Medicare Payment Amount: string (nullable = true)
+ |-- Average Medicare Standardized Payment Amount: string (nullable = true)
+
+
+
+## Renaming columns of DataFrame med1
+
+>>> med2 = med1.withColumnRenamed("HCPCS Code","HCPCS_Code").withColumnRenamed("HCPCS Description","HCPCS_Description").withColumnRenamed("HCPCS Drug Indicator","HCPCS_Drug_Indicator").withColumnRenamed("Place of Service","Place_of_Service").withColumnRenamed("Number of Providers","Number_of_Providers").withColumnRenamed("Number of Services","Number_of_Services").withColumnRenamed("Number of Unique Beneficiary/Provider Interactions","Number_of_Unique_Beneficiary/Provider_Interactions").withColumnRenamed("Number of Distinct Medicare Beneficiary/Per Day Services","Number_of_Distinct_Medicare_Beneficiary/Per_Day_Services").withColumnRenamed("Average Submitted Charge Amount","Average_Submitted_Charge_Amount").withColumnRenamed("Average Medicare Allowed Amount","Average_Medicare_Allowed_Amount").withColumnRenamed("Average Medicare Payment Amount","Average_Medicare_Payment_Amount").withColumnRenamed("Average Medicare Standardized Payment Amount","Average_Medicare_Standardized_Payment_Amount")
+
+
+
+
+## Printing Schema after column renamed
+
+>>> med2.printSchema()
+root
+ |-- HCPCS_Code: string (nullable = true)
+ |-- HCPCS_Description: string (nullable = true)
+ |-- HCPCS_Drug_Indicator: string (nullable = true)
+ |-- Place_of_Service: string (nullable = true)
+ |-- Number_of_Providers: string (nullable = true)
+ |-- Number_of_Services: string (nullable = true)
+ |-- Number_of_Unique_Beneficiary/Provider_Interactions: string (nullable = true)
+ |-- Number_of_Distinct_Medicare_Beneficiary/Per_Day_Services: string (nullable = true)
+ |-- Average_Submitted_Charge_Amount: string (nullable = true)
+ |-- Average_Medicare_Allowed_Amount: string (nullable = true)
+ |-- Average_Medicare_Payment_Amount: string (nullable = true)
+ |-- Average_Medicare_Standardized_Payment_Amount: string (nullable = true)
+
+
+
+
+
+## Sample replacing comma(,) and dollar($) chaacter from numeric string value columns
+
+>>> med2.select("Average_Submitted_Charge_Amount",regexp_replace(med2.Average_Submitted_Charge_Amount,',|\$','').alias("Average_Submitted_Charge_Amount")).show()
+
++-------------------------------+-------------------------------+               
+|Average_Submitted_Charge_Amount|Average_Submitted_Charge_Amount|
++-------------------------------+-------------------------------+
+|                      $7,908.15|                        7908.15|
+|                      $1,709.57|                        1709.57|
+|                      $1,145.43|                        1145.43|
+|                      $1,308.12|                        1308.12|
+|                      $1,000.69|                        1000.69|
+|                        $915.08|                         915.08|
+|                        $618.62|                         618.62|
+|                        $636.01|                         636.01|
+|                      $1,900.05|                        1900.05|
+|                      $1,456.79|                        1456.79|
+|                      $1,424.61|                        1424.61|
+|                        $679.22|                         679.22|
+|                      $1,150.48|                        1150.48|
+|                        $666.40|                         666.40|
+|                        $699.53|                         699.53|
+|                        $934.58|                         934.58|
+|                        $934.03|                         934.03|
+|                        $668.10|                         668.10|
+|                        $630.93|                         630.93|
+|                      $1,202.73|                        1202.73|
++-------------------------------+-------------------------------+
+only showing top 20 rows
