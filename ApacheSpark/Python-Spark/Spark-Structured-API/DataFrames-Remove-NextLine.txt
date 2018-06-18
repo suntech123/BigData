@@ -1,0 +1,21 @@
+============= Use below construct to remove next line chars from field values======================
+
+DataSet for this operation can be located under Data in same directory - sun_dbl.csv
+
+
+
+>>> dbc2.select(regexp_replace(dbc2.Address,'\n|\r\n',' ')).where(dbc2.Address.startswith('1730')).show(20,False)
++----------------------------------------------------+
+|regexp_replace(Address,
+|
+,  )                    |
++----------------------------------------------------+
+|1730 PARK STREET SUITE 211 NAPERVILLE, IL 60563     |
+|1730 PARK STREET SUITE 211 NAPERVILLE, IL 60563     |
+|1730 PARK STREET SUITE 211 NAPERVILLE, IL 60563     |
+|1730 PARK STREET SUITE 211 NAPERVILLE, IL 60563     |
+|1730 PARK STREET SUITE 124 NAPERVILLE, IL 60563     |
+|1730 PARK STREET SUITE 124 NAPERVILLE, IL 60563     |
+|1730 PARK STREET SUITE 124 NAPERVILLE, IL 60563     |
+|1730 PARK STREET SUITE 124 NAPERVILLE, IL 60563     |
++----------------------------------------------------+
