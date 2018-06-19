@@ -1,0 +1,12 @@
+======================== Renaming a column ===============================
+
+>>> dbl2=spark.read.csv("/user/kumarsu/sun_dbl.csv",header=True,sep=',',ignoreLeadingWhiteSpace=True,ignoreTrailingWhiteSpace=True,inferSchema=True,multiLine=True)
+
+>>> dbl2.columns
+['\xef\xbb\xbfcvrepnum', 'repfname', 'replname', 'regname', 'Address', 'acctl', 'adj', 'affl', 'ajchb', 'bor', 'c2cso', 'c2cst', 'coned', 'crd', 'crdch', 'cyber', 'dcomp', 'dta', 'enves', 'eo', 'fsi', 'nasd', 'nasdb', 'nasdp', 'neg', 'pass', 'pba', 'petf', 'pretf', 'pschg', 'ren', 'strn', 'tfpg', 'web1', 'wmu', 'xpro', 'payperiod', 'total']
+
+------------------------------------------------------------------------------------------------------------------------------
+
+>>> dbl3=dbl2.withColumnRenamed('\xef\xbb\xbfcvrepnum','cvrepnum')
+>>> dbl3.columns
+['cvrepnum', 'repfname', 'replname', 'regname', 'Address', 'acctl', 'adj', 'affl', 'ajchb', 'bor', 'c2cso', 'c2cst', 'coned', 'crd', 'crdch', 'cyber', 'dcomp', 'dta', 'enves', 'eo', 'fsi', 'nasd', 'nasdb', 'nasdp', 'neg', 'pass', 'pba', 'petf', 'pretf', 'pschg', 'ren', 'strn', 'tfpg', 'web1', 'wmu', 'xpro', 'payperiod', 'total']
