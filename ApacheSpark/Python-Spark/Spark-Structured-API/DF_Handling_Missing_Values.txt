@@ -1,0 +1,38 @@
+======================================================================================================================================
+
+class pyspark.sql.DataFrameNaFunctions - Functionality for working with missing data in DataFrame.
+
+======================================================================================================================================
+
+>>> dbl2.select(dbl2.cvrepnum,dbl2.repfname,dbl2.replname,dbl2.regname,regexp_replace(dbl2.Address,'\n|\r\n',' ').alias('Address'),dbl2.acctl).where(dbl2.Address.startswith('1730')).show(20,False)
++--------+--------+----------+-----------+----------------------------------------------------+-----+
+|cvrepnum|repfname|replname  |regname    |Address                                             |acctl|
++--------+--------+----------+-----------+----------------------------------------------------+-----+
+|0129    |JOHN    |AYOTTE    |MID AMERICA|1730 PARK STREET SUITE 211 NAPERVILLE, IL 60563     |null |
+|0129    |JOHN    |AYOTTE    |MID AMERICA|1730 PARK STREET SUITE 211 NAPERVILLE, IL 60563     |null |
+|0129    |JOHN    |AYOTTE    |MID AMERICA|1730 PARK STREET SUITE 211 NAPERVILLE, IL 60563     |null |
+|0129    |JOHN    |AYOTTE    |MID AMERICA|1730 PARK STREET SUITE 211 NAPERVILLE, IL 60563     |null |
+|8516    |PAUL    |STABROWSKI|MID AMERICA|1730 PARK STREET SUITE 124 NAPERVILLE, IL 60563     |null |
+|8516    |PAUL    |STABROWSKI|MID AMERICA|1730 PARK STREET SUITE 124 NAPERVILLE, IL 60563     |null |
+|8516    |PAUL    |STABROWSKI|MID AMERICA|1730 PARK STREET SUITE 124 NAPERVILLE, IL 60563     |null |
+|8516    |PAUL    |STABROWSKI|MID AMERICA|1730 PARK STREET SUITE 124 NAPERVILLE, IL 60563     |null |
++--------+--------+----------+-----------+----------------------------------------------------+-----+
+
+
+After Using fill(value, subset=None) :
+            
+            
+>>> dbl2.select(dbl2.cvrepnum,dbl2.repfname,dbl2.replname,dbl2.regname,regexp_replace(dbl2.Address,'\n|\r\n',' ').alias('Address'),dbl2.acctl).where(dbl2.Address.startswith('1730')).na.fill({'acctl' : 'unknown'}).show(20,False)
++--------+--------+----------+-----------+----------------------------------------------------+-------+
+|cvrepnum|repfname|replname  |regname    |Address                                             |acctl  |
++--------+--------+----------+-----------+----------------------------------------------------+-------+
+|0129    |JOHN    |AYOTTE    |MID AMERICA|1730 PARK STREET SUITE 211 NAPERVILLE, IL 60563     |unknown|
+|0129    |JOHN    |AYOTTE    |MID AMERICA|1730 PARK STREET SUITE 211 NAPERVILLE, IL 60563     |unknown|
+|0129    |JOHN    |AYOTTE    |MID AMERICA|1730 PARK STREET SUITE 211 NAPERVILLE, IL 60563     |unknown|
+|0129    |JOHN    |AYOTTE    |MID AMERICA|1730 PARK STREET SUITE 211 NAPERVILLE, IL 60563     |unknown|
+|8516    |PAUL    |STABROWSKI|MID AMERICA|1730 PARK STREET SUITE 124 NAPERVILLE, IL 60563     |unknown|
+|8516    |PAUL    |STABROWSKI|MID AMERICA|1730 PARK STREET SUITE 124 NAPERVILLE, IL 60563     |unknown|
+|8516    |PAUL    |STABROWSKI|MID AMERICA|1730 PARK STREET SUITE 124 NAPERVILLE, IL 60563     |unknown|
+|8516    |PAUL    |STABROWSKI|MID AMERICA|1730 PARK STREET SUITE 124 NAPERVILLE, IL 60563     |unknown|
++--------+--------+----------+-----------+----------------------------------------------------+-------+
+            
