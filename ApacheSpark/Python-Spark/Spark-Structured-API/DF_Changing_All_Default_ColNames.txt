@@ -1,0 +1,45 @@
+>>> rpt_8_0 = spark.read.csv("/user/kumarsu/brok_ops_data_files/RPT_08.0_06_19_18.csv",header=False, sep=',',ignoreLeadingWhiteSpace=True, ignoreTrailingWhiteSpace=True,multiLine=True,inferSchema=True)
+
+>>> rpt_8_0.columns
+['_c0', '_c1', '_c2', '_c3', '_c4', '_c5', '_c6', '_c7', '_c8', '_c9', '_c10', '_c11', '_c12', '_c13']
+
+
+>>> rpt_8_0.printSchema()
+root
+ |-- _c0: string (nullable = true)
+ |-- _c1: integer (nullable = true)
+ |-- _c2: string (nullable = true)
+ |-- _c3: string (nullable = true)
+ |-- _c4: string (nullable = true)
+ |-- _c5: string (nullable = true)
+ |-- _c6: double (nullable = true)
+ |-- _c7: integer (nullable = true)
+ |-- _c8: integer (nullable = true)
+ |-- _c9: integer (nullable = true)
+ |-- _c10: integer (nullable = true)
+ |-- _c11: integer (nullable = true)
+ |-- _c12: string (nullable = true)
+ |-- _c13: string (nullable = true)
+
+### Now using selectExpr DataFrame method to change all in SQL expression
+
+>>> rpt1_8_0 =rpt_8_0.selectExpr('_c0 AS REQUEST_TYPE','_c1 AS WORK_ITEM_NUM','_c2 AS ACCOUNT_STATUS','_c3 AS ACCOUNT_NUMBER','_c4 AS BROKER_DEALER','_c5 AS SLA_STATUS','_c6 AS SLA_DURATION','_c7 AS UNDER_30_MINS','_c8 AS 30_45_MINS','_c9 AS 45_60_MINS','_c10 AS 60_90_MINS','_c11 AS OVER_90_MINS','_c12 AS SLA_START_TIME','_c13 AS SLA_END_TIME')
+
+
+>>> rpt1_8_0.printSchema()
+root
+ |-- REQUEST_TYPE: string (nullable = true)
+ |-- WORK_ITEM_NUM: integer (nullable = true)
+ |-- ACCOUNT_STATUS: string (nullable = true)
+ |-- ACCOUNT_NUMBER: string (nullable = true)
+ |-- BROKER_DEALER: string (nullable = true)
+ |-- SLA_STATUS: string (nullable = true)
+ |-- SLA_DURATION: double (nullable = true)
+ |-- UNDER_30_MINS: integer (nullable = true)
+ |-- 30_45_MINS: integer (nullable = true)
+ |-- 45_60_MINS: integer (nullable = true)
+ |-- 60_90_MINS: integer (nullable = true)
+ |-- OVER_90_MINS: integer (nullable = true)
+ |-- SLA_START_TIME: string (nullable = true)
+ |-- SLA_END_TIME: string (nullable = true)
+
