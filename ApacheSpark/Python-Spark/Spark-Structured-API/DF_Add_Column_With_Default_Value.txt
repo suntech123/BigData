@@ -1,0 +1,58 @@
+>>> rpt2_8_0=rpt1_8_0.withColumn('TEAM',lit(100))
+
+>>> rpt2_8_0.select(rpt2_8_0.TEAM).show(5)
++----+
+|TEAM|
++----+
+| 100|
+| 100|
+| 100|
+| 100|
+| 100|
++----+
+only showing top 5 rows
+
+
+### By default column is added at last position
+
+>>> rpt2_8_0.printSchema()
+root
+ |-- REQUEST_TYPE: string (nullable = true)
+ |-- WORK_ITEM_NUM: integer (nullable = true)
+ |-- ACCOUNT_STATUS: string (nullable = true)
+ |-- ACCOUNT_NUMBER: string (nullable = true)
+ |-- BROKER_DEALER: string (nullable = true)
+ |-- SLA_STATUS: string (nullable = true)
+ |-- SLA_DURATION: double (nullable = true)
+ |-- UNDER_30_MINS: integer (nullable = true)
+ |-- 30_45_MINS: integer (nullable = true)
+ |-- 45_60_MINS: integer (nullable = true)
+ |-- 60_90_MINS: integer (nullable = true)
+ |-- OVER_90_MINS: integer (nullable = true)
+ |-- SLA_START_TIME: string (nullable = true)
+ |-- SLA_END_TIME: string (nullable = true)
+ |-- TEAM: integer (nullable = false)
+
+
+### In case we want it at some specified position (eg at first position) then we need to use select or selectExpr API on DataFrame
+
+>>> rpt2_8_0=rpt1_8_0.withColumn('TEAM',lit(100)).selectExpr('TEAM','REQUEST_TYPE','WORK_ITEM_NUM','ACCOUNT_STATUS','ACCOUNT_NUMBER','BROKER_DEALER','SLA_STATUS','SLA_DURATION','UNDER_30_MINS','30_45_MINS','45_60_MINS','60_90_MINS','OVER_90_MINS','SLA_START_TIME','SLA_END_TIME')
+
+
+>>> rpt2_8_0.printSchema()
+root
+ |-- TEAM: integer (nullable = false)
+ |-- REQUEST_TYPE: string (nullable = true)
+ |-- WORK_ITEM_NUM: integer (nullable = true)
+ |-- ACCOUNT_STATUS: string (nullable = true)
+ |-- ACCOUNT_NUMBER: string (nullable = true)
+ |-- BROKER_DEALER: string (nullable = true)
+ |-- SLA_STATUS: string (nullable = true)
+ |-- SLA_DURATION: double (nullable = true)
+ |-- UNDER_30_MINS: integer (nullable = true)
+ |-- 30_45_MINS: integer (nullable = true)
+ |-- 45_60_MINS: integer (nullable = true)
+ |-- 60_90_MINS: integer (nullable = true)
+ |-- OVER_90_MINS: integer (nullable = true)
+ |-- SLA_START_TIME: string (nullable = true)
+ |-- SLA_END_TIME: string (nullable = true)
