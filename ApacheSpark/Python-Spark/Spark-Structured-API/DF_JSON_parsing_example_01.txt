@@ -1,0 +1,168 @@
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+File : prize.json
+Location : Under Data folder
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+### Create a DataFrame from json file
+
+>>> prizes_df1 = spark.read.json("/data/prize.json")
+18/06/22 13:55:32 WARN streaming.FileStreamSink: Error while looking for metadata directory.
+18/06/22 13:55:32 WARN streaming.FileStreamSink: Error while looking for metadata directory.
+
+
+### Print the column list of the data frame
+
+>>> prizes_df1.columns
+['prizes']
+>>> prizes_df1.dtypes
+[('prizes', 'array<struct<category:string,laureates:array<struct<firstname:string,id:string,motivation:string,share:string,surname:string>>,overallMotivation:string,year:string>>')]
+
+
+
+### Print schema of data frame
+
+>>> prizes_df1.printSchema()
+root
+ |-- prizes: array (nullable = true)
+ |    |-- element: struct (containsNull = true)
+ |    |    |-- category: string (nullable = true)
+ |    |    |-- laureates: array (nullable = true)
+ |    |    |    |-- element: struct (containsNull = true)
+ |    |    |    |    |-- firstname: string (nullable = true)
+ |    |    |    |    |-- id: string (nullable = true)
+ |    |    |    |    |-- motivation: string (nullable = true)
+ |    |    |    |    |-- share: string (nullable = true)
+ |    |    |    |    |-- surname: string (nullable = true)
+ |    |    |-- overallMotivation: string (nullable = true)
+ |    |    |-- year: string (nullable = true)
+
+ 
+ 
+### Deflating the topmost tag
+>>> from pyspark.sql.functions import *
+>>> prizes_df2 = prizes_df1.select(explode(prizes_df1.prizes).alias('prizes'))
+
+
+
+### Printing schema again
+
+>>> prizes_df2.printSchema()
+root
+ |-- prizes: struct (nullable = true)
+ |    |-- category: string (nullable = true)
+ |    |-- laureates: array (nullable = true)
+ |    |    |-- element: struct (containsNull = true)
+ |    |    |    |-- firstname: string (nullable = true)
+ |    |    |    |-- id: string (nullable = true)
+ |    |    |    |-- motivation: string (nullable = true)
+ |    |    |    |-- share: string (nullable = true)
+ |    |    |    |-- surname: string (nullable = true)
+ |    |-- overallMotivation: string (nullable = true)
+ |    |-- year: string (nullable = true)
+
+ 
+ 
+ 
+>>> prizes_df3 = prizes_df2.select(prizes_df2.prizes['category'].alias('category'),explode(prizes_df2.prizes['laureates']).alias('laureates'),prizes_df2.prizes['overallMotivation'].alias('overallMotivation'),prizes_df2.prizes['year'].alias('year'))
+
+
+>>> prizes_df3.columns
+['category', 'laureates', 'overallMotivation', 'year']
+
+
+
+>>> prizes_df3.printSchema()
+root
+ |-- category: string (nullable = true)
+ |-- laureates: struct (nullable = true)
+ |    |-- firstname: string (nullable = true)
+ |    |-- id: string (nullable = true)
+ |    |-- motivation: string (nullable = true)
+ |    |-- share: string (nullable = true)
+ |    |-- surname: string (nullable = true)
+ |-- overallMotivation: string (nullable = true)
+ |-- year: string (nullable = true)
+
+ 
+
+ 
+ 
+ 
+>>> prizes_df4=prizes_df3.select(prizes_df3.category.alias('category'),prizes_df3.laureates['id'].alias('id'),prizes_df3.laureates['firstname'].alias('firstname'),prizes_df3.laureates['surname'].alias('surname'),prizes_df3.laureates['share'].alias('share'),prizes_df3.laureates['motivation'].alias('motivation'),prizes_df3.overallMotivation.alias('overallMotivation'),prizes_df3.year.alias('year')) 
+
+
+
+>>> prizes_df4.printSchema()
+root
+ |-- category: string (nullable = true)
+ |-- id: string (nullable = true)
+ |-- firstname: string (nullable = true)
+ |-- surname: string (nullable = true)
+ |-- share: string (nullable = true)
+ |-- motivation: string (nullable = true)
+ |-- overallMotivation: string (nullable = true)
+ |-- year: string (nullable = true)
+
+ 
+ 
+>>> prizes_df4.select(prizes_df4.category,prizes_df4.id,prizes_df4.firstname,prizes_df4.surname,prizes_df4.share,prizes_df4.overallMotivation,prizes_df4.year).show(20,False)
++----------+---+--------------------------------------------------------+----------+-----+-----------------+----+
+|category  |id |firstname                                               |surname   |share|overallMotivation|year|
++----------+---+--------------------------------------------------------+----------+-----+-----------------+----+
+|physics   |941|Rainer                                                  |Weiss     |2    |null             |2017|
+|physics   |942|Barry C.                                                |Barish    |4    |null             |2017|
+|physics   |943|Kip S.                                                  |Thorne    |4    |null             |2017|
+|chemistry |944|Jacques                                                 |Dubochet  |3    |null             |2017|
+|chemistry |945|Joachim                                                 |Frank     |3    |null             |2017|
+|chemistry |946|Richard                                                 |Henderson |3    |null             |2017|
+|medicine  |938|Jeffrey C.                                              |Hall      |3    |null             |2017|
+|medicine  |939|Michael                                                 |Rosbash   |3    |null             |2017|
+|medicine  |940|Michael W.                                              |Young     |3    |null             |2017|
+|literature|947|Kazuo                                                   |Ishiguro  |1    |null             |2017|
+|peace     |948|International Campaign to Abolish Nuclear Weapons (ICAN)|          |1    |null             |2017|
+|economics |949|Richard H.                                              |Thaler    |1    |null             |2017|
+|physics   |928|David J.                                                |Thouless  |2    |null             |2016|
+|physics   |929|F. Duncan M.                                            |Haldane   |4    |null             |2016|
+|physics   |930|J. Michael                                              |Kosterlitz|4    |null             |2016|
+|chemistry |931|Jean-Pierre                                             |Sauvage   |3    |null             |2016|
+|chemistry |932|Sir J. Fraser                                           |Stoddart  |3    |null             |2016|
+|chemistry |933|Bernard L.                                              |Feringa   |3    |null             |2016|
+|medicine  |927|Yoshinori                                               |Ohsumi    |1    |null             |2016|
+|literature|937|Bob                                                     |Dylan     |1    |null             |2016|
++----------+---+--------------------------------------------------------+----------+-----+-----------------+----+
+only showing top 20 rows
+
+
+>>> prizes_df4.select(prizes_df4.category,prizes_df4.id,prizes_df4.firstname,prizes_df4.surname,prizes_df4.share,prizes_df4.overallMotivation,prizes_df4.year).where(prizes_df4.category == 'physics').show(20,False)
++--------+---+------------+----------+-----+-----------------+----+
+|category|id |firstname   |surname   |share|overallMotivation|year|
++--------+---+------------+----------+-----+-----------------+----+
+|physics |941|Rainer      |Weiss     |2    |null             |2017|
+|physics |942|Barry C.    |Barish    |4    |null             |2017|
+|physics |943|Kip S.      |Thorne    |4    |null             |2017|
+|physics |928|David J.    |Thouless  |2    |null             |2016|
+|physics |929|F. Duncan M.|Haldane   |4    |null             |2016|
+|physics |930|J. Michael  |Kosterlitz|4    |null             |2016|
+|physics |919|Takaaki     |Kajita    |2    |null             |2015|
+|physics |920|Arthur B.   |McDonald  |2    |null             |2015|
+|physics |906|Isamu       |Akasaki   |3    |null             |2014|
+|physics |907|Hiroshi     |Amano     |3    |null             |2014|
+|physics |908|Shuji       |Nakamura  |3    |null             |2014|
+|physics |887|François    |Englert   |2    |null             |2013|
+|physics |888|Peter W.    |Higgs     |2    |null             |2013|
+|physics |876|Serge       |Haroche   |2    |null             |2012|
+|physics |877|David J.    |Wineland  |2    |null             |2012|
+|physics |864|Saul        |Perlmutter|2    |null             |2011|
+|physics |865|Brian P.    |Schmidt   |4    |null             |2011|
+|physics |866|Adam G.     |Riess     |4    |null             |2011|
+|physics |849|Andre       |Geim      |2    |null             |2010|
+|physics |850|Konstantin  |Novoselov |2    |null             |2010|
++--------+---+------------+----------+-----+-----------------+----+
+only showing top 20 rows
+
+
+
+>>> prizes_df4.count()
+923
