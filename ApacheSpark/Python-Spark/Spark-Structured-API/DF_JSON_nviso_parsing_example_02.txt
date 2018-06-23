@@ -546,3 +546,108 @@ df9=df8.select(df8.advisor_address\
 
 
 >>> df9.write.format('csv').mode('overwrite').option('sep','|').option('path','/data/nviso_processed').save()
+
+
+==============================================================================================================================
+
+CREATE DATABASE IF NOT EXISTS NVISO
+
+CREATE TABLE IF NOT EXISTS NVISO.PARSED_NVISO(
+advisor_address  STRING
+,advisor_email  STRING
+,advisor_key  STRING
+,advisor_name  STRING
+,advisor_phone  STRING
+,Role  STRING
+,Phone  STRING
+,Phone1  STRING
+,Prefix  STRING
+,Suffix  STRING
+,UserId  STRING
+,Twitter  STRING
+,Website  STRING
+,Facebook  STRING
+,IsActive  STRING
+,Lastname  STRING
+,LinkedIn  STRING
+,CompanyId  STRING
+,Firstname  STRING
+,Middlename  STRING
+,AddressTown  STRING
+,CompanyName  STRING
+,AddressState  STRING
+,Emailaddress  STRING
+,AddressCountry  STRING
+,AddressStreet1  STRING
+,AddressStreet2  STRING
+,AddressStreet3  STRING
+,AddressZipcode  STRING
+,BusinessUnitID  STRING
+,client_age  STRING
+,client_email  STRING
+,client_firstName  STRING
+,client_gender  STRING
+,client_lastName  STRING
+,client_lifestage  STRING
+,client_lifestageIndex  STRING
+,Attention  STRING
+,Confidence  STRING
+,Conservation  STRING
+,Emotion  STRING
+,Max_RiskTolerance  STRING
+,Min_RiskTolerance  STRING
+,anger_benchmark  STRING
+,anger_high  STRING
+,anger_low  STRING
+,disgust_benchmark  STRING
+,disgust_high  STRING
+,disgust_low  STRING
+,fear_benchmark  STRING
+,fear_high  STRING
+,fear_low  STRING
+,happiness_benchmark  STRING
+,happiness_high  STRING
+,happiness_low  STRING
+,neutral_benchmark  STRING
+,neutral_high  STRING
+,neutral_low  STRING
+,sadness_benchmark  STRING
+,sadness_high  STRING
+,sadness_low  STRING
+,score_benchmark  STRING
+,score_high_label_title  STRING
+,score_high_threshold  STRING
+,score_low_label_text  STRING
+,score_low_label_title  STRING
+,score_low_threshold  STRING
+,score_medium_label_text  STRING
+,score_medium_label_title  STRING
+,score_medium_threshold  STRING
+,surprise_benchmark  STRING
+,surprise_high  STRING
+,surprise_low  STRING
+,categoryId  STRING
+,category_name  STRING
+,category_score  STRING
+,className  STRING
+,data_x  STRING
+,data_y  STRING
+,seriesId  STRING
+,labels_categoryId  STRING
+,labels_name  STRING
+,labels_section_id  STRING
+,ER_data  STRING
+,label_id  STRING
+,sessionId  STRING
+,userid_1  STRING
+,version  STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '|'
+STORED AS TEXTFILE
+
+
+LOAD DATA INPATH '/data/nviso_processed/part-00000-e1da4757-6779-40ba-a927-488d252b6b33-c000.csv' INTO TABLE NVISO.PARSED_NVISO;
+
+
+
