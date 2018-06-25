@@ -1,0 +1,6 @@
+
+shows1 = spark.read.json("/user/kumarsu/shows.json")
+
+>>> shows2 = shows1.withColumn('genres_expl',explode(shows1.genres)).drop(shows1.genres)
+
+shows2.withColumn('episodes',shows2._embedded['episodes'])
