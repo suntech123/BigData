@@ -1,0 +1,20 @@
+
+
+spark.read.csv      ## Loads a CSV file and returns the result as a DataFrame.
+
+spark.read.format   ## format(source) --- Specifies the input data source format
+
+spark.read.jdbc     ## Construct a DataFrame representing the database table named table 
+                       accessible via JDBC URL url and connection properties.
+
+spark.read.json     ## Loads JSON files and returns the results as a DataFrame.
+
+spark.read.load     ## Loads data from a data source and returns it as a :class`DataFrame`. 
+                       If format optional parm not specified it defaults to spark parquet format.
+spark.read.option
+spark.read.options
+spark.read.orc
+spark.read.parquet
+spark.read.schema
+spark.read.table
+spark.read.text
