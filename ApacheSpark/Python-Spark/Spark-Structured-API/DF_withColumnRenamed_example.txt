@@ -1,0 +1,25 @@
+
+
+>>> med1 = spark.read.csv("/data/med_test.csv",header=True,sep='|',inferSchema=True,ignoreLeadingSpace=True,ignoreTrailingSpace=True)
+
+>>> med1.columns
+['HCPCS Code', 'HCPCS Description', 'HCPCS Drug Indicator', 'Place of Service', 'Number of Providers', 'Number of Services', 'Number of Unique Beneficiary/Provider Interactions', 'Number of Distinct Medicare Beneficiary/Per Day Services', 'Average Submitted Charge Amount', 'Average Medicare Allowed Amount', 'Average Medicare Payment Amount', 'Average Medicare Standardized Payment Amount']
+
+
+>>> med2=med1.withColumnRenamed('HCPCS Code','HCPCS_CODE')\
+.withColumnRenamed('HCPCS Description','HCPCS_DESCRIPTION')\
+.withColumnRenamed('HCPCS Drug Indicator','HCPCS_DRUG_INDICATOR')\
+.withColumnRenamed('Place of Service','PLACE_OF_SERVICE')\
+.withColumnRenamed('Number of Providers','NUMBER_OF_PROVIDERS')\
+.withColumnRenamed('Number of Services','NUMBER_OF_SERVICES')\
+.withColumnRenamed('Number of Unique Beneficiary/Provider Interactions','NUMBER_OF_UNIQUE_BENEFICIARY/PROVIDER_INTERACTIONS')\
+.withColumnRenamed('Number of Distinct Medicare Beneficiary/Per Day Services','NUMBER_OF_DISTINCT_MEDICARE_BENEFICIARY/PER_DAY_SERVICES')\
+.withColumnRenamed('Average Submitted Charge Amount','AVERAGE_SUBMITTED_CHARGE_AMOUNT')\
+.withColumnRenamed('Average Medicare Allowed Amount','AVERAGE_MEDICARE_ALLOWED_AMOUNT')\
+.withColumnRenamed('Average Medicare Payment Amount','AVERAGE_MEDICARE_PAYMENT_AMOUNT')\
+.withColumnRenamed('Average Medicare Standardized Payment Amount','AVERAGE_MEDICARE_STANDARDIZED_PAYMENT_AMOUNT')
+
+
+
+>>> med2.columns
+['HCPCS_CODE', 'HCPCS_DESCRIPTION', 'HCPCS_DRUG_INDICATOR', 'PLACE_OF_SERVICE', 'NUMBER_OF_PROVIDERS', 'NUMBER_OF_SERVICES', 'NUMBER_OF_UNIQUE_BENEFICIARY/PROVIDER_INTERACTIONS', 'NUMBER_OF_DISTINCT_MEDICARE_BENEFICIARY/PER_DAY_SERVICES', 'AVERAGE_SUBMITTED_CHARGE_AMOUNT', 'AVERAGE_MEDICARE_ALLOWED_AMOUNT', 'AVERAGE_MEDICARE_PAYMENT_AMOUNT', 'AVERAGE_MEDICARE_STANDARDIZED_PAYMENT_AMOUNT']
