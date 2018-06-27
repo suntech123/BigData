@@ -1,0 +1,50 @@
+
+
+### Checking the spark version in pyspark shell
+
+>>> spark.version
+u'2.2.0.cloudera2'
+
+
+### Creating a UDF registration object in pyspark
+
+spark.udf                        ---- Returns a UDFRegistration for UDF registration(object)
+
+>>> type(spark.udf)
+<class 'pyspark.sql.context.UDFRegistration'>
+
+
+### Creating a DF from a table.
+
+Returns the specified table as a DataFrame.
+
+>>> df.createOrReplaceTempView("table1")
+>>> df2 = spark.table("table1")
+>>> sorted(df.collect()) == sorted(df2.collect())
+True
+
+### Getting StreamingQueryManager
+
+>>> spark.streams
+<pyspark.sql.streaming.StreamingQueryManager object at 0xeee2d0>
+
+### stoping spark context
+
+SparkSession.stop()
+Stop the underlying SparkContext.
+
+=============================================================
+
+spark.sql
+spark.sparkContext
+spark.readStream
+spark.read
+spark.range
+spark.newSession
+spark.createDataFrame
+spark.conf
+spark.catalog
+spark.builder
+
+
+
