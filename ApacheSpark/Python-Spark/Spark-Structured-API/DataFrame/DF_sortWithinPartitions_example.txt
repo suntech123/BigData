@@ -1,0 +1,11 @@
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+# API Name: sortWithinPartitions(*cols,**kwargs)
+# Purpose: Returns a new DataFrame with each partition sorted by the specified column(s).
+#
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+>>> med2.sortWithinPartitions("HCPCS_CODE")
+DataFrame[HCPCS_CODE: string, HCPCS_DESCRIPTION: string, HCPCS_DRUG_INDICATOR: string, PLACE_OF_SERVICE: string, NUMBER_OF_PROVIDERS: string, NUMBER_OF_SERVICES: string, NUMBER_OF_UNIQUE_BENEFICIARY/PROVIDER_INTERACTIONS: string, NUMBER_OF_DISTINCT_MEDICARE_BENEFICIARY/PER_DAY_SERVICES: string, AVERAGE_SUBMITTED_CHARGE_AMOUNT: string, AVERAGE_MEDICARE_ALLOWED_AMOUNT: string, AVERAGE_MEDICARE_PAYMENT_AMOUNT: string, AVERAGE_MEDICARE_STANDARDIZED_PAYMENT_AMOUNT: string]
+
+
