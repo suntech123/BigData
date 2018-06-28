@@ -1,0 +1,32 @@
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+# API Name: unpersist(blocking=False)
+# Purpose: Marks the DataFrame as non-persistent, and remove all blocks for it from memory and disk.
+           Note - blocking default has changed to False to match Scala in 2.0.
+#
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+### If we are done with the DataFrame we can unpersist it so that its memory can be reclaimed
+
+>>> person1.is_cached
+True
+
+>>> person1.unpersist()
+DataFrame[id: bigint, name: string]
+>>> person1.is_cached
+False
+
+>>> person1.show()
++---+------+
+| id|  name|
++---+------+
+|  1| sunil|
+|  2|  Anil|
+|  3| Salil|
+|  4|Rakesh|
++---+------+
+
+>>> person1.is_cached
+False
+
