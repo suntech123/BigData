@@ -1,0 +1,18 @@
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+# API Name: stat
+# Purpose: Returns a DataFrameStatFunctions for statistic functions.
+#
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+>>> med1.stat
+<pyspark.sql.dataframe.DataFrameStatFunctions object at 0x14ef810>
+
+
+
+>>> med1.stat.freqItems(['HCPCS_DRUG_INDICATOR','PLACE_OF_SERVICE']).show()
++------------------------------+--------------------------+
+|HCPCS_DRUG_INDICATOR_freqItems|PLACE_OF_SERVICE_freqItems|
++------------------------------+--------------------------+
+|                        [Y, N]|                    [O, F]|
++------------------------------+--------------------------+
