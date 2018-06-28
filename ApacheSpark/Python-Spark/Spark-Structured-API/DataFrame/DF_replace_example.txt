@@ -1,0 +1,48 @@
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+# API Name: replace(to_replace, value=None, subset=None)
+# Purpose: Returns a new DataFrame replacing a value with another value. DataFrame.replace() and 
+#          DataFrameNaFunctions.replace() are aliases of each other. Values to_replace and value should contain either 
+#          all numerics, all booleans, or all strings. When replacing, the new value will be cast to the type of the 
+#          existing column. For numeric replacements all values to be replaced should have unique floating point 
+#          representation. In case of conflicts (for example with {42: -1, 42.0: 1}) and arbitrary replacement 
+#          will be used
+#
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+>>> student.show()
++---+-------+------------+
+| id|dept_id|   full_name|
++---+-------+------------+
+|  1|     11| SUNIL KUMAR|
+|  2|     12|  ANIL KUMAR|
+|  3|     13| SALIL KUMAR|
+|  4|     14|RAKESH KUMAR|
+|  2|     12|  ANIL KUMAR|
+|  3|     13| SALIL KUMAR|
++---+-------+------------+
+
+>>> student.replace('KUMAR','BEHL').show()
++---+-------+------------+
+| id|dept_id|   full_name|
++---+-------+------------+
+|  1|     11| SUNIL KUMAR|
+|  2|     12|  ANIL KUMAR|
+|  3|     13| SALIL KUMAR|
+|  4|     14|RAKESH KUMAR|
+|  2|     12|  ANIL KUMAR|
+|  3|     13| SALIL KUMAR|
++---+-------+------------+
+
+>>> student.replace('SUNIL KUMAR','BEHL').show()
++---+-------+------------+
+| id|dept_id|   full_name|
++---+-------+------------+
+|  1|     11|        BEHL|
+|  2|     12|  ANIL KUMAR|
+|  3|     13| SALIL KUMAR|
+|  4|     14|RAKESH KUMAR|
+|  2|     12|  ANIL KUMAR|
+|  3|     13| SALIL KUMAR|
++---+-------+------------+
