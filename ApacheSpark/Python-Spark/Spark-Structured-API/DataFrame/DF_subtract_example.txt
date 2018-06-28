@@ -1,0 +1,43 @@
+
+
+
+
+
+
+
+
+>>> l = [(1,'sunil'),(2,'Anil'),(3,'Salil'),(4,'Rakesh')]
+>>> person1 = spark.createDataFrame(l,['id','name'])
+
+>>> l1 = [(2,'Anil'),(3,'Salil')]
+>>> person2 = spark.createDataFrame(l1,['id','name'])
+
+>>> person1.show()
++---+------+
+| id|  name|
++---+------+
+|  1| sunil|
+|  2|  Anil|
+|  3| Salil|
+|  4|Rakesh|
++---+------+
+
+>>> person2.show()
++---+-----+
+| id| name|
++---+-----+
+|  2| Anil|
+|  3|Salil|
++---+-----+
+
+>>> person3=person1.subtract(person2)
+
+
+>>> person3.show()
++---+------+                                                                    
+| id|  name|
++---+------+
+|  1| sunil|
+|  4|Rakesh|
++---+------+
+
