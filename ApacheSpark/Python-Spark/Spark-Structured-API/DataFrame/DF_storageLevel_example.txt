@@ -1,0 +1,26 @@
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+# API Name: storageLevel
+# Purpose: To check if a dataframe is cached, check the storageLevel property.
+#
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+>>> l = [(1,'sunil'),(2,'Anil'),(3,'Salil'),(4,'Rakesh')]
+>>> person1 = spark.createDataFrame(l,['id','name'])
+
+>>> person1.storageLevel
+StorageLevel(False, False, False, False, 1)
+
+>>> med1 = spark.read.load("/data/med_pqt/part-00000-7f666b8f-45e7-40ac-b391-c37473c69008-c000.snappy.parquet")
+>>> med1.storageLevel
+StorageLevel(False, False, False, False, 1)
+
+
+### Now if we cache the DataFrame and check again the storage level
+
+>>> person1.cache()
+DataFrame[id: bigint, name: string]
+>>> person1.storageLevel
+StorageLevel(True, True, False, True, 1)
+
