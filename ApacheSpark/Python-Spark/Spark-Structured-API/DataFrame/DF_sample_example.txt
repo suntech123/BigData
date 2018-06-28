@@ -1,0 +1,14 @@
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+# API Name: sample(withReplacement, fraction, seed=None)
+# Purpose: Returns a sampled subset of this DataFrame.
+#          Note-This is not guaranteed to provide exactly the fraction specified of the total count of the given DataFrame.
+#
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+>>> med1.count()
+13020
+
+>>> med1.sample(False,0.2,42).count()
+2597
