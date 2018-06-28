@@ -1,0 +1,41 @@
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+# API Name: union(other)
+# Purpose: Return a new DataFrame containing union of rows in this and another frame.
+#
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+>>> person1.show()
++---+------+
+| id|  name|
++---+------+
+|  1| sunil|
+|  2|  Anil|
+|  3| Salil|
+|  4|Rakesh|
++---+------+
+
+>>> person2.show()
++---+-----+
+| id| name|
++---+-----+
+|  2| Anil|
+|  3|Salil|
++---+-----+
+
+### This is equivalent to UNION ALL in SQL. To do a SQL-style set union (that does deduplication of elements), 
+    use this function followed by a distinct.
+    
+>>> p1_u_p2 = person1.union(person2)
+>>> p1_u_p2.show()
++---+------+
+| id|  name|
++---+------+
+|  1| sunil|
+|  2|  Anil|
+|  3| Salil|
+|  4|Rakesh|
+|  2|  Anil|
+|  3| Salil|
++---+------+
+    
