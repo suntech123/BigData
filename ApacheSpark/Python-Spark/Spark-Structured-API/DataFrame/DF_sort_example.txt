@@ -1,0 +1,71 @@
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+# API Name: sort(*cols,*kwargs)
+# Purpose: Returns a new DataFrame sorted by the specified column(s).
+#
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+>>> person1.show()
++---+------+
+| id|  name|
++---+------+
+|  1| sunil|
+|  2|  Anil|
+|  3| Salil|
+|  4|Rakesh|
++---+------+
+
+>>> person1.sort(person1.name).show()
++---+------+                                                                    
+| id|  name|
++---+------+
+|  2|  Anil|
+|  4|Rakesh|
+|  3| Salil|
+|  1| sunil|
++---+------+
+
+
+>>> person1.sort(person1.name.desc()).show()
++---+------+                                                                    
+| id|  name|
++---+------+
+|  1| sunil|
+|  3| Salil|
+|  4|Rakesh|
+|  2|  Anil|
++---+------+
+
+>>> person1.sort(person1.name, ascending=False).show()
++---+------+
+| id|  name|
++---+------+
+|  1| sunil|
+|  3| Salil|
+|  4|Rakesh|
+|  2|  Anil|
++---+------+
+
+### Note : below asc function not working when given fully qualified name of column eg. - asc(person1.name)
+>>> person1.sort(asc("name")).show()
++---+------+
+| id|  name|
++---+------+
+|  2|  Anil|
+|  4|Rakesh|
+|  3| Salil|
+|  1| sunil|
++---+------+
+
+
+>>> person1.sort(desc("name")).show()
++---+------+                                                                    
+| id|  name|
++---+------+
+|  1| sunil|
+|  3| Salil|
+|  4|Rakesh|
+|  2|  Anil|
++---+------+
+
+
