@@ -4,3 +4,31 @@
 # Purpose: Projects a set of expressions and returns a new DataFrame.
 #
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+>>> student = p1_u_p2.selectExpr('id','id + 10 as dept_id','upper(concat(name," ","Kumar")) as full_name')
+>>> student.show()
++---+-------+------------+
+| id|dept_id|   full_name|
++---+-------+------------+
+|  1|     11| SUNIL KUMAR|
+|  2|     12|  ANIL KUMAR|
+|  3|     13| SALIL KUMAR|
+|  4|     14|RAKESH KUMAR|
+|  2|     12|  ANIL KUMAR|
+|  3|     13| SALIL KUMAR|
++---+-------+------------+
+
+
+>>> student.select(student.id,student.dept_id,student.full_name).show()
++---+-------+------------+
+| id|dept_id|   full_name|
++---+-------+------------+
+|  1|     11| SUNIL KUMAR|
+|  2|     12|  ANIL KUMAR|
+|  3|     13| SALIL KUMAR|
+|  4|     14|RAKESH KUMAR|
+|  2|     12|  ANIL KUMAR|
+|  3|     13| SALIL KUMAR|
++---+-------+------------+
+
