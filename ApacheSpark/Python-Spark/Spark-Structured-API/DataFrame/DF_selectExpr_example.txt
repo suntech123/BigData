@@ -1,0 +1,83 @@
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+# API Name: selectExpr(*expr)
+# Purpose: Projects a set of SQL expressions and returns a new DataFrame. This is a variant of select() that 
+#          accepts SQL expressions.
+#
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+>>> p1_u_p2.selectExpr('id','id + 10','name').show()
++---+---------+------+
+| id|(id + 10)|  name|
++---+---------+------+
+|  1|       11| sunil|
+|  2|       12|  Anil|
+|  3|       13| Salil|
+|  4|       14|Rakesh|
+|  2|       12|  Anil|
+|  3|       13| Salil|
++---+---------+------+
+
+>>> p1_u_p2.selectExpr('id','id + 10','upper(name)').show()
++---+---------+-----------+
+| id|(id + 10)|upper(name)|
++---+---------+-----------+
+|  1|       11|      SUNIL|
+|  2|       12|       ANIL|
+|  3|       13|      SALIL|
+|  4|       14|     RAKESH|
+|  2|       12|       ANIL|
+|  3|       13|      SALIL|
++---+---------+-----------+
+
+### Below is not working as expected
+>>> p1_u_p2.selectExpr('id','id + 10','upper(name)'+'KUMAR').show()
++---+---------+------+
+| id|(id + 10)| KUMAR|
++---+---------+------+
+|  1|       11| SUNIL|
+|  2|       12|  ANIL|
+|  3|       13| SALIL|
+|  4|       14|RAKESH|
+|  2|       12|  ANIL|
+|  3|       13| SALIL|
++---+---------+------+
+
+
+>>> p1_u_p2.selectExpr('id','id + 10','concat(name,"KUMAR")').show()
++---+---------+-------------------+
+| id|(id + 10)|concat(name, KUMAR)|
++---+---------+-------------------+
+|  1|       11|         sunilKUMAR|
+|  2|       12|          AnilKUMAR|
+|  3|       13|         SalilKUMAR|
+|  4|       14|        RakeshKUMAR|
+|  2|       12|          AnilKUMAR|
+|  3|       13|         SalilKUMAR|
++---+---------+-------------------+
+
+>>> p1_u_p2.selectExpr('id','id + 10','concat(name," ","KUMAR")').show()
++---+---------+----------------------+
+| id|(id + 10)|concat(name,  , KUMAR)|
++---+---------+----------------------+
+|  1|       11|           sunil KUMAR|
+|  2|       12|            Anil KUMAR|
+|  3|       13|           Salil KUMAR|
+|  4|       14|          Rakesh KUMAR|
+|  2|       12|            Anil KUMAR|
+|  3|       13|           Salil KUMAR|
++---+---------+----------------------+
+
+
+>>> p1_u_p2.selectExpr('id','id + 10','upper(concat(name," ","Kumar"))').show()
++---+---------+-----------------------------+
+| id|(id + 10)|upper(concat(name,  , Kumar))|
++---+---------+-----------------------------+
+|  1|       11|                  SUNIL KUMAR|
+|  2|       12|                   ANIL KUMAR|
+|  3|       13|                  SALIL KUMAR|
+|  4|       14|                 RAKESH KUMAR|
+|  2|       12|                   ANIL KUMAR|
+|  3|       13|                  SALIL KUMAR|
++---+---------+-----------------------------+
