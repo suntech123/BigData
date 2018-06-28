@@ -1,0 +1,22 @@
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+# API Name: getNumPartitions
+# Purpose: To check the number of partitions in a DataFrame.
+#
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+>>> med1 = spark.read.load("/data/med_pqt/part-00000-7f666b8f-45e7-40ac-b391-c37473c69008-c000.snappy.parquet")
+
+>>> med1.rdd.getNumPartitions
+<bound method RDD.getNumPartitions of MapPartitionsRDD[56] at javaToPython at NativeMethodAccessorImpl.java:0>
+>>> med1.rdd.getNumPartitions()
+1
+
+
+>>> med1.repartition(5)
+DataFrame[HCPCS_CODE: string, HCPCS_DESCRIPTION: string, HCPCS_DRUG_INDICATOR: string, PLACE_OF_SERVICE: string, NUMBER_OF_PROVIDERS: string, NUMBER_OF_SERVICES: string, NUMBER_OF_UNIQUE_BENEFICIARY/PROVIDER_INTERACTIONS: string, NUMBER_OF_DISTINCT_MEDICARE_BENEFICIARY/PER_DAY_SERVICES: string, AVERAGE_SUBMITTED_CHARGE_AMOUNT: string, AVERAGE_MEDICARE_ALLOWED_AMOUNT: string, AVERAGE_MEDICARE_PAYMENT_AMOUNT: string, AVERAGE_MEDICARE_STANDARDIZED_PAYMENT_AMOUNT: string]
+>>> med1.rdd.getNumPartitions()
+1
+>>> med2=med1.repartition(5)
+>>> med2.rdd.getNumPartitions()
+5
