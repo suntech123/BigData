@@ -1,0 +1,19 @@
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# 
+# API Name: toJSON
+# Purpose: Convers a DataFrame into an RDD of string.
+#
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+>>> med1 = spark.read.load("/data/med_pqt/part-00000-7f666b8f-45e7-40ac-b391-c37473c69008-c000.snappy.parquet")
+
+>>> med1.columns
+['HCPCS_CODE', 'HCPCS_DESCRIPTION', 'HCPCS_DRUG_INDICATOR', 'PLACE_OF_SERVICE', 'NUMBER_OF_PROVIDERS', 'NUMBER_OF_SERVICES', 'NUMBER_OF_UNIQUE_BENEFICIARY/PROVIDER_INTERACTIONS', 'NUMBER_OF_DISTINCT_MEDICARE_BENEFICIARY/PER_DAY_SERVICES', 'AVERAGE_SUBMITTED_CHARGE_AMOUNT', 'AVERAGE_MEDICARE_ALLOWED_AMOUNT', 'AVERAGE_MEDICARE_PAYMENT_AMOUNT', 'AVERAGE_MEDICARE_STANDARDIZED_PAYMENT_AMOUNT']
+
+
+### Converting DataFrame "med1" to RDD of string each row reprsenting one element in JSON document
+
+>>> med2_to_jsn = med1.toJSON()
+>>> med2_to_jsn.first()
+u'{"HCPCS_CODE":"0008M","HCPCS_DESCRIPTION":"Onc breast risk score","HCPCS_DRUG_INDICATOR":"N","PLACE_OF_SERVICE":"O","NUMBER_OF_PROVIDERS":"5","NUMBER_OF_SERVICES":"201","NUMBER_OF_UNIQUE_BENEFICIARY/PROVIDER_INTERACTIONS":"194","NUMBER_OF_DISTINCT_MEDICARE_BENEFICIARY/PER_DAY_SERVICES":"199","AVERAGE_SUBMITTED_CHARGE_AMOUNT":"$7,908.15","AVERAGE_MEDICARE_ALLOWED_AMOUNT":"$3,419.40","AVERAGE_MEDICARE_PAYMENT_AMOUNT":"$3,351.01","AVERAGE_MEDICARE_STANDARDIZED_PAYMENT_AMOUNT":"$3,351.03"}'
