@@ -1,0 +1,64 @@
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+# API Name: unionAll(other)
+# Purpose: Return a new DataFrame containing union of rows in this and another frame.
+#
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+>>> person1.show()
++---+------+
+| id|  name|
++---+------+
+|  1| sunil|
+|  2|  Anil|
+|  3| Salil|
+|  4|Rakesh|
++---+------+
+
+>>> person1.is_cached
+False
+>>> person1.show()
++---+------+
+| id|  name|
++---+------+
+|  1| sunil|
+|  2|  Anil|
+|  3| Salil|
+|  4|Rakesh|
++---+------+
+
+>>> person2.show()
++---+-----+
+| id| name|
++---+-----+
+|  2| Anil|
+|  3|Salil|
++---+-----+
+
+>>> person1.unionAll(person2)
+DataFrame[id: bigint, name: string]
+
+>>> person1.unionAll(person2).show()
++---+------+
+| id|  name|
++---+------+
+|  1| sunil|
+|  2|  Anil|
+|  3| Salil|
+|  4|Rakesh|
+|  2|  Anil|
+|  3| Salil|
++---+------+
+
+>>> p1_uall_p2 = person1.unionAll(person2)
+>>> p1_uall_p2.show()
++---+------+
+| id|  name|
++---+------+
+|  1| sunil|
+|  2|  Anil|
+|  3| Salil|
+|  4|Rakesh|
+|  2|  Anil|
+|  3| Salil|
++---+------+
