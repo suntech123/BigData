@@ -1,0 +1,35 @@
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+# API Name: limit(num)
+# Purpose: Limits the result count to the number specified.
+#
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+>>> student.show()
++---+------+-------+
+| id|  name|dept_id|
++---+------+-------+
+|  1| sunil|     10|
+|  2|  Anil|     20|
+|  3|Sanjay|     15|
+|  4|Bharat|     25|
++---+------+-------+
+
+
+>>> student.limit(3).show()
++---+------+-------+
+| id|  name|dept_id|
++---+------+-------+
+|  1| sunil|     10|
+|  2|  Anil|     20|
+|  3|Sanjay|     15|
++---+------+-------+
+
+
+>>> student.join(dept,'dept_id').select(student.id,student.name,student.dept_id,dept.dept_name).limit(2).orderBy(student.id).show()
++---+------+-------+---------+                                                  
+| id|  name|dept_id|dept_name|
++---+------+-------+---------+
+|  1| sunil|     10|       CS|
+|  4|Bharat|     25|       CE|
++---+------+-------+---------+
