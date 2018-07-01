@@ -1,0 +1,64 @@
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+# API Name: join(other, on=None, how=None)
+# Purpose: Joins with another DataFrame, using the given join expression.
+#
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+>>> l = [(1,'sunil',10),(2,'Anil',20),(3,'Sanjay',15),(4,'Bharat',25)]
+>>> student = spark.createDataFrame(l,['id','name','dept_id'])
+>>> student.show()
++---+------+-------+
+| id|  name|dept_id|
++---+------+-------+
+|  1| sunil|     10|
+|  2|  Anil|     20|
+|  3|Sanjay|     15|
+|  4|Bharat|     25|
++---+------+-------+
+
+>>> l2 = [(10,'CS'),(20,'ECE'),(15,'ME'),(25,'CE')]
+>>> dept = spark.createDataFrame(l2,['dept_id','dept_name'])
+>>> dept.show()
++-------+---------+
+|dept_id|dept_name|
++-------+---------+
+|     10|       CS|
+|     20|      ECE|
+|     15|       ME|
+|     25|       CE|
++-------+---------+
+
+>>> student.join(dept,'dept_id').show()
++-------+---+------+---------+                                                  
+|dept_id| id|  name|dept_name|
++-------+---+------+---------+
+|     25|  4|Bharat|       CE|
+|     10|  1| sunil|       CS|
+|     15|  3|Sanjay|       ME|
+|     20|  2|  Anil|      ECE|
++-------+---+------+---------+
+
+>>> student.join(dept,'dept_id').select(student.id,student.name,student.dept_id,dept.dept_name).show()
++---+------+-------+---------+                                                  
+| id|  name|dept_id|dept_name|
++---+------+-------+---------+
+|  4|Bharat|     25|       CE|
+|  1| sunil|     10|       CS|
+|  3|Sanjay|     15|       ME|
+|  2|  Anil|     20|      ECE|
++---+------+-------+---------+
+
+
+>>> student.join(dept,'dept_id').select(student.id,student.name,student.dept_id,dept.dept_name).orderBy(student.id).show()
++---+------+-------+---------+                                                  
+| id|  name|dept_id|dept_name|
++---+------+-------+---------+
+|  1| sunil|     10|       CS|
+|  2|  Anil|     20|      ECE|
+|  3|Sanjay|     15|       ME|
+|  4|Bharat|     25|       CE|
++---+------+-------+---------+
+
+
+
