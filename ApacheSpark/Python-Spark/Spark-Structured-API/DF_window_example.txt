@@ -1,0 +1,46 @@
+>>> rpt1 = spark.read.csv('/user/kumarsu/brok_ops_data_files/RPT_08.4_06_19_18.csv',header=False,sep=',',ignoreLeadingWhiteSpace=True,ignoreTrailingWhiteSpace=True)
+
+>>> rpt1.printSchema()
+root
+ |-- _c0: string (nullable = true)
+ |-- _c1: string (nullable = true)
+ |-- _c2: string (nullable = true)
+ |-- _c3: string (nullable = true)
+ |-- _c4: string (nullable = true)
+ |-- _c5: string (nullable = true)
+ |-- _c6: string (nullable = true)
+ |-- _c7: string (nullable = true)
+ |-- _c8: string (nullable = true)
+
+
+>>> from pyspark.sql import *
+
+>>> window = Window.partitionBy("_c4").orderBy("_c1").rowsBetween(Window.unboundedPreceding, Window.currentRow)
+
+>>> rpt1.select(rpt1._c0,rpt1._c1,rpt1._c2,rpt1._c4,rpt1._c8,row_number().over(window).alias('RNK')).show(20,False)
++--------------------------+-------+------------+-----------------------+-----------------------+---+
+|_c0                       |_c1    |_c2         |_c4                    |_c8                    |RNK|
++--------------------------+-------+------------+-----------------------+-----------------------+---+
+|Transitions-FNIC-Unindexed|5592188|Under Review|Cetera Advisor Networks|14-MAY-2018 07:40:17 AM|1  |
+|Transfers-ACAT            |5592244|IGO         |Cetera Advisor Networks|14-MAY-2018 09:53:51 AM|2  |
+|Mnt-NA Other              |5592282|Under Review|Cetera Advisor Networks|14-MAY-2018 06:18:00 AM|3  |
+|MoneyDesk-Other           |5592294|IGO         |Cetera Advisor Networks|14-MAY-2018 07:20:34 AM|4  |
+|Mnt-Cost Basis            |5592295|IGO         |Cetera Advisor Networks|14-MAY-2018 11:07:30 AM|5  |
+|MoneyDesk-IRA Dist        |5592313|IGO         |Cetera Advisor Networks|14-MAY-2018 07:39:55 AM|6  |
+|MoneyDesk-ACH             |5592668|IGO         |Cetera Advisor Networks|14-MAY-2018 06:42:14 AM|7  |
+|Transfers-ACAT            |5592797|Under Review|Cetera Advisor Networks|14-MAY-2018 09:18:58 AM|8  |
+|Transfers-Non-ACAT        |5592806|IGO         |Cetera Advisor Networks|14-MAY-2018 09:43:30 AM|9  |
+|Transfers-Non-ACAT        |5592811|IGO         |Cetera Advisor Networks|14-MAY-2018 06:52:12 AM|10 |
+|Transfers-ACAT            |5592814|IGO         |Cetera Advisor Networks|14-MAY-2018 09:45:09 AM|11 |
+|MoneyDesk-ACH             |5592816|IGO         |Cetera Advisor Networks|14-MAY-2018 06:53:28 AM|12 |
+|Mnt-Fee Updates           |5592826|IGO         |Cetera Advisor Networks|14-MAY-2018 06:55:24 AM|13 |
+|Advisory                  |5592845|Under Review|Cetera Advisor Networks|14-MAY-2018 07:01:53 AM|14 |
+|Transfers-ACAT            |5592861|IGO         |Cetera Advisor Networks|14-MAY-2018 10:35:27 AM|15 |
+|Transfers-ACAT            |5592893|IGO         |Cetera Advisor Networks|14-MAY-2018 10:18:03 AM|16 |
+|Advisory                  |5592938|IGO         |Cetera Advisor Networks|14-MAY-2018 10:18:00 AM|17 |
+|MoneyDesk-IRA Dist        |5592939|Under Review|Cetera Advisor Networks|14-MAY-2018 09:03:56 AM|18 |
+|MoneyDesk-ACH             |5592940|Under Review|Cetera Advisor Networks|14-MAY-2018 10:39:29 AM|19 |
+|MoneyDesk-IRA Dist        |5592941|Under Review|Cetera Advisor Networks|14-MAY-2018 09:00:49 AM|20 |
++--------------------------+-------+------------+-----------------------+-----------------------+---+
+only showing top 20 rows
+
