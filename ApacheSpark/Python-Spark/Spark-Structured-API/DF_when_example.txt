@@ -1,0 +1,69 @@
+>>> rpt1 = spark.read.csv('/user/kumarsu/brok_ops_data_files/RPT_08.4_06_19_18.csv',header=False,sep=',',ignoreLeadingWhiteSpace=True,ignoreTrailingWhiteSpace=True)
+
+>>> rpt1.printSchema()
+root
+ |-- _c0: string (nullable = true)
+ |-- _c1: string (nullable = true)
+ |-- _c2: string (nullable = true)
+ |-- _c3: string (nullable = true)
+ |-- _c4: string (nullable = true)
+ |-- _c5: string (nullable = true)
+ |-- _c6: string (nullable = true)
+ |-- _c7: string (nullable = true)
+ |-- _c8: string (nullable = true)
+
+
+>>> rpt1.select(rpt1._c0,rpt1._c1,rpt1._c2,rpt1._c4,rpt1._c8,when(rpt1._c2 == 'IGO',100).otherwise(200).alias('Team')).show(20,False)
++--------+-------+------------+----------------------------+-----------------------+----+
+|_c0     |_c1    |_c2         |_c4                         |_c8                    |Team|
++--------+-------+------------+----------------------------+-----------------------+----+
+|Advisory|5592845|Under Review|Cetera Advisor Networks     |14-MAY-2018 07:01:53 AM|200 |
+|Advisory|5592296|Under Review|Summit                      |14-MAY-2018 07:56:49 AM|200 |
+|Advisory|5592801|Under Review|Cetera Advisors             |14-MAY-2018 08:45:31 AM|200 |
+|Advisory|5592802|Under Review|Cetera Advisors             |14-MAY-2018 08:48:04 AM|200 |
+|Advisory|5593064|Under Review|Cetera Advisors             |14-MAY-2018 09:34:25 AM|200 |
+|Advisory|5593000|Under Review|Summit                      |14-MAY-2018 09:36:17 AM|200 |
+|Advisory|5593700|Under Review|Cetera Advisors             |14-MAY-2018 09:36:28 AM|200 |
+|Advisory|5593861|IGO         |Cetera Advisor Networks     |14-MAY-2018 09:40:29 AM|100 |
+|Advisory|5592938|IGO         |Cetera Advisor Networks     |14-MAY-2018 10:18:00 AM|100 |
+|Advisory|5593166|IGO         |Cetera Financial Specialists|14-MAY-2018 11:13:32 AM|100 |
+|Advisory|5593783|IGO         |Cetera Financial Specialists|14-MAY-2018 11:49:12 AM|100 |
+|Advisory|5593783|IGO         |Cetera Financial Specialists|14-MAY-2018 11:49:12 AM|100 |
+|Advisory|5593195|Under Review|Cetera Advisors             |14-MAY-2018 12:19:02 PM|200 |
+|Advisory|5592247|IGO         |Cetera Financial Specialists|14-MAY-2018 12:19:21 PM|100 |
+|Advisory|5593606|IGO         |Cetera Financial Specialists|14-MAY-2018 12:28:00 PM|100 |
+|Advisory|5593726|IGO         |Cetera Advisor Networks     |14-MAY-2018 12:30:24 PM|100 |
+|Advisory|5594823|IGO         |Cetera Advisors             |14-MAY-2018 12:33:00 PM|100 |
+|Advisory|5592225|IGO         |Cetera Financial Specialists|14-MAY-2018 12:36:48 PM|100 |
+|Advisory|5593790|IGO         |Cetera Advisor Networks     |14-MAY-2018 12:38:24 PM|100 |
+|Advisory|5592267|IGO         |Cetera Financial Specialists|14-MAY-2018 12:48:24 PM|100 |
++--------+-------+------------+----------------------------+-----------------------+----+
+only showing top 20 rows
+
+
+>>> rpt1.select(rpt1._c0,rpt1._c1,rpt1._c2,rpt1._c4,rpt1._c8,when(rpt1._c2 == 'IGO',100).when(rpt1._c2 == 'Under Review',500).otherwise(1000).alias('Team')).show(20,False)
++--------+-------+------------+----------------------------+-----------------------+----+
+|_c0     |_c1    |_c2         |_c4                         |_c8                    |Team|
++--------+-------+------------+----------------------------+-----------------------+----+
+|Advisory|5592845|Under Review|Cetera Advisor Networks     |14-MAY-2018 07:01:53 AM|500 |
+|Advisory|5592296|Under Review|Summit                      |14-MAY-2018 07:56:49 AM|500 |
+|Advisory|5592801|Under Review|Cetera Advisors             |14-MAY-2018 08:45:31 AM|500 |
+|Advisory|5592802|Under Review|Cetera Advisors             |14-MAY-2018 08:48:04 AM|500 |
+|Advisory|5593064|Under Review|Cetera Advisors             |14-MAY-2018 09:34:25 AM|500 |
+|Advisory|5593000|Under Review|Summit                      |14-MAY-2018 09:36:17 AM|500 |
+|Advisory|5593700|Under Review|Cetera Advisors             |14-MAY-2018 09:36:28 AM|500 |
+|Advisory|5593861|IGO         |Cetera Advisor Networks     |14-MAY-2018 09:40:29 AM|100 |
+|Advisory|5592938|IGO         |Cetera Advisor Networks     |14-MAY-2018 10:18:00 AM|100 |
+|Advisory|5593166|IGO         |Cetera Financial Specialists|14-MAY-2018 11:13:32 AM|100 |
+|Advisory|5593783|IGO         |Cetera Financial Specialists|14-MAY-2018 11:49:12 AM|100 |
+|Advisory|5593783|IGO         |Cetera Financial Specialists|14-MAY-2018 11:49:12 AM|100 |
+|Advisory|5593195|Under Review|Cetera Advisors             |14-MAY-2018 12:19:02 PM|500 |
+|Advisory|5592247|IGO         |Cetera Financial Specialists|14-MAY-2018 12:19:21 PM|100 |
+|Advisory|5593606|IGO         |Cetera Financial Specialists|14-MAY-2018 12:28:00 PM|100 |
+|Advisory|5593726|IGO         |Cetera Advisor Networks     |14-MAY-2018 12:30:24 PM|100 |
+|Advisory|5594823|IGO         |Cetera Advisors             |14-MAY-2018 12:33:00 PM|100 |
+|Advisory|5592225|IGO         |Cetera Financial Specialists|14-MAY-2018 12:36:48 PM|100 |
+|Advisory|5593790|IGO         |Cetera Advisor Networks     |14-MAY-2018 12:38:24 PM|100 |
+|Advisory|5592267|IGO         |Cetera Financial Specialists|14-MAY-2018 12:48:24 PM|100 |
++--------+-------+------------+----------------------------+-----------------------+----+
+only showing top 20 rows
