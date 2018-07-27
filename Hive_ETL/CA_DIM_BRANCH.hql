@@ -1,0 +1,372 @@
+/*
+##################################################################################################################
+Purpose: 
+		1. To consolidate data from Office Address from Bonus. office address table
+		2. To consolidate data from office supervisor from bonus. supervisor tables
+		3. Create a Stage Table that captures all the officers address and supervisor address for BD CA
+		4. Load the data to consolidate EDH Base table - EDH.DIM_BRANCH
+##################################################################################################################
+*/
+elapsedtime ON;
+
+/* Step 1: Create Local Temp table called Temp. Office Address */
+DROP
+	TABLE
+		IF EXISTS EDH_STAGING.TEMP_CA_OFFICES_ADDRESSES;
+
+CREATE
+	LOCAL TEMPORARY TABLE
+		EDH_STAGING.TEMP_CA_OFFICES_ADDRESSES(
+			BD SMALLINT NOT NULL,
+			OFFICE_CODE VARCHAR(10) NOT NULL,
+			ADDR_ID SMALLINT NOT NULL,
+			PRIMARY_IND VARCHAR(1) NOT NULL,
+			ADDR_TYPE SMALLINT NOT NULL,
+			NAME VARCHAR(50),
+			ADDR_LINE_1 VARCHAR(40) NOT NULL,
+			ADDR_LINE_2 VARCHAR(40),
+			SUITE_NUMBER VARCHAR(40),
+			CITY VARCHAR(40) NOT NULL,
+			STATE_CODE VARCHAR(2),
+			ZIP_CODE VARCHAR(10),
+			COUNTRY VARCHAR(50) NOT NULL,
+			PHONE_NUMBER BIGINT,
+			PHONE_EXTENTION INTEGER,
+			FAX_NUMBER BIGINT,
+			INSERT_LOAD_TS TIMESTAMP,
+			LOAD_USR VARCHAR(20),
+			LST_UPDATE_TS TIMESTAMP,
+			LST_UPDATE_USR VARCHAR(20),
+			COUNTRY_CD VARCHAR(50),
+			RNK BIGINT NOT NULL
+		) ON
+		COMMIT PRESERVE ROWS;
+		
+
+DROP
+	TABLE
+		IF EXISTS EDH_STAGING.TEMP_CA_OFFICES_ADDRESSES_1;
+
+CREATE
+	LOCAL TEMPORARY TABLE
+		EDH_STAGING.TEMP_CA_OFFICES_ADDRESSES_1(
+			BD SMALLINT NOT NULL,
+			OFFICE_CODE VARCHAR(10) NOT NULL,
+			ADDR_ID SMALLINT NOT NULL,
+			PRIMARY_IND VARCHAR(1) NOT NULL,
+			ADDR_TYPE SMALLINT NOT NULL,
+			NAME VARCHAR(50),
+			ADDR_LINE_1 VARCHAR(40) NOT NULL,
+			ADDR_LINE_2 VARCHAR(40),
+			SUITE_NUMBER VARCHAR(40),
+			CITY VARCHAR(40) NOT NULL,
+			STATE_CODE VARCHAR(2),
+			ZIP_CODE VARCHAR(10),
+			COUNTRY VARCHAR(50) NOT NULL,
+			PHONE_NUMBER BIGINT,
+			PHONE_EXTENTION INTEGER,
+			FAX_NUMBER BIGINT,
+			INSERT_LOAD_TS TIMESTAMP,
+			LOAD_USR VARCHAR(20),
+			LST_UPDATE_TS TIMESTAMP,
+			LST_UPDATE_USR VARCHAR(20),
+			COUNTRY_CD VARCHAR(50),
+			RNK BIGINT NOT NULL
+		) ON
+		COMMIT PRESERVE ROWS;		
+
+/* Step 1: Create Local temp table for office supervisors */
+DROP
+	TABLE
+		IF EXISTS EDH_STAGING.TEMP_CA_OFFICES_SUPERVISORS;
+
+CREATE
+	LOCAL TEMPORARY TABLE
+		EDH_STAGING.TEMP_CA_OFFICES_SUPERVISORS(
+			BD SMALLINT NOT NULL,
+			OFFICE_CODE VARCHAR(10) NOT NULL,
+			REP_SSN VARCHAR(9) NOT NULL,
+			START_DATE DATE NOT NULL,
+			TERM_DATE TIMESTAMP,
+			PRIMARY_IND VARCHAR(1) NOT NULL,
+			INSERT_LOAD_TS TIMESTAMP,
+			LOAD_USR VARCHAR(20),
+			LST_UPDATE_TS TIMESTAMP,
+			LST_UPDATE_USR VARCHAR(20),
+			RNK BIGINT NOT NULL
+		) ON
+		COMMIT PRESERVE ROWS;
+
+/* Step 2: Insert Data from bonus tables to Local temp tables that are created */
+INSERT
+	INTO
+		EDH_STAGING.TEMP_CA_OFFICES_ADDRESSES SELECT
+			 BD ,OFFICE_CODE,ADDR_ID ,PRIMARY_IND,ADDR_TYPE,NAME,ADDR_LINE_1,ADDR_LINE_2,SUITE_NUMBER,CITY,STATE_CODE,ZIP_CODE,
+ COUNTRY,PHONE_NUMBER,PHONE_EXTENTION,FAX_NUMBER,INSERT_LOAD_TS ,LOAD_USR,LST_UPDATE_TS,LST_UPDATE_USR, 
+ CASE WHEN STATE_CODE ='PR' THEN 'PR' ELSE 'US' END  COUNTRY_CD,
+			ROW_NUMBER() OVER(
+				PARTITION BY bd,
+				office_code,
+				ADDR_TYPE
+			ORDER BY
+				primary_ind DESC,
+				ADDR_ID DESC
+			) RNK
+		FROM
+			bonus.OFFICES_ADDRESSES s --splice-properties useSpark=true
+		WHERE
+			bd = 4;
+			
+INSERT
+	INTO
+		EDH_STAGING.TEMP_CA_OFFICES_ADDRESSES_1 SELECT
+			 BD ,OFFICE_CODE,ADDR_ID ,PRIMARY_IND,ADDR_TYPE,NAME,ADDR_LINE_1,ADDR_LINE_2,SUITE_NUMBER,CITY,STATE_CODE,ZIP_CODE,
+ COUNTRY,PHONE_NUMBER,PHONE_EXTENTION,FAX_NUMBER,INSERT_LOAD_TS ,LOAD_USR,LST_UPDATE_TS,LST_UPDATE_USR, 
+ CASE WHEN STATE_CODE ='PR' THEN 'PR' ELSE 'US' END  COUNTRY_CD,
+			ROW_NUMBER() OVER(
+				PARTITION BY bd,
+				office_code,				
+				primary_ind
+			ORDER BY
+				primary_ind DESC,
+				ADDR_ID DESC
+			) RNK
+		FROM
+			bonus.OFFICES_ADDRESSES s --splice-properties useSpark=true
+		WHERE
+			bd = 4;			
+
+/* insert data from bonus supervisor table to temp table Step 2 */
+INSERT
+	INTO
+		EDH_STAGING.TEMP_CA_OFFICES_SUPERVISORS SELECT
+			BD ,OFFICE_CODE ,REP_SSN,START_DATE,TERM_DATE ,PRIMARY_IND ,INSERT_LOAD_TS ,LOAD_USR ,LST_UPDATE_TS ,LST_UPDATE_USR ,
+			ROW_NUMBER() OVER(
+				PARTITION BY bd,
+				office_code
+			ORDER BY
+				primary_ind DESC,
+				TERM_DATE DESC
+			) RNK
+		FROM
+			bonus.OFFICES_SUPERVISORS s --splice-properties useSpark=true
+		WHERE
+			bd = 4;
+
+/* Truncate and Reload the dim branch stage tables - Step 3 */
+TRUNCATE TABLE
+	EDH_STAGING.DIM_BRANCH_CA;
+
+INSERT
+	INTO
+		EDH_STAGING.DIM_BRANCH_CA(
+			DIM_BRANCH_KEY,
+			BD_ID,
+			BRANCH_ID,
+			BRANCH_NUMBER,
+			PARENT_BRANCH_ID,
+			PARENT_DIM_BRANCH_KEY,
+			PRIMARY_MGR_PROFILE_KEY,
+			BRANCH_NM,
+			AFFILIATED_BUSINESS_NM,
+			BRANCH_TYPE,
+			EDH_BRANCH_TYPE,
+			BRANCH_BUSINESS_OWNER,
+			BRANCH_BUSINESS_OWNER_PROFILE_KEY,
+			OPEN_DT,
+			CLOSED_DT,
+			DOMICILE_STATE,
+			STATUS,
+			BRANCH_CRD,
+			BUSINESS_PHONE,
+			BUSINESS_FAX,
+			MAILING_ADDRESS_LINE1,
+			MAILING_ADDRESS_LINE2,
+			MAILING_CITY,
+			MAILING_STATE,
+			MAILING_ZIP,
+			MAILING_COUNTRY,
+			CURRENT_FLG,
+			DELETED_FLG,
+			EFF_START_DT,
+			EFF_END_DT,
+			LOAD_JOB_ID,
+			LOAD_TS,
+			LST_UPDT_JOB_ID,
+			LST_UPDT_TS
+		) SELECT 
+			CONCAT( TRIM( CAST( o.bd AS CHAR( 5 ))), TRIM( CAST( o.office_code AS CHAR( 30 )))) AS DIM_BRANCH_KEY,
+			o.bd AS BD_ID_KEY,
+			o.office_code AS BRANCH_ID,
+			--o.office_code AS BRANCH_NUMBER,
+			O.BRANCH_NUMBER AS BRANCH_NUMBER,
+			o.PARENT_OFFICE_CODE AS PARENT_BRANCH_ID,
+			CASE
+				WHEN CONCAT( TRIM( CAST( o.bd AS CHAR( 5 ))), TRIM( CAST( o.PARENT_OFFICE_CODE AS CHAR( 30 )))) IS NULL THEN '-2'
+				ELSE CONCAT( TRIM( CAST( o.bd AS CHAR( 5 ))), TRIM( CAST( o.PARENT_OFFICE_CODE AS CHAR( 30 ))))
+			END AS DIM_BRANCH_KEY,
+			'-2' AS PRIMARY_MGR_PROFILE_KEY,
+			o.Name AS BRANCH_NM,
+			o.AFFILIATED_BUSINESS_NAME AS AFFILIATED_BUSINESS_NM,
+			/*CASE
+				WHEN UPPER( SCA.code_desc )= 'REGION' THEN 'REGION'
+				WHEN UPPER( SCA.code_desc )= 'SALES OFFICE' THEN 'SALES OFFICE'
+				WHEN UPPER( SCA.code_desc )= 'OSJ BRANCH' THEN 'OSJ'
+				WHEN UPPER( SCA.code_desc )= 'OTHER'
+				AND AFFILIATION = 1 THEN 'FAD'
+				WHEN UPPER( SCA.code_desc )= 'OTHER'
+				AND AFFILIATION = 2 THEN 'FID - APPT ONLY'
+				WHEN UPPER( SCA.code_desc )= 'OTHER'
+				AND AFFILIATION = 3 THEN 'FID - HUB - SALES OFFICE'
+				WHEN UPPER( SCA.code_desc )= 'OTHER'
+				AND AFFILIATION = 4 THEN 'FID - NON HUB'
+				WHEN UPPER( SCA.code_desc )= 'OTHER'
+				AND AFFILIATION = 5 THEN 'INSURANCE ONLY'
+				WHEN UPPER( SCA.code_desc )= 'OTHER'
+				AND AFFILIATION = 6 THEN 'PERSONAL OFFICE'
+				WHEN UPPER( SCA.code_desc )= 'OTHER'
+				AND AFFILIATION = 7 THEN 'FID - HUB - OSJ BRANCH'
+				ELSE 'UNKNOWN'
+			END AS BRANCH_TYPE,*/
+		CASE WHEN  O.office_type = 1 then 'REGION'
+			 WHEN O.office_type = 2  then 'OSJ' 
+			 WHEN O.office_type = 3  then 'SALES OFFICE'  
+			 WHEN O.office_type = 4  THEN 
+			 CASE 
+				WHEN O.AFFILIATION =1 then 'FAD'
+				WHEN O.AFFILIATION=2 then 'FID - APPT ONLY'
+				WHEN O.AFFILIATION=3 then 'FID - HUB - SALES OFFICE'
+				WHEN O.AFFILIATION=4 then 'FID - NON HUB'
+				WHEN O.AFFILIATION=5 then 'INSURANCE ONLY'
+				WHEN O.AFFILIATION=6 then 'PERSONAL OFFICE'
+				WHEN O.AFFILIATION=7 then 'FID - HUB - OSJ BRANCH'
+				ELSE 'OTHER'
+				END
+		ELSE 'OTHER'
+		END AS BRANCH_TYPE ,
+			/*CASE
+				WHEN UPPER( SCA.code_desc )= 'REGION' THEN 'LEVEL4'
+				WHEN UPPER( SCA.code_desc )= 'OTHER' THEN 'LEVEL7'
+				WHEN UPPER( SCA.code_desc )= 'SALES OFFICE' THEN 'LEVEL6'
+				WHEN UPPER( SCA.code_desc )= 'OSJ BRANCH' THEN 'LEVEL5'
+				ELSE 'UNKNOWN'
+			END AS EDH_BRANCH_TYPE,*/			
+			CASE  WHEN O.OFFICE_TYPE = 1 then 'LEVEL4'
+			WHEN O.OFFICE_TYPE = 2  then 'LEVEL5'
+			WHEN O.OFFICE_TYPE = 3  then 'LEVEL6'  
+			WHEN O.OFFICE_TYPE = 4  then 'LEVEL7'
+			ELSE 'OTHER' END AS EDH_BRANCH_TYPE,
+			NULLIF('','') AS BRANCH_BUSINESS_OWNER , 
+			'-2' AS BRANCH_BUSINESS_OWNER_PROFILE_KEY,
+			CAST(
+				o.start_date AS DATE
+			) AS OPEN_DT,
+			CAST(
+				O.term_date AS DATE
+			) AS CLOSED_DT,
+			CASE
+				WHEN OA_ST_ADDR.state_code IS NULL THEN oa2.state_code
+				ELSE OA_ST_ADDR.state_code
+			END AS DOMICILE_STATE,
+			CASE
+				WHEN o.status_ind = 10 THEN 'OPEN'
+				WHEN o.status_ind = 60 THEN 'CLOSED'
+				WHEN o.status_ind = 20 THEN 'PENDING'
+				ELSE 'UNKNOWN'
+			END AS STATUS,
+			o.nasd_number AS BRANCH_CRD,
+			TRIM( REPLACE( REPLACE( REPLACE( REPLACE( CAST( CASE WHEN oa2.phone_number IS NULL THEN OA_ST_ADDR.phone_number ELSE oa2.phone_number END AS CHAR( 50 )), '-', '' ), '/', '' ), ' ', '' ), '', '' )) AS BUSINESS_PHONE,
+			-- oa. to oa2
+ TRIM( REPLACE( REPLACE( REPLACE( REPLACE( CAST( CASE WHEN oa2.fax_number IS NULL THEN OA_ST_ADDR.fax_number ELSE oa2.fax_number END AS CHAR( 50 )), '-', '' ), '/', '' ), ' ', '' ), '', '' )) AS BUSINESS_FAX,
+			-- oa. to oa2
+ CASE
+				WHEN oa2.addr_line_1 IS NULL THEN OA_ST_ADDR.addr_line_1
+				ELSE oa2.addr_line_1
+			END AS addr_line_1,
+			CASE
+				WHEN oa2.addr_line_2 IS NULL THEN OA_ST_ADDR.addr_line_2
+				ELSE oa2.addr_line_2
+			END AS addr_line_2,
+			CASE
+				WHEN oa2.city IS NULL THEN OA_ST_ADDR.city
+				ELSE oa2.city
+			END AS city,
+			CASE
+				WHEN oa2.state_code IS NULL THEN OA_ST_ADDR.state_code
+				ELSE oa2.state_code
+			END AS state_code,
+			REPLACE(
+				REPLACE(
+					REPLACE(
+						REPLACE(
+							CASE
+								WHEN oa2.zip_code IS NULL THEN OA_ST_ADDR.zip_code
+								ELSE oa2.zip_code
+							END,
+							'-',
+							''
+						),
+						'/',
+						''
+					),
+					' ',
+					''
+				),
+				'',
+				''
+			) AS Mail_Zip_Code,
+					CASE WHEN (CASE WHEN OA_ST_ADDR.STATE_CODE IS NULL THEN OA2.STATE_CODE ELSE OA_ST_ADDR.STATE_CODE END) ='PR' THEN 'PR' 
+					WHEN (CASE WHEN OA_ST_ADDR.STATE_CODE IS NULL THEN OA2.STATE_CODE ELSE OA_ST_ADDR.STATE_CODE END) IS NULL THEN 'US'
+					ELSE 'US' END AS Mail_Country,			--CASE WHEN oa2.STATE_CODE='PR' THEN 'PR' ELSE 'US' END AS Mail_Country,
+			'Y' AS CURRENT_FLG,
+			'N' AS DELETED_FLG,
+			CAST(
+				o.start_date AS DATE
+			) AS EFF_START_DT,
+			'2261-12-31' AS EFF_END_DT,
+			'INITIAL_LOAD' AS LOAD_JOB_ID,
+			CURRENT_TIMESTAMP AS LOAD_TS,
+			'INITIAL_LOAD' AS LST_UPDT_JOB_ID,
+			CURRENT_TIMESTAMP AS LST_UPDT_TS
+		FROM
+			bonus.offices o --splice-properties useSpark=true
+		/*LEFT OUTER JOIN bonus.system_codes sca ON
+			o.bd = sca.bd
+			AND o.office_type = sca.code_id
+			AND SCA.function_id = 'OFFICES'
+			AND SCA.code_type = 'TYPE'*/
+		LEFT OUTER JOIN EDH_STAGING.TEMP_CA_OFFICES_ADDRESSES OA_ST_ADDR ON
+			OA_ST_ADDR.office_code = o.office_code
+			AND o.bd = OA_ST_ADDR.BD
+			AND OA_ST_ADDR.ADDR_TYPE = 1
+			AND OA_ST_ADDR.rnk = 1
+		LEFT OUTER JOIN EDH_STAGING.TEMP_CA_OFFICES_ADDRESSES_1 oa2 ON
+			o.office_code = oa2.office_code
+			AND o.bd = oa2.bd
+			AND oa2.PRIMARY_IND = 'Y'
+			AND oa2.rnk = 1
+		LEFT OUTER JOIN EDH_STAGING.TEMP_CA_OFFICES_SUPERVISORS sup ON
+			sup.BD = o.bd
+			AND sup.OFFICE_CODE = o.OFFICE_CODE
+			AND sup.PRIMARY_IND = 'Y'
+			AND sup.rnk = 1
+		WHERE
+			o.bd = 4;
+
+/* Step 4: drop temp tables that were created for this purpose */
+DROP
+	TABLE
+		EDH_STAGING.TEMP_CA_OFFICES_ADDRESSES;
+
+DROP
+	TABLE
+		EDH_STAGING.TEMP_CA_OFFICES_SUPERVISORS;
+
+/* Step 5: Run Compaction and Analyze tables */
+CALL SYSCS_UTIL.SYSCS_PERFORM_MAJOR_COMPACTION_ON_TABLE(
+	'EDH_STAGING',
+	'DIM_BRANCH_CA'
+);
+
+ANALYZE TABLE
+	EDH_STAGING.DIM_BRANCH_CA;
