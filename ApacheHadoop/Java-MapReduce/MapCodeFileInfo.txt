@@ -1,3 +1,0 @@
-======================== Input Files ==========================
-
-AverageDriver.java    ----  comments.xml
