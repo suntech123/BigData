@@ -1,4 +1,0 @@
-https://stackoverflow.com/questions/23229482/parse-error-while-creating-external-table    ---hive
-https://community.hortonworks.com/questions/66156/hive-query-keyword-column-name.html ---hive
-
-https://www.quora.com/How-do-I-parse-XML-using-Spark
